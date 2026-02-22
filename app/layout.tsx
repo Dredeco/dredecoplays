@@ -87,11 +87,16 @@ export default function RootLayout({
 
         {/* Google AdSense */}
         <head>
-          <script
+          <Script
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7501367689908064"
             crossOrigin="anonymous"
-          ></script>
+          ></Script>
+
+          <meta
+            name="google-adsense-account"
+            content="ca-pub-7501367689908064"
+          />
         </head>
 
         {/* Google Analytics 4 — adicionar NEXT_PUBLIC_GA_ID no .env.local */}
