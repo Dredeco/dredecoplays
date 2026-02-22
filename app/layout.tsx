@@ -78,26 +78,23 @@ export default function RootLayout({
 
   return (
     <html lang="pt-BR" className="scroll-smooth">
+      {/* Google AdSense */}
+      <head>
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7501367689908064"
+          crossOrigin="anonymous"
+        ></Script>
+
+        <meta name="google-adsense-account" content="ca-pub-7501367689908064" />
+      </head>
+
       <body
         className={`${geistSans.variable} antialiased bg-[#0a0a0f] text-gray-100 min-h-screen`}
       >
         <Header />
         <main className="min-h-screen">{children}</main>
         <Footer />
-
-        {/* Google AdSense */}
-        <head>
-          <Script
-            async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7501367689908064"
-            crossOrigin="anonymous"
-          ></Script>
-
-          <meta
-            name="google-adsense-account"
-            content="ca-pub-7501367689908064"
-          />
-        </head>
 
         {/* Google Analytics 4 — adicionar NEXT_PUBLIC_GA_ID no .env.local */}
         {gaId && (

@@ -1,32 +1,49 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+declare global {
+  interface Window {
+    adsbygoogle: unknown[];
+  }
+}
+
 interface Props {
   position: "top" | "mid-content" | "mid-article" | "footer" | "sidebar";
   className?: string;
 }
 
-const dimensions: Record<Props["position"], { width: number; height: number; label: string }> = {
-  top: { width: 728, height: 90, label: "Leaderboard 728×90" },
-  "mid-content": { width: 728, height: 90, label: "Leaderboard 728×90" },
-  "mid-article": { width: 336, height: 280, label: "Retângulo 336×280" },
-  footer: { width: 728, height: 90, label: "Leaderboard 728×90" },
-  sidebar: { width: 300, height: 250, label: "Retângulo 300×250" },
-};
+export default function AdSlot({ className = "" }: Props) {
+  const [mounted, setMounted] = useState(false);
 
-export default function AdSlot({ position, className = "" }: Props) {
-  const { width, height, label } = dimensions[position];
+  useEffect(() => {
+    const t = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted || typeof window === "undefined") return;
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch {
+      // AdSense pode falhar em bloqueadores de anúncio
+    }
+  }, [mounted]);
+
+  if (!mounted) {
+    return <div className={`flex justify-center ${className}`} aria-hidden />;
+  }
 
   return (
     <div className={`flex justify-center ${className}`}>
-      {/* ADSENSE SLOT — substituir o conteúdo abaixo pelo script do Google AdSense */}
-      <div
-        style={{ width: `min(${width}px, 100%)`, height: `${height}px` }}
-        className="bg-[#13131a] border border-dashed border-[#2a2a3a] rounded-lg flex flex-col items-center justify-center gap-1"
-        aria-label="Espaço publicitário"
-      >
-        <span className="text-[#6b6b8a] text-xs font-medium uppercase tracking-wider">
-          Anúncio
-        </span>
-        <span className="text-[#2a2a3a] text-xs">{label}</span>
-      </div>
+      <ins
+        className="adsbygoogle"
+        style={{ display: "block" }}
+        data-ad-client="ca-pub-7501367689908064"
+        data-ad-slot="4057072452"
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+      />
     </div>
   );
 }
