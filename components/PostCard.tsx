@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import CategoryBadge from "./CategoryBadge";
+import PostThumbnail from "./PostThumbnail";
 import type { Post } from "@/lib/types";
 import { formatDate, getPostCoverUrl, getPostCategoryName, calculateReadingTime } from "@/lib/posts";
 
@@ -16,10 +16,9 @@ export default function PostCard({ post }: Props) {
   return (
     <article className="group bg-[#13131a] rounded-xl overflow-hidden border border-[#2a2a3a] hover:border-violet-700/50 transition-all duration-300 flex flex-col">
       <Link href={`/blog/${post.slug}`} className="block relative aspect-video overflow-hidden">
-        <Image
+        <PostThumbnail
           src={coverUrl}
           alt={post.title}
-          fill
           className="object-cover group-hover:scale-105 transition-transform duration-500"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />

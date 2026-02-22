@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Image from "next/image";
+import PostThumbnail from "@/components/PostThumbnail";
 import { getPostBySlug, getRelatedPosts } from "@/lib/api";
 import {
   formatDate,
@@ -120,10 +120,9 @@ export default async function PostPage({ params }: Props) {
         <div className="flex gap-10">
           <article className="flex-1 min-w-0">
             <div className="relative aspect-[16/9] rounded-xl overflow-hidden mb-8">
-              <Image
+              <PostThumbnail
                 src={coverUrl}
                 alt={post.title}
-                fill
                 priority
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 70vw"

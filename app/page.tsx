@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import {
   getFeaturedPost,
@@ -6,7 +5,8 @@ import {
   getPopularPosts,
   getCategories,
 } from "@/lib/api";
-import { formatDate } from "@/lib/posts";
+import { formatDate, getPostCoverUrl } from "@/lib/posts";
+import PostThumbnail from "@/components/PostThumbnail";
 import PostCardFeatured from "@/components/PostCardFeatured";
 import PostCard from "@/components/PostCard";
 import AdSlot from "@/components/AdSlot";
@@ -99,14 +99,9 @@ export default async function HomePage() {
                 <div className="hidden sm:block w-52 shrink-0">
                   <Link href={`/blog/${mostRead[0].slug}`}>
                     <div className="relative aspect-[3/4] rounded-xl overflow-hidden">
-                      <Image
-                        src={
-                          mostRead[0].thumbnail ||
-                          "https://placehold.co/400x533/1a1a2e/6366f1?text=Blog"
-                        }
+                      <PostThumbnail
+                        src={getPostCoverUrl(mostRead[0])}
                         alt={mostRead[0].title}
-                        fill
-                        unoptimized
                         className="object-cover hover:scale-105 transition-transform duration-500"
                         sizes="208px"
                       />
@@ -182,14 +177,9 @@ export default async function HomePage() {
               {mostRead.map((post, index) => (
                 <li key={post.id} className="flex gap-3">
                   <div className="relative w-16 h-12 rounded-lg overflow-hidden shrink-0">
-                    <Image
-                      src={
-                        post.thumbnail ||
-                        "https://placehold.co/64x48/1a1a2e/6366f1?text=Blog"
-                      }
+                    <PostThumbnail
+                      src={getPostCoverUrl(post)}
                       alt={post.title}
-                      fill
-                      unoptimized
                       className="object-cover"
                       sizes="64px"
                     />

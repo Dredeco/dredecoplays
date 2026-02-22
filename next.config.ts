@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "images.unsplash.com" },
       { protocol: "https", hostname: "m.media-amazon.com" },
       { protocol: "https", hostname: "http2.mlstatic.com" },
+      { protocol: "http", hostname: "api.dredecoplays.com.br" },
       { protocol: "https", hostname: "api.dredecoplays.com.br" },
     ],
   },

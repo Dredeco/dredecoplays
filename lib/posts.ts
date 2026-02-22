@@ -64,8 +64,23 @@ export function formatDate(date: string): string {
 export const DEFAULT_COVER_IMAGE =
   "https://placehold.co/800x450/1a1a2e/6366f1?text=Blog";
 
+/** Normaliza URL da API: http→https (evita mixed content) e trata paths relativos */
+function normalizeThumbnailUrl(url: string): string {
+  if (!url || url.startsWith("data:")) return url;
+  const trimmed = url.trim();
+  if (trimmed.startsWith("http://api.dredecoplays.com.br")) {
+    return trimmed.replace("http://", "https://");
+  }
+  if (trimmed.startsWith("/")) {
+    const base = process.env.NEXT_PUBLIC_API_URL || "https://api.dredecoplays.com.br";
+    return `${base.replace(/\/$/, "")}${trimmed}`;
+  }
+  return trimmed;
+}
+
 export function getPostCoverUrl(post: Post): string {
-  return post.thumbnail || DEFAULT_COVER_IMAGE;
+  const url = post.thumbnail || DEFAULT_COVER_IMAGE;
+  return url === DEFAULT_COVER_IMAGE ? url : normalizeThumbnailUrl(url);
 }
 
 export function getPostCategoryName(post: Post): string {

@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import PostThumbnail from "./PostThumbnail";
 import type { Post } from "@/lib/types";
 import CategoryBadge from "./CategoryBadge";
 import { getPostCoverUrl, getPostCategoryName } from "@/lib/posts";
@@ -15,10 +15,9 @@ export default function PostCardFeatured({ post }: Props) {
   return (
     <article className="relative rounded-xl overflow-hidden group">
       <div className="relative aspect-[16/9] sm:aspect-[21/9]">
-        <Image
+        <PostThumbnail
           src={coverUrl}
           alt={post.title}
-          fill
           priority
           className="object-cover group-hover:scale-105 transition-transform duration-700"
           sizes="(max-width: 1024px) 100vw, 65vw"
