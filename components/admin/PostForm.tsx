@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import type { Post, Category, Tag, CreatePostDto } from "@/lib/types";
 import { slugify } from "@/lib/posts";
 import { uploadImage } from "@/lib/api";
+import RichTextEditor from "./RichTextEditor";
+import Image from "next/image";
 
 interface Props {
   post?: Post | null;
@@ -24,10 +26,16 @@ export default function PostForm({
   const [slug, setSlug] = useState(post?.slug ?? "");
   const [excerpt, setExcerpt] = useState(post?.excerpt ?? "");
   const [content, setContent] = useState(post?.content ?? "");
-  const [categoryId, setCategoryId] = useState(post?.category_id ?? categories[0]?.id ?? 0);
-  const [status, setStatus] = useState<"draft" | "published">(post?.status ?? "draft");
+  const [categoryId, setCategoryId] = useState(
+    post?.category_id ?? categories[0]?.id ?? 0,
+  );
+  const [status, setStatus] = useState<"draft" | "published">(
+    post?.status ?? "draft",
+  );
   const [featured, setFeatured] = useState(post?.featured ?? false);
-  const [tagIds, setTagIds] = useState<number[]>(post?.tags?.map((t) => t.id) ?? []);
+  const [tagIds, setTagIds] = useState<number[]>(
+    post?.tags?.map((t) => t.id) ?? [],
+  );
   const [thumbnail, setThumbnail] = useState(post?.thumbnail ?? "");
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -40,7 +48,7 @@ export default function PostForm({
 
   function toggleTag(id: number) {
     setTagIds((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
     );
   }
 
@@ -81,7 +89,9 @@ export default function PostForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">Título</label>
+        <label className="block text-sm font-medium text-gray-300 mb-1">
+          Título
+        </label>
         <input
           type="text"
           value={title}
@@ -92,7 +102,9 @@ export default function PostForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">Slug (URL)</label>
+        <label className="block text-sm font-medium text-gray-300 mb-1">
+          Slug (URL)
+        </label>
         <input
           type="text"
           value={slug}
@@ -103,7 +115,9 @@ export default function PostForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">Resumo (excerpt)</label>
+        <label className="block text-sm font-medium text-gray-300 mb-1">
+          Resumo (excerpt)
+        </label>
         <textarea
           value={excerpt}
           onChange={(e) => setExcerpt(e.target.value)}
@@ -113,17 +127,16 @@ export default function PostForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">Conteúdo (HTML)</label>
-        <textarea
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          rows={15}
-          className="w-full px-4 py-2 rounded-lg bg-[#13131a] border border-[#2a2a3a] text-white focus:outline-none focus:border-violet-600 font-mono text-sm"
-        />
+        <label className="block text-sm font-medium text-gray-300 mb-1">
+          Conteúdo
+        </label>
+        <RichTextEditor value={content} onChange={setContent} token={token} />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">Categoria</label>
+        <label className="block text-sm font-medium text-gray-300 mb-1">
+          Categoria
+        </label>
         <select
           value={categoryId}
           onChange={(e) => setCategoryId(Number(e.target.value))}
@@ -138,7 +151,9 @@ export default function PostForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">Tags</label>
+        <label className="block text-sm font-medium text-gray-300 mb-2">
+          Tags
+        </label>
         <div className="flex flex-wrap gap-2">
           {tags.map((tag) => (
             <button
@@ -158,7 +173,9 @@ export default function PostForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">Thumbnail</label>
+        <label className="block text-sm font-medium text-gray-300 mb-1">
+          Thumbnail
+        </label>
         <div className="flex gap-4 items-start">
           <input
             type="file"
@@ -167,14 +184,18 @@ export default function PostForm({
             disabled={uploading}
             className="text-sm text-gray-400"
           />
-          {uploading && <span className="text-amber-400 text-sm">Enviando...</span>}
+          {uploading && (
+            <span className="text-amber-400 text-sm">Enviando...</span>
+          )}
         </div>
         {thumbnail && (
           <div className="mt-2">
-            <img
+            <Image
               src={thumbnail}
               alt="Thumbnail"
               className="w-40 h-24 object-cover rounded-lg"
+              width={160}
+              height={96}
             />
           </div>
         )}
@@ -191,7 +212,9 @@ export default function PostForm({
           <span className="text-gray-300">Em destaque</span>
         </label>
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">Status</label>
+          <label className="block text-sm font-medium text-gray-300 mb-1">
+            Status
+          </label>
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value as "draft" | "published")}
