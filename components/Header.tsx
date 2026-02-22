@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
+import logo from "@/public/logo.png";
 
 const navigation = [
   { label: "Listas & Rankings", href: "/categoria/listas-rankings" },
@@ -21,16 +23,10 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 bg-[#0a0a0f]/95 backdrop-blur-md border-b border-[#2a2a3a]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="flex items-center justify-between h-14 sm:h-16">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 shrink-0">
-            <div className="w-8 h-8 bg-violet-700 rounded flex items-center justify-center shadow-lg shadow-violet-900/50">
-              <span className="text-white font-black text-base leading-none">D</span>
-            </div>
-            <span className="font-black text-base sm:text-lg tracking-wider">
-              <span className="text-white">DREDECO</span>
-              <span className="text-violet-400"> PLAYS</span>
-            </span>
+            <Image src={logo} alt="Dredeco Plays" width={200} />
           </Link>
 
           {/* Desktop Nav */}
@@ -102,7 +98,11 @@ export default function Header() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d={menuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
+                  d={
+                    menuOpen
+                      ? "M6 18L18 6M6 6l12 12"
+                      : "M4 6h16M4 12h16M4 18h16"
+                  }
                 />
               </svg>
             </button>
@@ -123,9 +123,27 @@ export default function Header() {
               </Link>
             ))}
             <div className="border-t border-[#2a2a3a] mt-2 pt-2 flex gap-4">
-              <Link href="/blog" className="text-sm text-gray-400 py-2 px-2" onClick={() => setMenuOpen(false)}>Blog</Link>
-              <Link href="/sobre" className="text-sm text-gray-400 py-2 px-2" onClick={() => setMenuOpen(false)}>Sobre</Link>
-              <Link href="/contato" className="text-sm text-gray-400 py-2 px-2" onClick={() => setMenuOpen(false)}>Contato</Link>
+              <Link
+                href="/blog"
+                className="text-sm text-gray-400 py-2 px-2"
+                onClick={() => setMenuOpen(false)}
+              >
+                Blog
+              </Link>
+              <Link
+                href="/sobre"
+                className="text-sm text-gray-400 py-2 px-2"
+                onClick={() => setMenuOpen(false)}
+              >
+                Sobre
+              </Link>
+              <Link
+                href="/contato"
+                className="text-sm text-gray-400 py-2 px-2"
+                onClick={() => setMenuOpen(false)}
+              >
+                Contato
+              </Link>
             </div>
           </nav>
         )}

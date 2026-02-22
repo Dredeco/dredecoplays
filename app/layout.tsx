@@ -74,6 +74,13 @@ export default function RootLayout({
         <main className="min-h-screen">{children}</main>
         <Footer />
 
+        {/* Google AdSense */}
+        <Script
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7501367689908064"
+          strategy="afterInteractive"
+          crossOrigin="anonymous"
+        />
+
         {/* Google Analytics 4 — adicionar NEXT_PUBLIC_GA_ID no .env.local */}
         {gaId && (
           <>
