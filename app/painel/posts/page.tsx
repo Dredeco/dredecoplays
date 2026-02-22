@@ -81,8 +81,6 @@ export default function PostsListPage() {
     }
   }
 
-  const statusLabel = statusParam === "draft" ? "Rascunhos" : "Publicados";
-
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">

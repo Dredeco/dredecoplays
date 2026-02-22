@@ -1,4 +1,4 @@
-import type { Post, PostCategory } from "./types";
+import type { Post } from "./types";
 
 export function slugify(text: string): string {
   return text

@@ -1,14 +1,37 @@
 "use client";
 
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
-import Link from "@tiptap/extension-link";
+import Youtube from "@tiptap/extension-youtube";
 import FileHandler from "@tiptap/extension-file-handler";
 import { uploadImage } from "@/lib/api";
 
 const IMAGE_MIMES = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+
+function parseYoutubeUrl(input: string): string | null {
+  const trimmed = input?.trim();
+  if (!trimmed) return null;
+  try {
+    const url = new URL(trimmed);
+    if (url.hostname === "www.youtube.com" || url.hostname === "youtube.com") {
+      const v = url.searchParams.get("v");
+      if (v) return `https://www.youtube.com/watch?v=${v}`;
+      if (url.pathname.startsWith("/embed/")) {
+        const id = url.pathname.split("/").pop();
+        if (id) return `https://www.youtube.com/watch?v=${id}`;
+      }
+    }
+    if (url.hostname === "youtu.be") {
+      const id = url.pathname.slice(1).split("/")[0];
+      if (id) return `https://www.youtube.com/watch?v=${id}`;
+    }
+  } catch {
+    return null;
+  }
+  return null;
+}
 
 interface Props {
   value: string;
@@ -34,7 +57,7 @@ function Toolbar({
         alert(err instanceof Error ? err.message : "Erro no upload da imagem");
       }
     },
-    [editor, token]
+    [editor, token],
   );
 
   if (!editor) return null;
@@ -44,6 +67,13 @@ function Toolbar({
     const file = e.target.files?.[0];
     if (file && IMAGE_MIMES.includes(file.type)) addImage(file);
     e.target.value = "";
+  };
+
+  const handleYoutubeClick = () => {
+    const url = window.prompt("URL do vídeo (YouTube):");
+    const src = url ? parseYoutubeUrl(url) : null;
+    if (src) editor.chain().focus().setYoutubeVideo({ src }).run();
+    else if (url) alert("URL do YouTube inválida.");
   };
 
   const btnClass =
@@ -124,7 +154,7 @@ function Toolbar({
         className={`${btnClass} ${editor.isActive("blockquote") ? btnActiveClass : ""}`}
         title="Citação"
       >
-        "
+        {'"'}
       </button>
       <button
         type="button"
@@ -146,8 +176,21 @@ function Toolbar({
         Link
       </button>
       <span className="w-px h-6 bg-brand-border self-center mx-1" />
-      <button type="button" onClick={handleImageClick} className={btnClass} title="Inserir imagem">
+      <button
+        type="button"
+        onClick={handleImageClick}
+        className={btnClass}
+        title="Inserir imagem"
+      >
         🖼
+      </button>
+      <button
+        type="button"
+        onClick={handleYoutubeClick}
+        className={btnClass}
+        title="Inserir vídeo YouTube"
+      >
+        ▶
       </button>
       <input
         ref={inputRef}
@@ -160,20 +203,38 @@ function Toolbar({
   );
 }
 
-export default function RichTextEditor({ value, onChange, token }: Props) {
-  const tokenRef = useRef(token);
-  tokenRef.current = token;
-
+function RichTextEditorInner({ value, onChange, token }: Props) {
   const extensions = useMemo(() => {
     const handleUpload = async (file: File): Promise<string> => {
-      const { url } = await uploadImage(file, tokenRef.current);
+      const { url } = await uploadImage(file, token);
       return url;
     };
 
     return [
-      StarterKit,
-      Image.configure({ HTMLAttributes: { class: "rounded-lg max-w-full h-auto" } }),
-      Link.configure({ openOnClick: false, HTMLAttributes: { class: "text-brand-violet-light underline hover:text-brand-cyan" } }),
+      StarterKit.configure({
+        link: {
+          openOnClick: false,
+          HTMLAttributes: {
+            class: "text-brand-violet-light underline hover:text-brand-cyan",
+          },
+        },
+      }),
+      Image.configure({
+        HTMLAttributes: { class: "rounded-lg max-w-full h-auto" },
+        resize: {
+          enabled: true,
+          directions: ["top", "bottom", "left", "right"],
+          minWidth: 80,
+          minHeight: 80,
+          alwaysPreserveAspectRatio: true,
+        },
+      }),
+      Youtube.configure({
+        width: 640,
+        height: 360,
+        nocookie: true,
+        HTMLAttributes: { class: "rounded-lg w-full aspect-video" },
+      }),
       FileHandler.configure({
         allowedMimeTypes: IMAGE_MIMES,
         onPaste: async (editor, files) => {
@@ -192,7 +253,11 @@ export default function RichTextEditor({ value, onChange, token }: Props) {
             if (!IMAGE_MIMES.includes(file.type)) continue;
             try {
               const url = await handleUpload(file);
-              editor.chain().focus().insertContentAt(pos, { type: "image", attrs: { src: url } }).run();
+              editor
+                .chain()
+                .focus()
+                .insertContentAt(pos, { type: "image", attrs: { src: url } })
+                .run();
               pos += 1;
             } catch {
               // Falha silenciosa no drop
@@ -201,7 +266,7 @@ export default function RichTextEditor({ value, onChange, token }: Props) {
         },
       }),
     ];
-  }, []);
+  }, [token]);
 
   const editor = useEditor({
     extensions,
@@ -209,7 +274,8 @@ export default function RichTextEditor({ value, onChange, token }: Props) {
     immediatelyRender: false,
     editorProps: {
       attributes: {
-        class: "prose prose-invert max-w-none min-h-[300px] px-4 py-3 focus:outline-none",
+        class:
+          "prose prose-invert prose-sm max-w-none min-h-[300px] px-4 py-3 focus:outline-none [&_*]:!my-0.5",
       },
     },
     onUpdate: ({ editor }) => {
@@ -223,4 +289,24 @@ export default function RichTextEditor({ value, onChange, token }: Props) {
       <EditorContent editor={editor} />
     </div>
   );
+}
+
+export default function RichTextEditor(props: Props) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    const id = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(id);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div className="rounded-lg border border-brand-border overflow-hidden bg-brand-surface">
+        <div className="min-h-[300px] flex items-center justify-center text-gray-500">
+          Carregando editor...
+        </div>
+      </div>
+    );
+  }
+
+  return <RichTextEditorInner {...props} />;
 }

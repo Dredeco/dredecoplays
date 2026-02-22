@@ -13,6 +13,8 @@ import type {
   UpdateCategoryDto,
   CreateTagDto,
   UpdateTagDto,
+  CreateUserDto,
+  UpdateUserDto,
 } from "./types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.dredecoplays.com.br";
@@ -257,6 +259,40 @@ export async function updateTag(id: number, dto: UpdateTagDto, token: string): P
 
 export async function deleteTag(id: number, token: string): Promise<void> {
   await request(`/api/tags/${id}`, { method: "DELETE", token });
+}
+
+// --- Users (admin, JWT) ---
+
+export async function getUsers(token: string): Promise<User[]> {
+  const res = await request<{ data: User[] } | User[]>("/api/users", { token });
+  return Array.isArray(res) ? res : (res as { data: User[] }).data ?? [];
+}
+
+export async function getUser(id: number, token: string): Promise<User> {
+  const res = await request<SingleResponse<User>>(`/api/users/${id}`, { token });
+  return (res as unknown as SingleResponse<User>).data;
+}
+
+export async function createUser(dto: CreateUserDto, token: string): Promise<User> {
+  const res = await request<SingleResponse<User>>("/api/users", {
+    method: "POST",
+    body: JSON.stringify(dto),
+    token,
+  });
+  return (res as unknown as SingleResponse<User>).data;
+}
+
+export async function updateUser(id: number, dto: UpdateUserDto, token: string): Promise<User> {
+  const res = await request<SingleResponse<User>>(`/api/users/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(dto),
+    token,
+  });
+  return (res as unknown as SingleResponse<User>).data;
+}
+
+export async function deleteUser(id: number, token: string): Promise<void> {
+  await request(`/api/users/${id}`, { method: "DELETE", token });
 }
 
 // --- Upload ---

@@ -5,6 +5,7 @@ export interface User {
   name: string;
   avatar: string | null;
   email?: string;
+  role?: "admin" | "editor";
 }
 
 export interface Category {
@@ -95,7 +96,7 @@ export interface CreatePostDto {
   tags?: number[];
 }
 
-export interface UpdatePostDto extends Partial<CreatePostDto> {}
+export type UpdatePostDto = Partial<CreatePostDto>;
 
 export interface CreateCategoryDto {
   name: string;
@@ -104,11 +105,25 @@ export interface CreateCategoryDto {
   color: string;
 }
 
-export interface UpdateCategoryDto extends Partial<CreateCategoryDto> {}
+export type UpdateCategoryDto = Partial<CreateCategoryDto>;
 
 export interface CreateTagDto {
   name: string;
   slug: string;
 }
 
-export interface UpdateTagDto extends Partial<CreateTagDto> {}
+export type UpdateTagDto = Partial<CreateTagDto>;
+
+export interface CreateUserDto {
+  name: string;
+  email: string;
+  password: string;
+  role?: "admin" | "editor";
+}
+
+export interface UpdateUserDto {
+  name?: string;
+  email?: string;
+  password?: string;
+  role?: "admin" | "editor";
+}

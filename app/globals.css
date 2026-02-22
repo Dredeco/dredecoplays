@@ -53,3 +53,17 @@ body {
   --tw-prose-th-borders: #2a2a3a;
   --tw-prose-td-borders: #2a2a3a;
 }
+
+/* TipTap image resize handles */
+[data-resize-handle] {
+  width: 8px;
+  height: 8px;
+  background: var(--color-brand-violet);
+  border-radius: 2px;
+  cursor: se-resize;
+  opacity: 0.8;
+}
+[data-resize-handle]:hover {
+  opacity: 1;
+  background: var(--color-brand-violet-light);
+}

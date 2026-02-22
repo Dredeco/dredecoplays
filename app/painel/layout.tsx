@@ -19,7 +19,8 @@ export default function PainelLayout({
   const token = mounted ? getToken() : null;
 
   useEffect(() => {
-    setMounted(true);
+    const id = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(id);
   }, []);
 
   useEffect(() => {

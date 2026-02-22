@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import {
-  getPostBySlug,
-  getRelatedPosts,
-} from "@/lib/api";
+import { getPostBySlug, getRelatedPosts } from "@/lib/api";
 import {
   formatDate,
   getPostCoverUrl,
@@ -34,7 +31,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!post) return { title: "Post não encontrado" };
 
   const coverUrl = getPostCoverUrl(post);
-  const imageUrl = coverUrl.startsWith("http") ? coverUrl : `${SITE_URL}${coverUrl}`;
+  const imageUrl = coverUrl.startsWith("http")
+    ? coverUrl
+    : `${SITE_URL}${coverUrl}`;
 
   return {
     title: post.title,
@@ -73,7 +72,7 @@ export default async function PostPage({ params }: Props) {
   const relatedPosts = await getRelatedPosts(
     slug,
     getPostCategorySlug(post),
-    3
+    3,
   );
   const readingTime = calculateReadingTime(post.content);
   const coverUrl = getPostCoverUrl(post);
@@ -187,8 +186,10 @@ export default async function PostPage({ params }: Props) {
             </header>
 
             <div
-              className="prose prose-invert prose-lg max-w-none [&_img]:rounded-lg [&_a]:text-violet-400 [&_a]:hover:text-violet-300"
-              dangerouslySetInnerHTML={{ __html: injectHeadingIds(post.content) }}
+              className="prose prose-invert prose-lg max-w-none [&_img]:rounded-lg [&_a]:text-violet-400 [&_a]:hover:text-violet-300 [&_iframe]:max-w-full [&_iframe]:rounded-lg [&_[data-youtube-video]]:aspect-video [&_[data-youtube-video]>iframe]:w-full [&_[data-youtube-video]>iframe]:h-full [&_h1]:!my-0.5 [&_h2]:!my-0.5 [&_h3]:!my-0.5"
+              dangerouslySetInnerHTML={{
+                __html: injectHeadingIds(post.content),
+              }}
             />
 
             <AdSlot position="mid-article" className="my-12" />
