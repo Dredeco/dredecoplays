@@ -1,0 +1,55 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --color-brand-bg: #0a0a0f;
+  --color-brand-surface: #13131a;
+  --color-brand-surface-2: #1c1c28;
+  --color-brand-border: #2a2a3a;
+  --color-brand-violet: #7c3aed;
+  --color-brand-violet-light: #9d5ff0;
+  --color-brand-cyan: #00d4ff;
+  --color-brand-muted: #6b6b8a;
+  --font-sans: var(--font-geist-sans);
+}
+
+body {
+  background-color: #0a0a0f;
+  color: #e2e2f0;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #13131a;
+}
+::-webkit-scrollbar-thumb {
+  background: #7c3aed;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #9d5ff0;
+}
+
+/* Prose dark theme overrides */
+.prose {
+  --tw-prose-body: #d4d4e8;
+  --tw-prose-headings: #ffffff;
+  --tw-prose-links: #9d5ff0;
+  --tw-prose-bold: #ffffff;
+  --tw-prose-counters: #9d5ff0;
+  --tw-prose-bullets: #7c3aed;
+  --tw-prose-hr: #2a2a3a;
+  --tw-prose-quotes: #d4d4e8;
+  --tw-prose-quote-borders: #7c3aed;
+  --tw-prose-captions: #6b6b8a;
+  --tw-prose-code: #00d4ff;
+  --tw-prose-pre-code: #e2e2f0;
+  --tw-prose-pre-bg: #13131a;
+  --tw-prose-th-borders: #2a2a3a;
+  --tw-prose-td-borders: #2a2a3a;
+}
