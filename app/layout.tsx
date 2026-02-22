@@ -15,6 +15,10 @@ const SITE_URL = "https://dredecoplays.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  icons: {
+    icon: "/navicon.png",
+    apple: "/navicon.png",
+  },
   title: {
     default: "Dredeco Plays — Portal de Games",
     template: "%s | Dredeco Plays",
@@ -39,7 +43,14 @@ export const metadata: Metadata = {
     locale: "pt_BR",
     url: SITE_URL,
     siteName: "Dredeco Plays",
-    images: [{ url: "/og-default.png", width: 1200, height: 630, alt: "Dredeco Plays" }],
+    images: [
+      {
+        url: "/og-default.png",
+        width: 1200,
+        height: 630,
+        alt: "Dredeco Plays",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
