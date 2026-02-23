@@ -16,8 +16,8 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://dredecoplays.com.b
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   icons: {
-    icon: "/navicon.png",
-    apple: "/navicon.png",
+    icon: "/favicon.png",
+    apple: "/favicon.png",
   },
   title: {
     default: "Dredeco Plays — Portal de Games",
