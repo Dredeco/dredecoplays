@@ -343,6 +343,19 @@ export async function deleteProduct(id: number, token: string): Promise<void> {
   await request(`/api/products/${id}`, { method: "DELETE", token });
 }
 
+/** GET /api/products (público, sem token) — retorna produtos ativos */
+export async function getPublicProducts(): Promise<Product[]> {
+  try {
+    const res = await request<{ data: Product[] } | Product[]>("/api/products");
+    const all = Array.isArray(res)
+      ? res
+      : (res as { data: Product[] }).data ?? [];
+    return all.filter((p) => p.active !== false);
+  } catch {
+    return [];
+  }
+}
+
 // --- Upload ---
 
 export async function uploadImage(

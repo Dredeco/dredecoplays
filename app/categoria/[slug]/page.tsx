@@ -5,6 +5,7 @@ import { getCategories, getCategoryPosts } from "@/lib/api";
 import PostCard from "@/components/PostCard";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import AdSlot from "@/components/AdSlot";
+import ProductsRowAd from "@/components/ProductsRowAd";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -83,6 +84,8 @@ export default async function CategoryPage({ params, searchParams }: Props) {
               <PostCard key={post.id} post={post} />
             ))}
           </div>
+
+          <ProductsRowAd className="mt-12" />
 
           {totalPages > 1 && (
             <div className="flex justify-center gap-2 mt-12">

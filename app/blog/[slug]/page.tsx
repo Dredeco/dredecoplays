@@ -17,6 +17,7 @@ import RelatedPosts from "@/components/RelatedPosts";
 import ShareButtons from "@/components/ShareButtons";
 import AdSlot from "@/components/AdSlot";
 import CategoryBadge from "@/components/CategoryBadge";
+import ProductsGridAd from "@/components/ProductsGridAd";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://dredecoplays.com.br";
 
@@ -204,6 +205,8 @@ export default async function PostPage({ params }: Props) {
               title={post.title}
               url={`${SITE_URL}/blog/${post.slug}`}
             />
+
+            <ProductsGridAd className="my-12" />
 
             <RelatedPosts posts={relatedPosts} />
 

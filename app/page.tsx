@@ -11,6 +11,8 @@ import PostCardFeatured from "@/components/PostCardFeatured";
 import PostCard from "@/components/PostCard";
 import AdSlot from "@/components/AdSlot";
 import CategoryBadge from "@/components/CategoryBadge";
+import ProductsGridAd from "@/components/ProductsGridAd";
+import ProductsRowAd from "@/components/ProductsRowAd";
 
 export const revalidate = 60;
 
@@ -53,6 +55,8 @@ export default async function HomePage() {
           </section>
 
           <AdSlot position="mid-content" />
+
+          <ProductsRowAd className="mt-10" />
 
           <section>
             <div className="flex items-center gap-3 mb-6">
@@ -197,6 +201,8 @@ export default async function HomePage() {
               ))}
             </ol>
           </div>
+
+          <ProductsGridAd />
 
           <AdSlot position="sidebar" />
         </aside>
