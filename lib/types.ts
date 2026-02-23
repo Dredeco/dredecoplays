@@ -130,3 +130,35 @@ export interface UpdateUserDto {
   password?: string;
   role?: "admin" | "editor";
 }
+
+export interface Product {
+  id: number;
+  name: string;
+  price: number;
+  original_price?: number | null;
+  rating?: number | null;
+  affiliate_url: string;
+  image?: string | null;
+  active: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateProductDto {
+  name: string;
+  price: number;
+  affiliate_url: string;
+  image?: string;
+  original_price?: number;
+  rating?: number;
+}
+
+export interface UpdateProductDto {
+  name?: string;
+  price?: number;
+  original_price?: number;
+  rating?: number;
+  affiliate_url?: string;
+  image?: string;
+  active?: boolean;
+}

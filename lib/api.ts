@@ -3,6 +3,7 @@ import type {
   Category,
   Tag,
   User,
+  Product,
   PaginatedResponse,
   SingleResponse,
   AuthResponse,
@@ -15,6 +16,8 @@ import type {
   UpdateTagDto,
   CreateUserDto,
   UpdateUserDto,
+  CreateProductDto,
+  UpdateProductDto,
 } from "./types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.dredecoplays.com.br";
@@ -309,6 +312,35 @@ export async function updateUser(id: number, dto: UpdateUserDto, token: string):
 
 export async function deleteUser(id: number, token: string): Promise<void> {
   await request(`/api/users/${id}`, { method: "DELETE", token });
+}
+
+// --- Products (admin, JWT) ---
+
+export async function getProducts(token: string): Promise<Product[]> {
+  const res = await request<{ data: Product[] } | Product[]>("/api/products", { token });
+  return Array.isArray(res) ? res : (res as { data: Product[] }).data ?? [];
+}
+
+export async function createProduct(dto: CreateProductDto, token: string): Promise<Product> {
+  const res = await request<SingleResponse<Product>>("/api/products", {
+    method: "POST",
+    body: JSON.stringify(dto),
+    token,
+  });
+  return (res as unknown as SingleResponse<Product>).data;
+}
+
+export async function updateProduct(id: number, dto: UpdateProductDto, token: string): Promise<Product> {
+  const res = await request<SingleResponse<Product>>(`/api/products/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(dto),
+    token,
+  });
+  return (res as unknown as SingleResponse<Product>).data;
+}
+
+export async function deleteProduct(id: number, token: string): Promise<void> {
+  await request(`/api/products/${id}`, { method: "DELETE", token });
 }
 
 // --- Upload ---
