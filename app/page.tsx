@@ -12,7 +12,7 @@ import PostCard from "@/components/PostCard";
 import AdSlot from "@/components/AdSlot";
 import CategoryBadge from "@/components/CategoryBadge";
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 export default async function HomePage() {
   const [featuredPost, recentPosts, popularPosts, categories] =

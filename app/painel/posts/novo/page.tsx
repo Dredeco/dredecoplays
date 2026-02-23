@@ -3,24 +3,35 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { createPost, getCategories, getTags } from "@/lib/api";
-import { getToken } from "@/lib/auth";
+import { createPost, getCategories, getTags, getMe } from "@/lib/api";
+import { getToken, getUser, setUser } from "@/lib/auth";
 import PostForm from "@/components/admin/PostForm";
 import type { CreatePostDto } from "@/lib/types";
+import type { User } from "@/lib/types";
 
 export default function NovoPostPage() {
   const router = useRouter();
   const token = getToken();
   const [categories, setCategories] = useState<Awaited<ReturnType<typeof getCategories>>>([]);
   const [tags, setTags] = useState<Awaited<ReturnType<typeof getTags>>>([]);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!token) return;
-    Promise.all([getCategories(), getTags()])
-      .then(([cats, tgs]) => {
+    const loadUser = (): Promise<User | null> => {
+      const stored = getUser();
+      if (stored) return Promise.resolve(stored);
+      return getMe(token).then((user) => {
+        setUser(user);
+        return user;
+      }).catch(() => null);
+    };
+    Promise.all([getCategories(), getTags(), loadUser()])
+      .then(([cats, tgs, user]) => {
         setCategories(cats);
         setTags(tgs);
+        setCurrentUser(user ?? null);
       })
       .finally(() => setLoading(false));
   }, [token]);
@@ -32,7 +43,7 @@ export default function NovoPostPage() {
   }
 
   if (!token) return null;
-  if (loading) return <div className="text-gray-500">Carregando...</div>;
+  if (loading || !currentUser) return <div className="text-gray-500">Carregando...</div>;
 
   return (
     <div>
@@ -49,6 +60,7 @@ export default function NovoPostPage() {
         categories={categories}
         tags={tags}
         token={token}
+        currentUser={currentUser}
         onSubmit={handleSubmit}
       />
     </div>

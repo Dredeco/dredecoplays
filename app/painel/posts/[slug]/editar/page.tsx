@@ -8,11 +8,13 @@ import {
   updatePost,
   getCategories,
   getTags,
+  getMe,
 } from "@/lib/api";
-import { getToken } from "@/lib/auth";
+import { getToken, getUser, setUser } from "@/lib/auth";
 import PostForm from "@/components/admin/PostForm";
 import type { Post } from "@/lib/types";
 import type { UpdatePostDto } from "@/lib/types";
+import type { User } from "@/lib/types";
 
 export default function EditarPostPage() {
   const router = useRouter();
@@ -22,15 +24,25 @@ export default function EditarPostPage() {
   const [post, setPost] = useState<Post | null>(null);
   const [categories, setCategories] = useState<Awaited<ReturnType<typeof getCategories>>>([]);
   const [tags, setTags] = useState<Awaited<ReturnType<typeof getTags>>>([]);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!token || !slug) return;
-    Promise.all([getPostBySlug(slug), getCategories(), getTags()])
-      .then(([p, cats, tgs]) => {
+    const loadUser = (): Promise<User | null> => {
+      const stored = getUser();
+      if (stored) return Promise.resolve(stored);
+      return getMe(token).then((user) => {
+        setUser(user);
+        return user;
+      }).catch(() => null);
+    };
+    Promise.all([getPostBySlug(slug), getCategories(), getTags(), loadUser()])
+      .then(([p, cats, tgs, user]) => {
         setPost(p ?? null);
         setCategories(cats);
         setTags(tgs);
+        setCurrentUser(user ?? null);
       })
       .finally(() => setLoading(false));
   }, [token, slug]);
@@ -42,7 +54,7 @@ export default function EditarPostPage() {
   }
 
   if (!token) return null;
-  if (loading) return <div className="text-gray-500">Carregando...</div>;
+  if (loading || !currentUser) return <div className="text-gray-500">Carregando...</div>;
   if (!post) return <div className="text-red-400">Post não encontrado.</div>;
 
   return (
@@ -61,6 +73,7 @@ export default function EditarPostPage() {
         categories={categories}
         tags={tags}
         token={token}
+        currentUser={currentUser}
         onSubmit={handleSubmit}
       />
     </div>

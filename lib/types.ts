@@ -6,6 +6,8 @@ export interface User {
   avatar: string | null;
   email?: string;
   role?: "admin" | "editor";
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Category {
@@ -89,6 +91,7 @@ export interface CreatePostDto {
   slug: string;
   excerpt: string;
   content: string;
+  user_id: number;
   category_id: number;
   status?: "draft" | "published";
   featured?: boolean;

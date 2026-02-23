@@ -20,6 +20,8 @@ import CategoryBadge from "@/components/CategoryBadge";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://dredecoplays.com";
 
+export const revalidate = 60;
+
 interface Props {
   params: Promise<{ slug: string }>;
 }

@@ -12,6 +12,7 @@ interface Props {
   categories: Category[];
   tags: Tag[];
   token: string;
+  currentUser: { id: number } | null;
   onSubmit: (dto: CreatePostDto) => Promise<void>;
 }
 
@@ -20,6 +21,7 @@ export default function PostForm({
   categories,
   tags,
   token,
+  currentUser,
   onSubmit,
 }: Props) {
   const [title, setTitle] = useState(post?.title ?? "");
@@ -68,6 +70,10 @@ export default function PostForm({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!currentUser) {
+      alert("Você precisa estar logado para criar ou editar posts.");
+      return;
+    }
     setSaving(true);
     try {
       await onSubmit({
@@ -75,6 +81,7 @@ export default function PostForm({
         slug,
         excerpt,
         content,
+        user_id: currentUser.id,
         category_id: categoryId,
         status,
         featured,

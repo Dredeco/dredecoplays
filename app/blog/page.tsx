@@ -4,7 +4,7 @@ import AdSlot from "@/components/AdSlot";
 import Link from "next/link";
 import type { Metadata } from "next";
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Blog",

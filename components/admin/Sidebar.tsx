@@ -11,7 +11,11 @@ const navItems = [
   { label: "Usuários", href: "/painel/usuarios", icon: "M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" },
 ];
 
-export default function AdminSidebar() {
+interface Props {
+  userName?: string | null;
+}
+
+export default function AdminSidebar({ userName }: Props) {
   const pathname = usePathname();
 
   return (
@@ -58,7 +62,19 @@ export default function AdminSidebar() {
         })}
       </nav>
 
-      <div className="p-4 border-t border-[#2a2a3a]">
+      <div className="p-4 border-t border-[#2a2a3a] space-y-1">
+        {userName && (
+          <div className="px-4 py-2 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-violet-700/50 flex items-center justify-center shrink-0">
+              <span className="text-violet-300 font-semibold text-sm">
+                {userName.charAt(0).toUpperCase()}
+              </span>
+            </div>
+            <span className="text-sm text-gray-400 truncate" title={userName}>
+              {userName}
+            </span>
+          </div>
+        )}
         <Link
           href="/"
           className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-gray-400 hover:bg-[#1c1c28] hover:text-white transition-colors"

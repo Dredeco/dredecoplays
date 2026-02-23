@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
 import Youtube from "@tiptap/extension-youtube";
 import FileHandler from "@tiptap/extension-file-handler";
@@ -211,23 +212,15 @@ function RichTextEditorInner({ value, onChange, token }: Props) {
     };
 
     return [
-      StarterKit.configure({
-        link: {
-          openOnClick: false,
-          HTMLAttributes: {
-            class: "text-brand-violet-light underline hover:text-brand-cyan",
-          },
+      StarterKit.configure(),
+      Link.configure({
+        openOnClick: false,
+        HTMLAttributes: {
+          class: "text-brand-violet-light underline hover:text-brand-cyan",
         },
       }),
       Image.configure({
         HTMLAttributes: { class: "rounded-lg max-w-full h-auto" },
-        resize: {
-          enabled: true,
-          directions: ["top", "bottom", "left", "right"],
-          minWidth: 80,
-          minHeight: 80,
-          alwaysPreserveAspectRatio: true,
-        },
       }),
       Youtube.configure({
         width: 640,

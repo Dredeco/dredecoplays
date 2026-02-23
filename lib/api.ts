@@ -48,15 +48,31 @@ async function request<T>(
 // --- Auth ---
 
 export async function login(email: string, password: string): Promise<AuthResponse> {
-  return request<AuthResponse>("/api/auth/login", {
+  const res = await request<
+    AuthResponse & {
+      data?: { token?: string; user?: import("./types").User };
+    }
+  >("/api/auth/login", {
     method: "POST",
     body: JSON.stringify({ email, password }),
   });
+  const token = (res.token ?? res.data?.token) as string;
+  const user =
+    res.user ?? res.data?.user ?? {
+      id: 0,
+      name: email.split("@")[0],
+      avatar: null,
+      email,
+    };
+  return { token, user };
 }
 
+/** GET /api/auth/me - Retorna { user: User } */
 export async function getMe(token: string): Promise<User> {
-  const res = await request<SingleResponse<User>>("/api/auth/me", { token });
-  return (res as unknown as SingleResponse<User>).data;
+  const res = await request<{ user: User }>("/api/auth/me", { token });
+  const user = res.user;
+  if (!user) throw new Error("Resposta inválida da API: user ausente");
+  return user;
 }
 
 // --- Posts (público) ---

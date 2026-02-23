@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { login } from "@/lib/api";
-import { setToken } from "@/lib/auth";
+import { setToken, setUser } from "@/lib/auth";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -21,6 +21,7 @@ export default function LoginPage() {
     try {
       const res = await login(email, password);
       setToken(res.token);
+      if (res.user) setUser(res.user);
       router.replace("/painel");
       router.refresh();
     } catch (err) {
