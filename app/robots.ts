@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/", "/_next/", "/painel"],
       },
     ],
-    sitemap: `${process.env.NEXT_PUBLIC_SITE_URL || "https://dredecoplays.com"}/sitemap.xml`,
+    sitemap: `${process.env.NEXT_PUBLIC_SITE_URL || "https://dredecoplays.com.br"}/sitemap.xml`,
   };
 }

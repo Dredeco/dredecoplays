@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import PostThumbnail from "@/components/PostThumbnail";
-import { getPostBySlug, getRelatedPosts } from "@/lib/api";
+import { getPostBySlug, getRelatedPosts, getPosts } from "@/lib/api";
 import {
   formatDate,
   getPostCoverUrl,
@@ -18,9 +18,14 @@ import ShareButtons from "@/components/ShareButtons";
 import AdSlot from "@/components/AdSlot";
 import CategoryBadge from "@/components/CategoryBadge";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://dredecoplays.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://dredecoplays.com.br";
 
 export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const res = await getPosts({ limit: 200, status: "published" });
+  return res.data.map((post) => ({ slug: post.slug }));
+}
 
 interface Props {
   params: Promise<{ slug: string }>;

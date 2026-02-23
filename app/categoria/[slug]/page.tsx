@@ -11,6 +11,11 @@ interface Props {
   searchParams: Promise<{ page?: string }>;
 }
 
+export async function generateStaticParams() {
+  const categories = await getCategories();
+  return categories.map((cat) => ({ slug: cat.slug }));
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const categories = await getCategories();
