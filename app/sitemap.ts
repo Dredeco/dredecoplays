@@ -4,9 +4,11 @@ import { getPostCoverUrl } from "@/lib/posts";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://dredecoplays.com.br";
 
+export const revalidate = 3600;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [postsRes, categories] = await Promise.all([
-    getPosts({ limit: 500, status: "published" }),
+    getPosts({ limit: 1000, status: "published" }),
     getCategories(),
   ]);
 

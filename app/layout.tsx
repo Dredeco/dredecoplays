@@ -16,8 +16,11 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://dredecoplays.com.b
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   icons: {
-    icon: "/favicon.png",
-    apple: "/favicon.png",
+    icon: [
+      { url: `${SITE_URL}/favicon.ico`, sizes: "any" },
+      { url: `${SITE_URL}/favicon.png`, type: "image/png", sizes: "32x32" },
+    ],
+    apple: `${SITE_URL}/favicon.png`,
   },
   title: {
     default: "Dredeco Plays — Portal de Games",
@@ -45,10 +48,11 @@ export const metadata: Metadata = {
     siteName: "Dredeco Plays",
     images: [
       {
-        url: "/og-default.png",
+        url: `${SITE_URL}/og-default.png`,
         width: 1200,
         height: 630,
         alt: "Dredeco Plays",
+        type: "image/png",
       },
     ],
   },

@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const coverUrl = getPostCoverUrl(post);
   const imageUrl = coverUrl.startsWith("http")
     ? coverUrl
-    : `${SITE_URL}${coverUrl}`;
+    : `${SITE_URL}${coverUrl.startsWith("/") ? coverUrl : `/${coverUrl}`}`;
 
   return {
     title: post.title,
@@ -56,7 +56,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       publishedTime: post.createdAt,
       modifiedTime: post.updatedAt,
       authors: post.author ? [post.author.name] : undefined,
-      images: [{ url: imageUrl, width: 1200, height: 630, alt: post.title }],
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
