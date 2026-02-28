@@ -401,7 +401,20 @@ export default function ProdutosPage() {
                         </div>
                       )}
                     </td>
-                    <td className="py-3 px-2 text-white font-medium">{product.name}</td>
+                    <td className="py-3 px-2">
+                      {product.affiliate_url ? (
+                        <a
+                          href={product.affiliate_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-white font-medium text-violet-400 hover:text-violet-300 underline decoration-violet-500/50 hover:decoration-violet-400 transition-colors"
+                        >
+                          {product.name}
+                        </a>
+                      ) : (
+                        <span className="text-white font-medium">{product.name}</span>
+                      )}
+                    </td>
                     <td className="py-3 px-2 text-violet-400">
                       R$ {Number(product.price).toFixed(2).replace(".", ",")}
                     </td>
