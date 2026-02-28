@@ -39,19 +39,19 @@ export default async function BlogPage({ searchParams }: Props) {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-2">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-foreground mb-2">
           Blog
         </h1>
-        <p className="text-gray-400">
+        <p className="text-muted">
           {meta.total} {meta.total === 1 ? "artigo" : "artigos"} publicados sobre games
         </p>
       </div>
 
-      <div className="flex flex-wrap gap-2 mb-8 pb-6 border-b border-[#2a2a3a]">
+      <div className="flex flex-wrap gap-2 mb-8 pb-6 border-b border-border">
         <Link
           href="/blog"
           className={`px-4 py-1.5 rounded-full text-sm font-medium ${
-            !params.category ? "bg-violet-700 text-white" : "bg-[#1c1c28] text-gray-300 hover:bg-violet-900/40 hover:text-violet-300 border border-[#2a2a3a] transition-colors"
+            !params.category ? "bg-violet-700 text-white" : "bg-surface-2 text-foreground hover:bg-violet-900/40 hover:text-violet-300 border border-border transition-colors"
           }`}
         >
           Todos
@@ -63,7 +63,7 @@ export default async function BlogPage({ searchParams }: Props) {
             className={`px-4 py-1.5 rounded-full text-sm font-medium ${
               params.category === cat.slug
                 ? "bg-violet-700 text-white"
-                : "bg-[#1c1c28] text-gray-300 hover:bg-violet-900/40 hover:text-violet-300 border border-[#2a2a3a] transition-colors"
+                : "bg-surface-2 text-foreground hover:bg-violet-900/40 hover:text-violet-300 border border-border transition-colors"
             }`}
           >
             {cat.name}
@@ -74,7 +74,7 @@ export default async function BlogPage({ searchParams }: Props) {
       <div className="flex gap-8">
         <div className="flex-1 min-w-0">
           {posts.length === 0 ? (
-            <div className="text-center py-20 text-gray-500">
+            <div className="text-center py-20 text-muted">
               Nenhum post encontrado.
             </div>
           ) : (
@@ -92,18 +92,18 @@ export default async function BlogPage({ searchParams }: Props) {
               {page > 1 && (
                 <Link
                   href={`/blog?page=${page - 1}${params.category ? `&category=${params.category}` : ""}${params.search ? `&search=${encodeURIComponent(params.search)}` : ""}`}
-                  className="px-4 py-2 rounded-lg bg-[#1c1c28] text-gray-300 hover:bg-violet-900/40 border border-[#2a2a3a]"
+                  className="px-4 py-2 rounded-lg bg-surface-2 text-foreground hover:bg-violet-900/40 border border-border"
                 >
                   Anterior
                 </Link>
               )}
-              <span className="px-4 py-2 text-gray-400">
+              <span className="px-4 py-2 text-muted">
                 Página {page} de {meta.totalPages}
               </span>
               {page < meta.totalPages && (
                 <Link
                   href={`/blog?page=${page + 1}${params.category ? `&category=${params.category}` : ""}${params.search ? `&search=${encodeURIComponent(params.search)}` : ""}`}
-                  className="px-4 py-2 rounded-lg bg-[#1c1c28] text-gray-300 hover:bg-violet-900/40 border border-[#2a2a3a]"
+                  className="px-4 py-2 rounded-lg bg-surface-2 text-foreground hover:bg-violet-900/40 border border-border"
                 >
                   Próxima
                 </Link>
@@ -115,19 +115,19 @@ export default async function BlogPage({ searchParams }: Props) {
         </div>
 
         <aside className="hidden lg:flex flex-col gap-6 w-64 shrink-0">
-          <div className="bg-[#13131a] rounded-xl border border-[#2a2a3a] p-5 sticky top-24">
-            <h3 className="text-white font-bold text-xs uppercase tracking-widest mb-4">
+          <div className="bg-surface rounded-xl border border-border p-5 sticky top-24">
+            <h3 className="text-foreground font-bold text-xs uppercase tracking-widest mb-4">
               Categorias
             </h3>
-            <ul className="divide-y divide-[#2a2a3a]">
+            <ul className="divide-y divide-border">
               {categories.map((cat) => (
                 <li key={cat.id}>
                   <Link
                     href={`/categoria/${cat.slug}`}
-                    className="flex items-center justify-between py-2.5 text-sm text-gray-400 hover:text-violet-400 transition-colors"
+                    className="flex items-center justify-between py-2.5 text-sm text-muted hover:text-violet-400 transition-colors"
                   >
                     <span>{cat.name}</span>
-                    <span className="text-gray-600 text-xs">&rarr;</span>
+                    <span className="text-muted text-xs">&rarr;</span>
                   </Link>
                 </li>
               ))}

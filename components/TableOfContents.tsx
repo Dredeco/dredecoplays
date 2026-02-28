@@ -36,7 +36,7 @@ export default function TableOfContents({ headings }: Props) {
 
   return (
     <nav aria-label="Índice do artigo" className="sticky top-24">
-      <h3 className="text-white font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
+      <h3 className="text-foreground font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
         <span className="w-4 h-px bg-violet-600 inline-block" />
         Neste artigo
       </h3>
@@ -50,7 +50,7 @@ export default function TableOfContents({ headings }: Props) {
               } ${
                 activeId === heading.id
                   ? "text-violet-400 font-medium"
-                  : "text-gray-400 hover:text-gray-200"
+                  : "text-muted hover:text-foreground"
               }`}
             >
               {heading.text}

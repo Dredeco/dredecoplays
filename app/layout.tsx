@@ -4,6 +4,7 @@ import Script from "next/script";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Providers from "@/components/Providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -81,7 +82,7 @@ export default function RootLayout({
   const gaId = process.env.NEXT_PUBLIC_GA_ID;
 
   return (
-    <html lang="pt-BR" className="scroll-smooth">
+    <html lang="pt-BR" className="scroll-smooth" suppressHydrationWarning>
       {/* Google AdSense */}
       <head>
         <Script
@@ -94,11 +95,13 @@ export default function RootLayout({
       </head>
 
       <body
-        className={`${geistSans.variable} antialiased bg-[#0a0a0f] text-gray-100 min-h-screen`}
+        className={`${geistSans.variable} antialiased bg-bg text-foreground min-h-screen transition-colors duration-300`}
       >
-        <Header />
-        <main className="min-h-screen">{children}</main>
-        <Footer />
+        <Providers>
+          <Header />
+          <main className="min-h-screen">{children}</main>
+          <Footer />
+        </Providers>
 
         {/* Google Analytics 4 — adicionar NEXT_PUBLIC_GA_ID no .env.local */}
         {gaId && (

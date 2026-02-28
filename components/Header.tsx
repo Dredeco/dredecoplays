@@ -5,6 +5,7 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import logo from "@/public/logo.png";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const navigation = [
   { label: "Listas & Rankings", href: "/categoria/listas-rankings" },
@@ -21,7 +22,7 @@ export default function Header() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 bg-[#0a0a0f]/95 backdrop-blur-md border-b border-[#2a2a3a]">
+    <header className="sticky top-0 z-50 bg-bg/95 backdrop-blur-md border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -39,8 +40,8 @@ export default function Header() {
                   href={item.href}
                   className={`text-sm px-3 py-2 rounded-md font-medium transition-colors ${
                     isActive
-                      ? "text-violet-400 bg-violet-950/50"
-                      : "text-gray-300 hover:text-violet-400 hover:bg-[#1c1c28]"
+                      ? "text-white bg-violet-950/50"
+                      : "text-nav hover:text-violet-400 hover:bg-surface-2"
                   }`}
                 >
                   {item.label}
@@ -53,18 +54,19 @@ export default function Header() {
           <div className="flex items-center gap-2">
             <Link
               href="/blog"
-              className="hidden sm:flex items-center gap-1.5 text-sm text-gray-400 hover:text-white transition-colors px-3 py-2"
+              className="hidden sm:flex items-center gap-1.5 text-sm text-nav-muted hover:text-nav transition-colors px-3 py-2"
             >
               Blog
             </Link>
             <Link
               href="/sobre"
-              className="hidden sm:flex items-center gap-1.5 text-sm text-gray-400 hover:text-white transition-colors px-3 py-2"
+              className="hidden sm:flex items-center gap-1.5 text-sm text-nav-muted hover:text-nav transition-colors px-3 py-2"
             >
               Sobre
             </Link>
+            <ThemeToggle />
             <button
-              className="text-gray-400 hover:text-white transition-colors p-2"
+              className="text-nav-muted hover:text-nav transition-colors p-2"
               aria-label="Buscar"
             >
               <svg
@@ -83,7 +85,7 @@ export default function Header() {
               </svg>
             </button>
             <button
-              className="xl:hidden text-gray-400 hover:text-white transition-colors p-2"
+              className="xl:hidden text-nav-muted hover:text-nav transition-colors p-2"
               onClick={() => setMenuOpen(!menuOpen)}
               aria-label="Menu"
             >
@@ -111,35 +113,35 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {menuOpen && (
-          <nav className="xl:hidden pb-4 border-t border-[#2a2a3a] pt-3 flex flex-col gap-1">
+          <nav className="xl:hidden pb-4 border-t border-border pt-3 flex flex-col gap-1">
             {navigation.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-sm text-gray-300 hover:text-violet-400 transition-colors font-medium py-2 px-2 rounded-md hover:bg-[#1c1c28]"
+                className="text-sm text-nav hover:text-violet-400 transition-colors font-medium py-2 px-2 rounded-md hover:bg-surface-2"
                 onClick={() => setMenuOpen(false)}
               >
                 {item.label}
               </Link>
             ))}
-            <div className="border-t border-[#2a2a3a] mt-2 pt-2 flex gap-4">
+            <div className="border-t border-border mt-2 pt-2 flex gap-4">
               <Link
                 href="/blog"
-                className="text-sm text-gray-400 py-2 px-2"
+                className="text-sm text-nav-muted py-2 px-2"
                 onClick={() => setMenuOpen(false)}
               >
                 Blog
               </Link>
               <Link
                 href="/sobre"
-                className="text-sm text-gray-400 py-2 px-2"
+                className="text-sm text-nav-muted py-2 px-2"
                 onClick={() => setMenuOpen(false)}
               >
                 Sobre
               </Link>
               <Link
                 href="/contato"
-                className="text-sm text-gray-400 py-2 px-2"
+                className="text-sm text-nav-muted py-2 px-2"
                 onClick={() => setMenuOpen(false)}
               >
                 Contato

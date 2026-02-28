@@ -14,7 +14,7 @@ export default function PostCard({ post }: Props) {
   const readingTime = calculateReadingTime(post.content);
 
   return (
-    <article className="group bg-[#13131a] rounded-xl overflow-hidden border border-[#2a2a3a] hover:border-violet-700/50 transition-all duration-300 flex flex-col">
+    <article className="group bg-surface rounded-xl overflow-hidden border border-border hover:border-violet-700/50 transition-all duration-300 flex flex-col">
       <Link href={`/blog/${post.slug}`} className="block relative aspect-video overflow-hidden">
         <PostThumbnail
           src={coverUrl}
@@ -30,15 +30,15 @@ export default function PostCard({ post }: Props) {
         />
 
         <Link href={`/blog/${post.slug}`} className="flex-1">
-          <h3 className="mt-2 text-white font-bold text-base leading-tight group-hover:text-violet-400 transition-colors line-clamp-2">
+          <h3 className="mt-2 text-foreground font-bold text-base leading-tight group-hover:text-violet-400 transition-colors line-clamp-2">
             {post.title}
           </h3>
-          <p className="mt-1.5 text-gray-400 text-sm line-clamp-2 leading-relaxed">
+          <p className="mt-1.5 text-muted text-sm line-clamp-2 leading-relaxed">
             {post.excerpt}
           </p>
         </Link>
 
-        <div className="flex items-center gap-2 mt-3 text-xs text-gray-500">
+        <div className="flex items-center gap-2 mt-3 text-xs text-muted">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-3.5 w-3.5 shrink-0"

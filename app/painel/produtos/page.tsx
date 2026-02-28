@@ -126,16 +126,16 @@ export default function ProdutosPage() {
   }
 
   if (!token) return null;
-  if (loading) return <div className="text-gray-500">Carregando...</div>;
+  if (loading) return <div className="text-muted">Carregando...</div>;
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-white mb-6">Produtos Afiliados</h2>
+      <h2 className="text-2xl font-bold text-foreground mb-6">Produtos Afiliados</h2>
 
       {creating ? (
         <form
           onSubmit={handleCreate}
-          className="p-4 rounded-xl bg-[#13131a] border border-[#2a2a3a] mb-6 space-y-3"
+          className="p-4 rounded-xl bg-surface border border-border mb-6 space-y-3"
         >
           <input
             value={createForm.name}
@@ -143,7 +143,7 @@ export default function ProdutosPage() {
             placeholder="Nome *"
             required
             maxLength={200}
-            className="w-full px-4 py-2 rounded-lg bg-[#0a0a0f] border border-[#2a2a3a] text-white"
+            className="w-full px-4 py-2 rounded-lg bg-bg border border-border text-foreground"
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <input
@@ -154,7 +154,7 @@ export default function ProdutosPage() {
               onChange={(e) => setCreateForm((f) => ({ ...f, price: e.target.value ? Number(e.target.value) : 0 }))}
               placeholder="Preço *"
               required
-              className="w-full px-4 py-2 rounded-lg bg-[#0a0a0f] border border-[#2a2a3a] text-white"
+              className="w-full px-4 py-2 rounded-lg bg-bg border border-border text-foreground"
             />
             <input
               type="number"
@@ -168,7 +168,7 @@ export default function ProdutosPage() {
                 }))
               }
               placeholder="Preço original"
-              className="w-full px-4 py-2 rounded-lg bg-[#0a0a0f] border border-[#2a2a3a] text-white"
+              className="w-full px-4 py-2 rounded-lg bg-bg border border-border text-foreground"
             />
           </div>
           <input
@@ -177,14 +177,14 @@ export default function ProdutosPage() {
             onChange={(e) => setCreateForm((f) => ({ ...f, affiliate_url: e.target.value }))}
             placeholder="URL de afiliado *"
             required
-            className="w-full px-4 py-2 rounded-lg bg-[#0a0a0f] border border-[#2a2a3a] text-white"
+            className="w-full px-4 py-2 rounded-lg bg-bg border border-border text-foreground"
           />
           <input
             value={createForm.image ?? ""}
             onChange={(e) => setCreateForm((f) => ({ ...f, image: e.target.value }))}
             placeholder="URL ou path da imagem"
             maxLength={255}
-            className="w-full px-4 py-2 rounded-lg bg-[#0a0a0f] border border-[#2a2a3a] text-white"
+            className="w-full px-4 py-2 rounded-lg bg-bg border border-border text-foreground"
           />
           <input
             type="number"
@@ -199,7 +199,7 @@ export default function ProdutosPage() {
               }))
             }
             placeholder="Avaliação (0-5)"
-            className="w-full px-4 py-2 rounded-lg bg-[#0a0a0f] border border-[#2a2a3a] text-white max-w-[120px]"
+            className="w-full px-4 py-2 rounded-lg bg-bg border border-border text-foreground max-w-[120px]"
           />
           <div className="flex gap-2">
             <button
@@ -211,7 +211,7 @@ export default function ProdutosPage() {
             <button
               type="button"
               onClick={() => setCreating(false)}
-              className="px-4 py-2 rounded-lg bg-[#1c1c28] text-gray-400"
+              className="px-4 py-2 rounded-lg bg-surface-2 text-muted"
             >
               Cancelar
             </button>
@@ -227,14 +227,14 @@ export default function ProdutosPage() {
       )}
 
       {products.length === 0 ? (
-        <div className="text-center py-12 text-gray-500 bg-[#13131a] rounded-xl border border-[#2a2a3a]">
+        <div className="text-center py-12 text-muted bg-[#13131a] rounded-xl border border-border">
           Nenhum produto cadastrado.
         </div>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="text-left text-sm text-gray-400 border-b border-[#2a2a3a]">
+              <tr className="text-left text-sm text-muted border-b border-border">
                 <th className="py-3 px-2 w-14">Imagem</th>
                 <th className="py-3 px-2">Nome</th>
                 <th className="py-3 px-2">Preço</th>
@@ -247,11 +247,11 @@ export default function ProdutosPage() {
             <tbody>
               {products.map((product) =>
                 editingId === product.id ? (
-                  <tr key={product.id} className="border-b border-[#2a2a3a]">
+                  <tr key={product.id} className="border-b border-border">
                     <td colSpan={7} className="py-4 px-2">
                       <form
                         onSubmit={(e) => handleUpdate(e, product.id)}
-                        className="p-4 rounded-xl bg-[#13131a] border border-[#2a2a3a] space-y-3"
+                        className="p-4 rounded-xl bg-surface border border-border space-y-3"
                       >
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                           <input
@@ -259,7 +259,7 @@ export default function ProdutosPage() {
                             onChange={(e) => setEditField(product.id, "name", e.target.value)}
                             placeholder="Nome"
                             maxLength={200}
-                            className="px-4 py-2 rounded-lg bg-[#0a0a0f] border border-[#2a2a3a] text-white"
+                            className="px-4 py-2 rounded-lg bg-bg border border-border text-foreground"
                           />
                           <input
                             type="number"
@@ -276,7 +276,7 @@ export default function ProdutosPage() {
                               )
                             }
                             placeholder="Preço"
-                            className="px-4 py-2 rounded-lg bg-[#0a0a0f] border border-[#2a2a3a] text-white"
+                            className="px-4 py-2 rounded-lg bg-bg border border-border text-foreground"
                           />
                           <input
                             type="number"
@@ -295,7 +295,7 @@ export default function ProdutosPage() {
                               )
                             }
                             placeholder="Preço original"
-                            className="px-4 py-2 rounded-lg bg-[#0a0a0f] border border-[#2a2a3a] text-white"
+                            className="px-4 py-2 rounded-lg bg-bg border border-border text-foreground"
                           />
                           <input
                             type="url"
@@ -308,7 +308,7 @@ export default function ProdutosPage() {
                               setEditField(product.id, "affiliate_url", e.target.value)
                             }
                             placeholder="URL de afiliado"
-                            className="px-4 py-2 rounded-lg bg-[#0a0a0f] border border-[#2a2a3a] text-white sm:col-span-2"
+                            className="px-4 py-2 rounded-lg bg-bg border border-border text-foreground sm:col-span-2"
                           />
                           <input
                             value={
@@ -321,7 +321,7 @@ export default function ProdutosPage() {
                             }
                             placeholder="URL da imagem"
                             maxLength={255}
-                            className="px-4 py-2 rounded-lg bg-[#0a0a0f] border border-[#2a2a3a] text-white"
+                            className="px-4 py-2 rounded-lg bg-bg border border-border text-foreground"
                           />
                           <input
                             type="number"
@@ -341,9 +341,9 @@ export default function ProdutosPage() {
                               )
                             }
                             placeholder="Avaliação (0-5)"
-                            className="px-4 py-2 rounded-lg bg-[#0a0a0f] border border-[#2a2a3a] text-white"
+                            className="px-4 py-2 rounded-lg bg-bg border border-border text-foreground"
                           />
-                          <label className="flex items-center gap-2 text-gray-400">
+                          <label className="flex items-center gap-2 text-muted">
                             <input
                               type="checkbox"
                               checked={
@@ -352,7 +352,7 @@ export default function ProdutosPage() {
                               onChange={(e) =>
                                 setEditField(product.id, "active", e.target.checked)
                               }
-                              className="rounded border-[#2a2a3a] text-violet-600"
+                              className="rounded border-border text-violet-600"
                             />
                             Ativo
                           </label>
@@ -375,7 +375,7 @@ export default function ProdutosPage() {
                                 return next;
                               });
                             }}
-                            className="px-4 py-2 rounded-lg bg-[#1c1c28] text-gray-400"
+                            className="px-4 py-2 rounded-lg bg-surface-2 text-muted"
                           >
                             Cancelar
                           </button>
@@ -384,10 +384,10 @@ export default function ProdutosPage() {
                     </td>
                   </tr>
                 ) : (
-                  <tr key={product.id} className="border-b border-[#2a2a3a]">
+                  <tr key={product.id} className="border-b border-border">
                     <td className="py-3 px-2">
                       {product.image ? (
-                        <div className="relative w-10 h-10 rounded overflow-hidden bg-[#1c1c28]">
+                        <div className="relative w-10 h-10 rounded overflow-hidden bg-surface-2">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={product.image}
@@ -396,7 +396,7 @@ export default function ProdutosPage() {
                           />
                         </div>
                       ) : (
-                        <div className="w-10 h-10 rounded bg-[#1c1c28] border border-[#2a2a3a] flex items-center justify-center text-gray-500 text-xs">
+                        <div className="w-10 h-10 rounded bg-surface-2 border border-border flex items-center justify-center text-muted text-xs">
                           -
                         </div>
                       )}
@@ -407,23 +407,23 @@ export default function ProdutosPage() {
                           href={product.affiliate_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-white font-medium text-violet-400 hover:text-violet-300 underline decoration-violet-500/50 hover:decoration-violet-400 transition-colors"
+                          className="text-foreground font-medium text-violet-400 hover:text-violet-300 underline decoration-violet-500/50 hover:decoration-violet-400 transition-colors"
                         >
                           {product.name}
                         </a>
                       ) : (
-                        <span className="text-white font-medium">{product.name}</span>
+                        <span className="text-foreground font-medium">{product.name}</span>
                       )}
                     </td>
                     <td className="py-3 px-2 text-violet-400">
                       R$ {Number(product.price).toFixed(2).replace(".", ",")}
                     </td>
-                    <td className="py-3 px-2 text-gray-500 text-sm">
+                    <td className="py-3 px-2 text-muted text-sm">
                       {product.original_price != null
                         ? `R$ ${Number(product.original_price).toFixed(2).replace(".", ",")}`
                         : "-"}
                     </td>
-                    <td className="py-3 px-2 text-gray-400 text-sm">
+                    <td className="py-3 px-2 text-muted text-sm">
                       {product.rating != null
                         ? Number(product.rating).toFixed(1)
                         : "-"}
@@ -453,7 +453,7 @@ export default function ProdutosPage() {
                             setEditingId(product.id);
                             setEditForm((f) => ({ ...f, [product.id]: {} }));
                           }}
-                          className="text-sm text-gray-400 hover:text-white"
+                          className="text-sm text-muted hover:text-white"
                         >
                           Editar
                         </button>

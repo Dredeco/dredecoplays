@@ -39,7 +39,7 @@ export default async function HomePage() {
           <section>
             <div className="flex items-center gap-3 mb-6">
               <div className="w-1 h-7 bg-violet-600 rounded-full shrink-0" />
-              <h2 className="text-xl font-bold text-white">Últimos Posts</h2>
+              <h2 className="text-xl font-bold text-foreground">Últimos Posts</h2>
               <Link
                 href="/blog"
                 className="ml-auto text-sm text-violet-400 hover:text-violet-300 transition-colors"
@@ -61,7 +61,7 @@ export default async function HomePage() {
           <section>
             <div className="flex items-center gap-3 mb-6">
               <div className="w-1 h-7 bg-violet-600 rounded-full shrink-0" />
-              <h2 className="text-xl font-bold text-white">Mais Lidos</h2>
+              <h2 className="text-xl font-bold text-foreground">Mais Lidos</h2>
             </div>
             <div className="flex gap-6 items-start">
               <ol className="flex-1 space-y-5">
@@ -84,12 +84,12 @@ export default async function HomePage() {
                       />
                       <Link
                         href={`/blog/${post.slug}`}
-                        className="block mt-1 text-white font-semibold hover:text-violet-400 transition-colors leading-snug"
+                        className="block mt-1 text-foreground font-semibold hover:text-violet-400 transition-colors leading-snug"
                       >
                         {post.title}
                       </Link>
                       <time
-                        className="text-xs text-gray-500 mt-1 block"
+                        className="text-xs text-muted mt-1 block"
                         dateTime={post.createdAt}
                       >
                         {formatDate(post.createdAt)}
@@ -123,11 +123,11 @@ export default async function HomePage() {
             <input
               type="search"
               placeholder="Buscar..."
-              className="w-full bg-[#13131a] border border-[#2a2a3a] rounded-lg px-4 py-3 text-sm text-gray-300 placeholder:text-gray-600 focus:outline-none focus:border-violet-600 transition-colors"
+              className="w-full bg-surface border border-border rounded-lg px-4 py-3 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-violet-600 transition-colors"
             />
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4 absolute right-3.5 top-3.5 text-gray-500"
+              className="h-4 w-4 absolute right-3.5 top-3.5 text-muted"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -141,21 +141,21 @@ export default async function HomePage() {
             </svg>
           </div>
 
-          <div className="bg-[#13131a] rounded-xl border border-[#2a2a3a] p-5">
-            <h3 className="text-white font-bold text-xs uppercase tracking-widest mb-4">
+          <div className="bg-surface rounded-xl border border-border p-5">
+            <h3 className="text-foreground font-bold text-xs uppercase tracking-widest mb-4">
               Categorias
             </h3>
-            <ul className="divide-y divide-[#2a2a3a]">
+            <ul className="divide-y divide-border">
               {categories.map((cat) => (
                 <li key={cat.id}>
                   <Link
                     href={`/categoria/${cat.slug}`}
-                    className="flex items-center justify-between py-2.5 text-sm text-gray-400 hover:text-violet-400 transition-colors"
+                    className="flex items-center justify-between py-2.5 text-sm text-muted hover:text-violet-400 transition-colors"
                   >
                     <span>{cat.name}</span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 text-gray-600"
+                      className="h-4 w-4 text-muted"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -173,8 +173,8 @@ export default async function HomePage() {
             </ul>
           </div>
 
-          <div className="bg-[#13131a] rounded-xl border border-[#2a2a3a] p-5">
-            <h3 className="text-white font-bold text-xs uppercase tracking-widest mb-4">
+          <div className="bg-surface rounded-xl border border-border p-5">
+            <h3 className="text-foreground font-bold text-xs uppercase tracking-widest mb-4">
               Populares
             </h3>
             <ol className="space-y-4">
@@ -193,7 +193,7 @@ export default async function HomePage() {
                   </div>
                   <Link
                     href={`/blog/${post.slug}`}
-                    className="text-xs text-gray-300 hover:text-violet-400 transition-colors font-medium leading-snug line-clamp-3"
+                    className="text-xs text-foreground hover:text-violet-400 transition-colors font-medium leading-snug line-clamp-3"
                   >
                     {post.title}
                   </Link>

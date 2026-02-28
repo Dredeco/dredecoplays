@@ -12,10 +12,10 @@ export default function NotFound() {
       <div className="text-8xl font-black text-violet-800/30 leading-none mb-4">
         404
       </div>
-      <h1 className="text-3xl font-extrabold text-white mb-3">
+      <h1 className="text-3xl font-extrabold text-foreground mb-3">
         Página não encontrada
       </h1>
-      <p className="text-gray-400 text-lg mb-8 max-w-md">
+      <p className="text-muted text-lg mb-8 max-w-md">
         O jogo que você estava procurando não existe ou foi removido. Que tal
         explorar outros conteúdos?
       </p>
@@ -28,7 +28,7 @@ export default function NotFound() {
         </Link>
         <Link
           href="/blog"
-          className="bg-[#1c1c28] hover:bg-[#2a2a3a] text-gray-300 font-semibold px-6 py-3 rounded-lg border border-[#2a2a3a] transition-colors"
+          className="bg-surface-2 hover:bg-border text-foreground font-semibold px-6 py-3 rounded-lg border border-border transition-colors"
         >
           Ver todos os posts
         </Link>

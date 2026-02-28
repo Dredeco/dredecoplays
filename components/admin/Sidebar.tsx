@@ -20,13 +20,13 @@ export default function AdminSidebar({ userName }: Props) {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 shrink-0 bg-[#13131a] border-r border-[#2a2a3a] min-h-screen flex flex-col">
-      <div className="p-6 border-b border-[#2a2a3a]">
+    <aside className="w-64 shrink-0 bg-surface border-r border-border min-h-screen flex flex-col">
+      <div className="p-6 border-b border-border">
         <Link href="/painel" className="flex items-center gap-2">
           <div className="w-8 h-8 bg-violet-700 rounded flex items-center justify-center">
-            <span className="text-white font-black text-sm">D</span>
+            <span className="text-foreground font-black text-sm">D</span>
           </div>
-          <span className="font-bold text-white">Painel Admin</span>
+          <span className="font-bold text-foreground">Painel Admin</span>
         </Link>
       </div>
 
@@ -40,7 +40,7 @@ export default function AdminSidebar({ userName }: Props) {
               className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                 isActive
                   ? "bg-violet-700/30 text-violet-400"
-                  : "text-gray-400 hover:bg-[#1c1c28] hover:text-white"
+                  : "text-muted hover:bg-surface-2 hover:text-foreground"
               }`}
             >
               <svg
@@ -63,7 +63,7 @@ export default function AdminSidebar({ userName }: Props) {
         })}
       </nav>
 
-      <div className="p-4 border-t border-[#2a2a3a] space-y-1">
+      <div className="p-4 border-t border-border space-y-1">
         {userName && (
           <div className="px-4 py-2 flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-violet-700/50 flex items-center justify-center shrink-0">
@@ -71,14 +71,14 @@ export default function AdminSidebar({ userName }: Props) {
                 {userName.charAt(0).toUpperCase()}
               </span>
             </div>
-            <span className="text-sm text-gray-400 truncate" title={userName}>
+            <span className="text-sm text-muted truncate" title={userName}>
               {userName}
             </span>
           </div>
         )}
         <Link
           href="/"
-          className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-gray-400 hover:bg-[#1c1c28] hover:text-white transition-colors"
+          className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-muted hover:bg-surface-2 hover:text-foreground transition-colors"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />

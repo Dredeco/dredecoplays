@@ -161,22 +161,22 @@ export default async function PostPage({ params }: Props) {
                 {post.tags?.slice(0, 3).map((tag) => (
                   <span
                     key={tag.id}
-                    className="text-xs text-gray-400 bg-[#1c1c28] px-2.5 py-1 rounded border border-[#2a2a3a]"
+                    className="text-xs text-muted bg-surface-2 px-2.5 py-1 rounded border border-border"
                   >
                     #{tag.name}
                   </span>
                 ))}
               </div>
 
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-white leading-tight mb-4">
+              <h1 className="text-3xl sm:text-4xl font-extrabold text-foreground leading-tight mb-4">
                 {post.title}
               </h1>
 
-              <p className="text-gray-400 text-lg leading-relaxed mb-6">
+              <p className="text-muted text-lg leading-relaxed mb-6">
                 {post.excerpt}
               </p>
 
-              <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 pb-6 border-b border-[#2a2a3a]">
+              <div className="flex flex-wrap items-center gap-4 text-sm text-muted pb-6 border-b border-border">
                 <span>✍️ {post.author?.name ?? "Dredeco Plays"}</span>
                 <span>·</span>
                 <time dateTime={post.createdAt}>

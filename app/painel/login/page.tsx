@@ -43,7 +43,7 @@ export default function LoginPage() {
           </Link>
         </div>
 
-        <div className="bg-[#13131a] rounded-xl border border-[#2a2a3a] p-8">
+        <div className="bg-surface rounded-xl border border-border p-8">
           <h1 className="text-2xl font-bold text-white mb-2">Painel Admin</h1>
           <p className="text-gray-400 text-sm mb-6">
             Entre com suas credenciais para acessar o painel
@@ -67,7 +67,7 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 autoComplete="email"
-                className="w-full px-4 py-3 rounded-lg bg-[#0a0a0f] border border-[#2a2a3a] text-white placeholder:text-gray-600 focus:outline-none focus:border-violet-600"
+                className="w-full px-4 py-3 rounded-lg bg-bg border border-border text-foreground placeholder:text-muted focus:outline-none focus:border-violet-600"
                 placeholder="admin@exemplo.com"
               />
             </div>
@@ -83,7 +83,7 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 autoComplete="current-password"
-                className="w-full px-4 py-3 rounded-lg bg-[#0a0a0f] border border-[#2a2a3a] text-white placeholder:text-gray-600 focus:outline-none focus:border-violet-600"
+                className="w-full px-4 py-3 rounded-lg bg-bg border border-border text-foreground placeholder:text-muted focus:outline-none focus:border-violet-600"
                 placeholder="••••••••"
               />
             </div>

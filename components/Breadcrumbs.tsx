@@ -30,10 +30,10 @@ export default function Breadcrumbs({ items }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <nav aria-label="Breadcrumb" className="mb-6">
-        <ol className="flex flex-wrap items-center gap-1.5 text-sm text-gray-400">
+        <ol className="flex flex-wrap items-center gap-1.5 text-sm text-muted">
           {items.map((item, index) => (
             <li key={index} className="flex items-center gap-1.5">
-              {index > 0 && <span className="text-gray-600">›</span>}
+              {index > 0 && <span className="text-muted">›</span>}
               {item.href ? (
                 <Link
                   href={item.href}
@@ -42,7 +42,7 @@ export default function Breadcrumbs({ items }: Props) {
                   {item.label}
                 </Link>
               ) : (
-                <span className="text-gray-300">{item.label}</span>
+                <span className="text-foreground">{item.label}</span>
               )}
             </li>
           ))}

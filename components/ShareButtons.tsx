@@ -20,8 +20,8 @@ export default function ShareButtons({ title, url }: Props) {
   const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(`${title}\n${url}`)}`;
 
   return (
-    <div className="flex flex-wrap items-center gap-3 mt-10 pt-6 border-t border-[#2a2a3a]">
-      <span className="text-sm text-gray-400 font-medium">Compartilhar:</span>
+    <div className="flex flex-wrap items-center gap-3 mt-10 pt-6 border-t border-border">
+      <span className="text-sm text-muted font-medium">Compartilhar:</span>
 
       <a
         href={twitterUrl}
@@ -43,7 +43,7 @@ export default function ShareButtons({ title, url }: Props) {
 
       <button
         onClick={handleCopy}
-        className="flex items-center gap-2 bg-[#1c1c28] hover:bg-[#2a2a3a] text-gray-300 hover:text-white font-medium px-4 py-2 rounded-full text-sm transition-colors border border-[#2a2a3a]"
+        className="flex items-center gap-2 bg-surface-2 hover:bg-border text-foreground font-medium px-4 py-2 rounded-full text-sm transition-colors border border-border"
       >
         {copied ? "✓ Copiado!" : "🔗 Copiar link"}
       </button>

@@ -64,16 +64,16 @@ export default async function CategoryPage({ params, searchParams }: Props) {
       />
 
       <div className="mb-8">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-2">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-foreground mb-2">
           {category.name}
         </h1>
-        <p className="text-gray-400">
+        <p className="text-muted">
           {total} {total === 1 ? "artigo" : "artigos"} encontrados
         </p>
       </div>
 
       {posts.length === 0 ? (
-        <div className="text-center py-20 text-gray-500">
+        <div className="text-center py-20 text-muted">
           <p className="text-4xl mb-4">🎮</p>
           <p className="text-lg">Nenhum post nesta categoria ainda.</p>
         </div>
@@ -92,18 +92,18 @@ export default async function CategoryPage({ params, searchParams }: Props) {
               {page > 1 && (
                 <Link
                   href={`/categoria/${slug}?page=${page - 1}`}
-                  className="px-4 py-2 rounded-lg bg-[#1c1c28] text-gray-300 hover:bg-violet-900/40 border border-[#2a2a3a]"
+                  className="px-4 py-2 rounded-lg bg-surface-2 text-foreground hover:bg-violet-900/40 border border-border"
                 >
                   Anterior
                 </Link>
               )}
-              <span className="px-4 py-2 text-gray-400">
+              <span className="px-4 py-2 text-muted">
                 Página {page} de {totalPages}
               </span>
               {page < totalPages && (
                 <Link
                   href={`/categoria/${slug}?page=${page + 1}`}
-                  className="px-4 py-2 rounded-lg bg-[#1c1c28] text-gray-300 hover:bg-violet-900/40 border border-[#2a2a3a]"
+                  className="px-4 py-2 rounded-lg bg-surface-2 text-foreground hover:bg-violet-900/40 border border-border"
                 >
                   Próxima
                 </Link>

@@ -70,29 +70,29 @@ export default function TagsPage() {
   }
 
   if (!token) return null;
-  if (loading) return <div className="text-gray-500">Carregando...</div>;
+  if (loading) return <div className="text-muted">Carregando...</div>;
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-white mb-6">Tags</h2>
+      <h2 className="text-2xl font-bold text-foreground mb-6">Tags</h2>
 
       {creating ? (
         <form
           onSubmit={handleCreate}
-          className="p-4 rounded-xl bg-[#13131a] border border-[#2a2a3a] mb-4 flex gap-2"
+          className="p-4 rounded-xl bg-surface border border-border mb-4 flex gap-2"
         >
           <input
             value={form.name}
             onChange={(e) => handleNameChange(e.target.value)}
             placeholder="Nome"
             required
-            className="flex-1 px-4 py-2 rounded-lg bg-[#0a0a0f] border border-[#2a2a3a] text-white"
+            className="flex-1 px-4 py-2 rounded-lg bg-bg border border-border text-foreground"
           />
           <input
             value={form.slug}
             onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))}
             placeholder="Slug"
-            className="flex-1 px-4 py-2 rounded-lg bg-[#0a0a0f] border border-[#2a2a3a] text-white"
+            className="flex-1 px-4 py-2 rounded-lg bg-bg border border-border text-foreground"
           />
           <button
             type="submit"
@@ -103,7 +103,7 @@ export default function TagsPage() {
           <button
             type="button"
             onClick={() => setCreating(false)}
-            className="px-4 py-2 rounded-lg bg-[#1c1c28] text-gray-400"
+            className="px-4 py-2 rounded-lg bg-surface-2 text-muted"
           >
             Cancelar
           </button>
@@ -123,20 +123,20 @@ export default function TagsPage() {
             <form
               key={tag.id}
               onSubmit={(e) => handleUpdate(e, tag.id)}
-              className="flex gap-2 p-2 rounded-lg bg-[#13131a] border border-[#2a2a3a]"
+              className="flex gap-2 p-2 rounded-lg bg-surface border border-border"
             >
               <input
                 value={form.name}
                 onChange={(e) => handleNameChange(e.target.value)}
                 placeholder="Nome"
                 required
-                className="px-3 py-1 rounded bg-[#0a0a0f] border border-[#2a2a3a] text-white text-sm"
+                className="px-3 py-1 rounded bg-bg border border-border text-foreground text-sm"
               />
               <input
                 value={form.slug}
                 onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))}
                 placeholder="Slug"
-                className="px-3 py-1 rounded bg-[#0a0a0f] border border-[#2a2a3a] text-white text-sm"
+                className="px-3 py-1 rounded bg-bg border border-border text-foreground text-sm"
               />
               <button
                 type="submit"
@@ -147,7 +147,7 @@ export default function TagsPage() {
               <button
                 type="button"
                 onClick={() => setEditingId(null)}
-                className="px-2 py-1 rounded bg-[#1c1c28] text-gray-400 text-sm"
+                className="px-2 py-1 rounded bg-surface-2 text-muted text-sm"
               >
                 Cancelar
               </button>
@@ -155,10 +155,10 @@ export default function TagsPage() {
           ) : (
             <div
               key={tag.id}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#13131a] border border-[#2a2a3a]"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface border border-border"
             >
-              <span className="text-white text-sm">{tag.name}</span>
-              <span className="text-gray-500 text-xs">/{tag.slug}</span>
+              <span className="text-foreground text-sm">{tag.name}</span>
+              <span className="text-muted text-xs">/{tag.slug}</span>
               <button
                 onClick={() => {
                   setEditingId(tag.id);

@@ -48,15 +48,15 @@ export default function PainelLayout({
 
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center">
-        <div className="animate-pulse text-gray-500">Carregando...</div>
+      <div className="min-h-screen bg-bg flex items-center justify-center">
+        <div className="animate-pulse text-muted">Carregando...</div>
       </div>
     );
   }
 
   if (isLoginPage) {
     return (
-      <div className="min-h-screen bg-[#0a0a0f]">
+      <div className="min-h-screen bg-bg">
         {children}
       </div>
     );
@@ -67,11 +67,11 @@ export default function PainelLayout({
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] flex">
+    <div className="min-h-screen bg-bg flex">
       <AdminSidebar userName={userName} />
       <main className="flex-1 overflow-auto">
-        <header className="sticky top-0 z-10 bg-[#0a0a0f]/95 backdrop-blur border-b border-[#2a2a3a] px-6 py-4 flex items-center justify-between">
-          <h1 className="text-lg font-semibold text-white">Painel</h1>
+        <header className="sticky top-0 z-10 bg-bg/95 backdrop-blur border-b border-border px-6 py-4 flex items-center justify-between">
+          <h1 className="text-lg font-semibold text-foreground">Painel</h1>
           <div className="flex items-center gap-4">
             {userName && (
               <span className="text-sm font-medium text-violet-300 truncate max-w-[180px]" title={userName}>
@@ -80,7 +80,7 @@ export default function PainelLayout({
             )}
             <Link
               href="/"
-              className="text-sm text-gray-400 hover:text-white"
+              className="text-sm text-muted hover:text-foreground"
             >
               Ver site
             </Link>

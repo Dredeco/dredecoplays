@@ -12,9 +12,9 @@ import type { User } from "@/lib/types";
 import type { CreateUserDto, UpdateUserDto } from "@/lib/types";
 
 const INPUT_CLASS =
-  "w-full px-4 py-2 rounded-lg bg-[#0a0a0f] border border-[#2a2a3a] text-white focus:outline-none focus:border-violet-600";
+  "w-full px-4 py-2 rounded-lg bg-bg border border-border text-foreground focus:outline-none focus:border-violet-600";
 const BTN_PRIMARY = "px-4 py-2 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-medium";
-const BTN_SECONDARY = "px-4 py-2 rounded-lg bg-[#1c1c28] text-gray-400 hover:text-white";
+const BTN_SECONDARY = "px-4 py-2 rounded-lg bg-surface-2 text-muted hover:text-foreground";
 
 export default function UsuariosPage() {
   const token = getToken();
@@ -97,16 +97,16 @@ export default function UsuariosPage() {
   }
 
   if (!token) return null;
-  if (loading) return <div className="text-gray-500">Carregando...</div>;
+  if (loading) return <div className="text-muted">Carregando...</div>;
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-white mb-6">Usuários</h2>
+      <h2 className="text-2xl font-bold text-foreground mb-6">Usuários</h2>
 
       {creating ? (
         <form
           onSubmit={handleCreate}
-          className="p-4 rounded-xl bg-[#13131a] border border-[#2a2a3a] mb-4 space-y-3"
+          className="p-4 rounded-xl bg-surface border border-border mb-4 space-y-3"
         >
           <input
             value={form.name}
@@ -168,7 +168,7 @@ export default function UsuariosPage() {
             <form
               key={user.id}
               onSubmit={(e) => handleUpdate(e, user.id)}
-              className="p-4 rounded-xl bg-[#13131a] border border-[#2a2a3a] space-y-3"
+              className="p-4 rounded-xl bg-surface border border-border space-y-3"
             >
               <input
                 value={form.name}
@@ -219,12 +219,12 @@ export default function UsuariosPage() {
           ) : (
             <div
               key={user.id}
-              className="flex items-center justify-between p-4 rounded-xl bg-[#13131a] border border-[#2a2a3a]"
+              className="flex items-center justify-between p-4 rounded-xl bg-surface border border-border"
             >
               <div className="flex items-center gap-3">
-                <span className="text-white font-medium">{user.name}</span>
-                <span className="text-gray-500 text-sm">{user.email}</span>
-                <span className="text-gray-400 text-xs px-2 py-0.5 rounded bg-[#1c1c28]">
+                <span className="text-foreground font-medium">{user.name}</span>
+                <span className="text-muted text-sm">{user.email}</span>
+                <span className="text-muted text-xs px-2 py-0.5 rounded bg-surface-2">
                   {user.role ?? "editor"}
                 </span>
               </div>

@@ -96,7 +96,7 @@ export default function PostForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">
+        <label className="block text-sm font-medium text-foreground mb-1">
           Título
         </label>
         <input
@@ -104,12 +104,12 @@ export default function PostForm({
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
-          className="w-full px-4 py-2 rounded-lg bg-[#13131a] border border-[#2a2a3a] text-white focus:outline-none focus:border-violet-600"
+          className="w-full px-4 py-2 rounded-lg bg-surface border border-border text-foreground focus:outline-none focus:border-violet-600"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">
+        <label className="block text-sm font-medium text-foreground mb-1">
           Slug (URL)
         </label>
         <input
@@ -117,37 +117,37 @@ export default function PostForm({
           value={slug}
           onChange={(e) => setSlug(e.target.value)}
           required
-          className="w-full px-4 py-2 rounded-lg bg-[#13131a] border border-[#2a2a3a] text-white focus:outline-none focus:border-violet-600"
+          className="w-full px-4 py-2 rounded-lg bg-surface border border-border text-foreground focus:outline-none focus:border-violet-600"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">
+        <label className="block text-sm font-medium text-foreground mb-1">
           Resumo (excerpt)
         </label>
         <textarea
           value={excerpt}
           onChange={(e) => setExcerpt(e.target.value)}
           rows={3}
-          className="w-full px-4 py-2 rounded-lg bg-[#13131a] border border-[#2a2a3a] text-white focus:outline-none focus:border-violet-600"
+          className="w-full px-4 py-2 rounded-lg bg-surface border border-border text-foreground focus:outline-none focus:border-violet-600"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">
+        <label className="block text-sm font-medium text-foreground mb-1">
           Conteúdo
         </label>
         <RichTextEditor value={content} onChange={setContent} token={token} />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">
+        <label className="block text-sm font-medium text-foreground mb-1">
           Categoria
         </label>
         <select
           value={categoryId}
           onChange={(e) => setCategoryId(Number(e.target.value))}
-          className="w-full px-4 py-2 rounded-lg bg-[#13131a] border border-[#2a2a3a] text-white focus:outline-none focus:border-violet-600"
+          className="w-full px-4 py-2 rounded-lg bg-surface border border-border text-foreground focus:outline-none focus:border-violet-600"
         >
           {categories.map((cat) => (
             <option key={cat.id} value={cat.id}>
@@ -158,7 +158,7 @@ export default function PostForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
+        <label className="block text-sm font-medium text-foreground mb-2">
           Tags
         </label>
         <div className="flex flex-wrap gap-2">
@@ -170,7 +170,7 @@ export default function PostForm({
               className={`px-3 py-1 rounded-full text-sm ${
                 tagIds.includes(tag.id)
                   ? "bg-violet-600 text-white"
-                  : "bg-[#1c1c28] text-gray-400 border border-[#2a2a3a] hover:border-violet-600"
+                  : "bg-surface-2 text-muted border border-border hover:border-violet-600"
               }`}
             >
               {tag.name}
@@ -180,7 +180,7 @@ export default function PostForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">
+        <label className="block text-sm font-medium text-foreground mb-1">
           Thumbnail
         </label>
         <div className="flex gap-4 items-start">
@@ -189,7 +189,7 @@ export default function PostForm({
             accept="image/*"
             onChange={handleFileChange}
             disabled={uploading}
-            className="text-sm text-gray-400"
+            className="text-sm text-muted"
           />
           {uploading && (
             <span className="text-amber-400 text-sm">Enviando...</span>
@@ -214,18 +214,18 @@ export default function PostForm({
             type="checkbox"
             checked={featured}
             onChange={(e) => setFeatured(e.target.checked)}
-            className="rounded bg-[#13131a] border-[#2a2a3a] text-violet-600 focus:ring-violet-600"
+            className="rounded bg-surface border-border text-violet-600 focus:ring-violet-600"
           />
-          <span className="text-gray-300">Em destaque</span>
+          <span className="text-foreground">Em destaque</span>
         </label>
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Status
           </label>
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value as "draft" | "published")}
-            className="px-4 py-2 rounded-lg bg-[#13131a] border border-[#2a2a3a] text-white"
+            className="px-4 py-2 rounded-lg bg-surface border border-border text-foreground"
           >
             <option value="draft">Rascunho</option>
             <option value="published">Publicado</option>

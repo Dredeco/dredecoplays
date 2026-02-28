@@ -43,7 +43,7 @@ export default function PostCardFeatured({ post }: Props) {
           </h2>
         </Link>
 
-        <p className="text-gray-300 text-sm sm:text-base mb-5 line-clamp-2 max-w-xl hidden sm:block">
+        <p className="text-white/90 text-sm sm:text-base mb-5 line-clamp-2 max-w-xl hidden sm:block">
           {post.excerpt}
         </p>
 

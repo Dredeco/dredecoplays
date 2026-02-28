@@ -84,35 +84,35 @@ export default function CategoriasPage() {
   }
 
   if (!token) return null;
-  if (loading) return <div className="text-gray-500">Carregando...</div>;
+  if (loading) return <div className="text-muted">Carregando...</div>;
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-white mb-6">Categorias</h2>
+      <h2 className="text-2xl font-bold text-foreground mb-6">Categorias</h2>
 
       {creating ? (
         <form
           onSubmit={handleCreate}
-          className="p-4 rounded-xl bg-[#13131a] border border-[#2a2a3a] mb-4 space-y-3"
+          className="p-4 rounded-xl bg-surface border border-border mb-4 space-y-3"
         >
           <input
             value={form.name}
             onChange={(e) => handleNameChange(e.target.value)}
             placeholder="Nome"
             required
-            className="w-full px-4 py-2 rounded-lg bg-[#0a0a0f] border border-[#2a2a3a] text-white"
+            className="w-full px-4 py-2 rounded-lg bg-bg border border-border text-foreground"
           />
           <input
             value={form.slug}
             onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))}
             placeholder="Slug"
-            className="w-full px-4 py-2 rounded-lg bg-[#0a0a0f] border border-[#2a2a3a] text-white"
+            className="w-full px-4 py-2 rounded-lg bg-bg border border-border text-foreground"
           />
           <input
             value={form.description}
             onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
             placeholder="Descrição"
-            className="w-full px-4 py-2 rounded-lg bg-[#0a0a0f] border border-[#2a2a3a] text-white"
+            className="w-full px-4 py-2 rounded-lg bg-bg border border-border text-foreground"
           />
           <div className="flex gap-2">
             <input
@@ -124,7 +124,7 @@ export default function CategoriasPage() {
             <input
               value={form.color}
               onChange={(e) => setForm((f) => ({ ...f, color: e.target.value }))}
-              className="flex-1 px-4 py-2 rounded-lg bg-[#0a0a0f] border border-[#2a2a3a] text-white"
+              className="flex-1 px-4 py-2 rounded-lg bg-bg border border-border text-foreground"
             />
           </div>
           <div className="flex gap-2">
@@ -137,7 +137,7 @@ export default function CategoriasPage() {
             <button
               type="button"
               onClick={() => setCreating(false)}
-              className="px-4 py-2 rounded-lg bg-[#1c1c28] text-gray-400"
+              className="px-4 py-2 rounded-lg bg-surface-2 text-muted"
             >
               Cancelar
             </button>
@@ -158,26 +158,26 @@ export default function CategoriasPage() {
             <form
               key={cat.id}
               onSubmit={(e) => handleUpdate(e, cat.id)}
-              className="p-4 rounded-xl bg-[#13131a] border border-[#2a2a3a] space-y-3"
+              className="p-4 rounded-xl bg-surface border border-border space-y-3"
             >
               <input
                 value={form.name}
                 onChange={(e) => handleNameChange(e.target.value)}
                 placeholder="Nome"
                 required
-                className="w-full px-4 py-2 rounded-lg bg-[#0a0a0f] border border-[#2a2a3a] text-white"
+                className="w-full px-4 py-2 rounded-lg bg-bg border border-border text-foreground"
               />
               <input
                 value={form.slug}
                 onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))}
                 placeholder="Slug"
-                className="w-full px-4 py-2 rounded-lg bg-[#0a0a0f] border border-[#2a2a3a] text-white"
+                className="w-full px-4 py-2 rounded-lg bg-bg border border-border text-foreground"
               />
               <input
                 value={form.description}
                 onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
                 placeholder="Descrição"
-                className="w-full px-4 py-2 rounded-lg bg-[#0a0a0f] border border-[#2a2a3a] text-white"
+                className="w-full px-4 py-2 rounded-lg bg-bg border border-border text-foreground"
               />
               <div className="flex gap-2">
                 <input
@@ -189,7 +189,7 @@ export default function CategoriasPage() {
                 <input
                   value={form.color}
                   onChange={(e) => setForm((f) => ({ ...f, color: e.target.value }))}
-                  className="flex-1 px-4 py-2 rounded-lg bg-[#0a0a0f] border border-[#2a2a3a] text-white"
+                  className="flex-1 px-4 py-2 rounded-lg bg-bg border border-border text-foreground"
                 />
               </div>
               <div className="flex gap-2">
@@ -202,7 +202,7 @@ export default function CategoriasPage() {
                 <button
                   type="button"
                   onClick={() => setEditingId(null)}
-                  className="px-4 py-2 rounded-lg bg-[#1c1c28] text-gray-400"
+                  className="px-4 py-2 rounded-lg bg-surface-2 text-muted"
                 >
                   Cancelar
                 </button>
@@ -211,15 +211,15 @@ export default function CategoriasPage() {
           ) : (
             <div
               key={cat.id}
-              className="flex items-center justify-between p-4 rounded-xl bg-[#13131a] border border-[#2a2a3a]"
+              className="flex items-center justify-between p-4 rounded-xl bg-surface border border-border"
             >
               <div className="flex items-center gap-3">
                 <div
                   className="w-4 h-4 rounded"
                   style={{ backgroundColor: cat.color }}
                 />
-                <span className="text-white font-medium">{cat.name}</span>
-                <span className="text-gray-500 text-sm">/{cat.slug}</span>
+                <span className="text-foreground font-medium">{cat.name}</span>
+                <span className="text-muted text-sm">/{cat.slug}</span>
               </div>
               <div className="flex gap-2">
                 <button

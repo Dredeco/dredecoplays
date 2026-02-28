@@ -54,7 +54,7 @@ export default function EditarPostPage() {
   }
 
   if (!token) return null;
-  if (loading || !currentUser) return <div className="text-gray-500">Carregando...</div>;
+  if (loading || !currentUser) return <div className="text-muted">Carregando...</div>;
   if (!post) return <div className="text-red-400">Post não encontrado.</div>;
 
   return (
@@ -62,11 +62,11 @@ export default function EditarPostPage() {
       <div className="flex items-center gap-4 mb-6">
         <Link
           href="/painel/posts"
-          className="text-gray-400 hover:text-white"
+          className="text-muted hover:text-foreground"
         >
           ← Voltar
         </Link>
-        <h2 className="text-2xl font-bold text-white">Editar: {post.title}</h2>
+        <h2 className="text-2xl font-bold text-foreground">Editar: {post.title}</h2>
       </div>
       <PostForm
         post={post}

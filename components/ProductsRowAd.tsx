@@ -14,7 +14,7 @@ export default async function ProductsRowAd({ className = "" }: Props) {
 
   return (
     <section className={className}>
-      <h3 className="text-white font-bold text-sm uppercase tracking-widest mb-4">
+      <h3 className="text-foreground font-bold text-sm uppercase tracking-widest mb-4">
         Produtos Recomendados
       </h3>
       <ProductsRowAdSlider products={display} />

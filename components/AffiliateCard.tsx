@@ -18,8 +18,8 @@ export default function AffiliateCard({
   description,
 }: Props) {
   return (
-    <div className="not-prose my-8 flex flex-col sm:flex-row gap-5 bg-[#13131a] border border-brand-violet/40 rounded-xl p-5 shadow-lg shadow-violet-950/20">
-      <div className="relative w-full sm:w-36 h-36 rounded-lg overflow-hidden shrink-0 bg-[#1c1c28]">
+    <div className="not-prose my-8 flex flex-col sm:flex-row gap-5 bg-surface border border-brand-violet/40 rounded-xl p-5 shadow-lg shadow-violet-950/20">
+      <div className="relative w-full sm:w-36 h-36 rounded-lg overflow-hidden shrink-0 bg-surface-2">
         <Image
           src={image}
           alt={name}
@@ -31,9 +31,9 @@ export default function AffiliateCard({
 
       <div className="flex-1 flex flex-col justify-between gap-3">
         <div>
-          <h3 className="text-white font-bold text-lg leading-tight">{name}</h3>
+          <h3 className="text-foreground font-bold text-lg leading-tight">{name}</h3>
           {description && (
-            <p className="text-gray-400 text-sm mt-1">{description}</p>
+            <p className="text-muted text-sm mt-1">{description}</p>
           )}
           <p className="text-brand-cyan font-black text-2xl mt-2">{price}</p>
         </div>

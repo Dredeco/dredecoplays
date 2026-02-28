@@ -84,7 +84,7 @@ export default function PostsListPage() {
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <h2 className="text-2xl font-bold text-white">Posts</h2>
+        <h2 className="text-2xl font-bold text-foreground">Posts</h2>
         <Link
           href="/painel/posts/novo"
           className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-medium w-fit"
@@ -102,7 +102,7 @@ export default function PostsListPage() {
           className={`px-4 py-2 rounded-lg text-sm font-medium ${
             statusParam === "published"
               ? "bg-violet-600 text-white"
-              : "bg-[#13131a] text-gray-400 hover:bg-[#1c1c28] border border-[#2a2a3a]"
+              : "bg-surface text-muted hover:bg-surface-2 border border-border"
           }`}
         >
           Publicados
@@ -112,7 +112,7 @@ export default function PostsListPage() {
           className={`px-4 py-2 rounded-lg text-sm font-medium ${
             statusParam === "draft"
               ? "bg-violet-600 text-white"
-              : "bg-[#13131a] text-gray-400 hover:bg-[#1c1c28] border border-[#2a2a3a]"
+              : "bg-surface text-muted hover:bg-surface-2 border border-border"
           }`}
         >
           Rascunhos
@@ -135,7 +135,7 @@ export default function PostsListPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Buscar por título..."
-            className="flex-1 px-4 py-2 rounded-lg bg-[#13131a] border border-[#2a2a3a] text-white placeholder:text-gray-600 focus:outline-none focus:border-violet-600"
+            className="flex-1 px-4 py-2 rounded-lg bg-surface border border-border text-foreground placeholder:text-muted focus:outline-none focus:border-violet-600"
           />
           <button
             type="submit"
@@ -147,16 +147,16 @@ export default function PostsListPage() {
       </form>
 
       {loading ? (
-        <div className="text-gray-500 py-8">Carregando...</div>
+        <div className="text-muted py-8">Carregando...</div>
       ) : posts.length === 0 ? (
-        <div className="text-center py-12 text-gray-500 bg-[#13131a] rounded-xl border border-[#2a2a3a]">
+        <div className="text-center py-12 text-muted bg-surface rounded-xl border border-border">
           Nenhum post encontrado.
         </div>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="text-left text-sm text-gray-400 border-b border-[#2a2a3a]">
+              <tr className="text-left text-sm text-muted border-b border-border">
                 <th className="py-3 px-2">Título</th>
                 <th className="py-3 px-2">Categoria</th>
                 <th className="py-3 px-2">Status</th>
@@ -166,16 +166,16 @@ export default function PostsListPage() {
             </thead>
             <tbody>
               {posts.map((post) => (
-                <tr key={post.id} className="border-b border-[#2a2a3a]">
+                <tr key={post.id} className="border-b border-border">
                   <td className="py-3 px-2">
                     <Link
                       href={`/painel/posts/${post.slug}/editar`}
-                      className="text-white hover:text-violet-400 font-medium"
+                      className="text-foreground hover:text-violet-400 font-medium"
                     >
                       {post.title}
                     </Link>
                   </td>
-                  <td className="py-3 px-2 text-gray-400 text-sm">
+                  <td className="py-3 px-2 text-muted text-sm">
                     {post.category?.name ?? "-"}
                   </td>
                   <td className="py-3 px-2">
@@ -189,7 +189,7 @@ export default function PostsListPage() {
                       {post.status === "published" ? "Publicado" : "Rascunho"}
                     </span>
                   </td>
-                  <td className="py-3 px-2 text-gray-500 text-sm">
+                  <td className="py-3 px-2 text-muted text-sm">
                     {new Date(post.createdAt).toLocaleDateString("pt-BR")}
                   </td>
                   <td className="py-3 px-2 text-right">
@@ -197,7 +197,7 @@ export default function PostsListPage() {
                       <Link
                         href={`/blog/${post.slug}`}
                         target="_blank"
-                        className="text-sm text-gray-400 hover:text-white"
+                        className="text-sm text-muted hover:text-foreground"
                       >
                         Ver
                       </Link>
@@ -210,7 +210,7 @@ export default function PostsListPage() {
                       </button>
                       <Link
                         href={`/painel/posts/${post.slug}/editar`}
-                        className="text-sm text-gray-400 hover:text-white"
+                        className="text-sm text-muted hover:text-foreground"
                       >
                         Editar
                       </Link>
@@ -235,18 +235,18 @@ export default function PostsListPage() {
           {page > 1 && (
             <Link
               href={`/painel/posts?page=${page - 1}&status=${statusParam}${searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : ""}`}
-              className="px-4 py-2 rounded-lg bg-[#13131a] text-gray-400 hover:bg-violet-900/40 border border-[#2a2a3a]"
+              className="px-4 py-2 rounded-lg bg-surface text-muted hover:bg-violet-900/40 border border-border"
             >
               Anterior
             </Link>
           )}
-          <span className="px-4 py-2 text-gray-400">
+          <span className="px-4 py-2 text-muted">
             Página {page} de {meta.totalPages}
           </span>
           {page < meta.totalPages && (
             <Link
               href={`/painel/posts?page=${page + 1}&status=${statusParam}${searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : ""}`}
-              className="px-4 py-2 rounded-lg bg-[#13131a] text-gray-400 hover:bg-violet-900/40 border border-[#2a2a3a]"
+              className="px-4 py-2 rounded-lg bg-surface text-muted hover:bg-violet-900/40 border border-border"
             >
               Próxima
             </Link>

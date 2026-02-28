@@ -15,16 +15,16 @@ export default function SobrePage() {
           <div className="w-10 h-10 bg-violet-700 rounded flex items-center justify-center">
             <span className="text-white font-black text-lg">D</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-white">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-foreground">
             Sobre o Dredeco Plays
           </h1>
         </div>
         <div className="w-20 h-1 bg-violet-600 rounded-full" />
       </div>
 
-      <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
+      <div className="space-y-6 text-foreground text-lg leading-relaxed">
         <p>
-          O <strong className="text-white">Dredeco Plays</strong> é um portal
+          O <strong className="text-foreground">Dredeco Plays</strong> é um portal
           de games em português brasileiro, criado para quem ama videogames e
           quer conteúdo de qualidade — sem enrolação.
         </p>
@@ -35,7 +35,7 @@ export default function SobrePage() {
           Indie Games e tudo que vale a pena jogar — de PlayStation a PC.
         </p>
 
-        <h2 className="text-2xl font-bold text-white pt-4">O que você encontra aqui</h2>
+        <h2 className="text-2xl font-bold text-foreground pt-4">O que você encontra aqui</h2>
 
         <ul className="space-y-3">
           {[
@@ -46,16 +46,16 @@ export default function SobrePage() {
           ].map(([title, desc]) => (
             <li key={title} className="flex gap-3">
               <div className="flex-1">
-                <strong className="text-white block">{title}</strong>
-                <span className="text-gray-400 text-base">{desc}</span>
+                <strong className="text-foreground block">{title}</strong>
+                <span className="text-muted text-base">{desc}</span>
               </div>
             </li>
           ))}
         </ul>
 
-        <div className="bg-[#13131a] border border-[#2a2a3a] rounded-xl p-6 mt-8">
-          <h3 className="text-white font-bold text-lg mb-2">Aviso de Afiliados</h3>
-          <p className="text-gray-400 text-base">
+        <div className="bg-surface border border-border rounded-xl p-6 mt-8">
+          <h3 className="text-foreground font-bold text-lg mb-2">Aviso de Afiliados</h3>
+          <p className="text-muted text-base">
             Este site participa dos programas de afiliados da Amazon e Mercado
             Livre. Ao comprar produtos através dos nossos links, recebemos uma
             comissão sem nenhum custo adicional para você. Isso nos ajuda a
@@ -74,7 +74,7 @@ export default function SobrePage() {
         </Link>
         <Link
           href="/contato"
-          className="bg-[#1c1c28] hover:bg-[#2a2a3a] text-gray-300 font-semibold px-6 py-3 rounded-lg border border-[#2a2a3a] transition-colors"
+          className="bg-surface-2 hover:bg-border text-foreground font-semibold px-6 py-3 rounded-lg border border-border transition-colors"
         >
           Contato
         </Link>

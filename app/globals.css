@@ -2,6 +2,12 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
+  /* Semantic theme colors - dark by default */
+  --color-bg: #0a0a0f;
+  --color-surface: #13131a;
+  --color-surface-2: #1c1c28;
+  --color-border: #2a2a3a;
+  /* Brand colors (same in both themes) */
   --color-brand-bg: #0a0a0f;
   --color-brand-surface: #13131a;
   --color-brand-surface-2: #1c1c28;
@@ -10,32 +16,49 @@
   --color-brand-violet-light: #9d5ff0;
   --color-brand-cyan: #00d4ff;
   --color-brand-muted: #6b6b8a;
+  --color-foreground: #e2e2f0;
+  --color-muted: #6b6b8a;
+  --color-nav: #e2e2f0;
+  --color-nav-muted: #9ca3af;
   --font-sans: var(--font-geist-sans);
 }
 
+/* Light theme overrides */
+html.light {
+  --color-bg: #f8fafc;
+  --color-surface: #ffffff;
+  --color-surface-2: #f1f5f9;
+  --color-border: #e2e8f0;
+  --color-foreground: #1e293b;
+  --color-muted: #64748b;
+  --color-nav: #0f172a;
+  --color-nav-muted: #334155;
+}
+
 body {
-  background-color: #0a0a0f;
-  color: #e2e2f0;
+  background-color: var(--color-bg);
+  color: var(--color-foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 18px;
   line-height: 1.7;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 ::-webkit-scrollbar {
   width: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #13131a;
+  background: var(--color-surface);
 }
 ::-webkit-scrollbar-thumb {
-  background: #7c3aed;
+  background: var(--color-brand-violet);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #9d5ff0;
+  background: var(--color-brand-violet-light);
 }
 
-/* Prose dark theme overrides */
+/* Prose - dark theme */
 .prose {
   --tw-prose-body: #d4d4e8;
   --tw-prose-headings: #ffffff;
@@ -52,6 +75,25 @@ body {
   --tw-prose-pre-bg: #13131a;
   --tw-prose-th-borders: #2a2a3a;
   --tw-prose-td-borders: #2a2a3a;
+}
+
+/* Prose - light theme */
+html.light .prose {
+  --tw-prose-body: #334155;
+  --tw-prose-headings: #0f172a;
+  --tw-prose-links: #7c3aed;
+  --tw-prose-bold: #0f172a;
+  --tw-prose-counters: #7c3aed;
+  --tw-prose-bullets: #7c3aed;
+  --tw-prose-hr: #e2e8f0;
+  --tw-prose-quotes: #475569;
+  --tw-prose-quote-borders: #7c3aed;
+  --tw-prose-captions: #64748b;
+  --tw-prose-code: #0284c7;
+  --tw-prose-pre-code: #1e293b;
+  --tw-prose-pre-bg: #f1f5f9;
+  --tw-prose-th-borders: #e2e8f0;
+  --tw-prose-td-borders: #e2e8f0;
 }
 
 /* TipTap image resize handles */
