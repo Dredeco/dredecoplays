@@ -13,7 +13,7 @@ function ProductCard({ product }: { product: Product }) {
       href={product.affiliate_url}
       target="_blank"
       rel="nofollow sponsored noopener noreferrer"
-      className="flex flex-col h-full rounded-xl bg-surface border border-border overflow-hidden hover:border-violet-600/50 transition-colors group"
+      className="flex flex-col h-full rounded-xl bg-surface border border-border overflow-hidden shadow-md hover:border-violet-600/50 transition-colors group"
     >
       <div className="h-36 w-full shrink-0 overflow-hidden bg-surface-2 flex items-center justify-center p-3">
         {product.image ? (

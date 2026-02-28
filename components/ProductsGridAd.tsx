@@ -12,7 +12,7 @@ function ProductCard({ product }: { product: Product }) {
       href={product.affiliate_url}
       target="_blank"
       rel="nofollow sponsored noopener noreferrer"
-      className="flex h-full min-w-0 flex-col overflow-hidden rounded-xl bg-surface border border-border hover:border-violet-600/50 transition-colors group"
+      className="flex h-full min-w-0 flex-col overflow-hidden rounded-xl bg-surface border border-border shadow-md hover:border-violet-600/50 transition-colors group"
     >
       <div className="h-20 w-full shrink-0 bg-surface-2 flex items-center justify-center p-2">
         {product.image ? (
@@ -66,7 +66,7 @@ export default async function ProductsGridAd({ className = "" }: Props) {
 
   return (
     <div
-      className={`bg-surface rounded-xl border border-border p-5 ${className}`}
+      className={`bg-surface rounded-xl border border-border shadow-md p-5 ${className}`}
     >
       <h3 className="text-foreground font-bold text-xs uppercase tracking-widest mb-4">
         Produtos Recomendados

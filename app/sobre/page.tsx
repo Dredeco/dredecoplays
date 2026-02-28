@@ -53,7 +53,7 @@ export default function SobrePage() {
           ))}
         </ul>
 
-        <div className="bg-surface border border-border rounded-xl p-6 mt-8">
+        <div className="bg-surface border border-border rounded-xl shadow-md p-6 mt-8">
           <h3 className="text-foreground font-bold text-lg mb-2">Aviso de Afiliados</h3>
           <p className="text-muted text-base">
             Este site participa dos programas de afiliados da Amazon e Mercado

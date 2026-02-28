@@ -14,7 +14,7 @@ export default function PostCard({ post }: Props) {
   const readingTime = calculateReadingTime(post.content);
 
   return (
-    <article className="group bg-surface rounded-xl overflow-hidden border border-border hover:border-violet-700/50 transition-all duration-300 flex flex-col">
+    <article className="group bg-surface rounded-xl overflow-hidden border border-border shadow-md hover:border-violet-700/50 transition-all duration-300 flex flex-col">
       <Link href={`/blog/${post.slug}`} className="block relative aspect-video overflow-hidden">
         <PostThumbnail
           src={coverUrl}

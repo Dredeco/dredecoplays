@@ -141,7 +141,7 @@ export default async function HomePage() {
             </svg>
           </div>
 
-          <div className="bg-surface rounded-xl border border-border p-5">
+          <div className="bg-surface rounded-xl border border-border shadow-md p-5">
             <h3 className="text-foreground font-bold text-xs uppercase tracking-widest mb-4">
               Categorias
             </h3>
@@ -173,7 +173,7 @@ export default async function HomePage() {
             </ul>
           </div>
 
-          <div className="bg-surface rounded-xl border border-border p-5">
+          <div className="bg-surface rounded-xl border border-border shadow-md p-5">
             <h3 className="text-foreground font-bold text-xs uppercase tracking-widest mb-4">
               Populares
             </h3>

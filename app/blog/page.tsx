@@ -115,7 +115,7 @@ export default async function BlogPage({ searchParams }: Props) {
         </div>
 
         <aside className="hidden lg:flex flex-col gap-6 w-64 shrink-0">
-          <div className="bg-surface rounded-xl border border-border p-5 sticky top-24">
+          <div className="bg-surface rounded-xl border border-border shadow-md p-5 sticky top-24">
             <h3 className="text-foreground font-bold text-xs uppercase tracking-widest mb-4">
               Categorias
             </h3>

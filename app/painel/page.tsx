@@ -93,10 +93,10 @@ export default function DashboardPage() {
           <Link
             key={card.href}
             href={card.href}
-            className="block p-6 rounded-xl bg-[#13131a] border border-[#2a2a3a] hover:border-violet-700/50 transition-colors"
+            className="block p-6 rounded-xl bg-surface border border-border shadow-md hover:border-violet-700/50 transition-colors"
           >
-            <p className="text-gray-400 text-sm font-medium">{card.label}</p>
-            <p className="text-3xl font-bold text-white mt-1">{card.value}</p>
+            <p className="text-muted text-sm font-medium">{card.label}</p>
+            <p className="text-3xl font-bold text-foreground mt-1">{card.value}</p>
           </Link>
         ))}
       </div>

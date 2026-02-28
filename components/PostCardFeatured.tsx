@@ -13,7 +13,7 @@ export default function PostCardFeatured({ post }: Props) {
   const categoryName = getPostCategoryName(post);
 
   return (
-    <article className="relative rounded-xl overflow-hidden group">
+    <article className="relative rounded-xl overflow-hidden group shadow-lg">
       <div className="relative aspect-[16/9] sm:aspect-[21/9]">
         <PostThumbnail
           src={coverUrl}
