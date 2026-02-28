@@ -182,12 +182,6 @@ export default async function PostPage({ params }: Props) {
                 <time dateTime={post.createdAt}>
                   📅 {formatDate(post.createdAt)}
                 </time>
-                {post.updatedAt !== post.createdAt && (
-                  <>
-                    <span>·</span>
-                    <span>🔄 Atualizado em {formatDate(post.updatedAt)}</span>
-                  </>
-                )}
                 <span>·</span>
                 <span>⏱️ {readingTime} min de leitura</span>
                 {post.views > 0 && (
@@ -200,7 +194,7 @@ export default async function PostPage({ params }: Props) {
             </header>
 
             <div
-              className="prose prose-invert prose-lg max-w-none [&_img]:rounded-lg [&_a]:text-violet-400 [&_a]:hover:text-violet-300 [&_iframe]:max-w-full [&_iframe]:rounded-lg [&_[data-youtube-video]]:aspect-video [&_[data-youtube-video]>iframe]:w-full [&_[data-youtube-video]>iframe]:h-full [&_h1]:!my-0.5 [&_h2]:!my-0.5 [&_h3]:!my-0.5"
+              className="prose prose-invert prose-lg max-w-none [&_*]:!my-0 [&_hr]:!my-6 [&_p:empty]:!my-4"
               dangerouslySetInnerHTML={{
                 __html: injectHeadingIds(post.content),
               }}
