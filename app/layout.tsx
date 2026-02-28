@@ -5,6 +5,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Providers from "@/components/Providers";
+import ScrollToTop from "@/components/ScrollToTop";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -98,6 +99,7 @@ export default function RootLayout({
         className={`${geistSans.variable} antialiased bg-bg text-foreground min-h-screen transition-colors duration-300`}
       >
         <Providers>
+          <ScrollToTop />
           <Header />
           <main className="min-h-screen">{children}</main>
           <Footer />
