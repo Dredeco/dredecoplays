@@ -32,24 +32,28 @@ export default function PostCardFeatured({ post }: Props) {
             Destaque
           </span>
           <CategoryBadge
-            category={post.category ? { name: categoryName, slug: post.category.slug, color: post.category.color } : categoryName}
+            category={
+              post.category
+                ? {
+                    name: categoryName,
+                    slug: post.category.slug,
+                    color: post.category.color,
+                  }
+                : categoryName
+            }
             asLink={false}
           />
         </div>
 
         <Link href={`/blog/${post.slug}`}>
-          <h2 className="text-white font-extrabold text-xl sm:text-3xl leading-tight mb-4 hover:text-violet-300 transition-colors max-w-2xl">
+          <h2 className="text-white font-extrabold text-lg sm:text-3xl leading-tight mb-4 hover:text-violet-300 transition-colors max-w-2xl">
             {post.title}
           </h2>
         </Link>
 
-        <p className="text-white/90 text-sm sm:text-base mb-5 line-clamp-2 max-w-xl hidden sm:block">
-          {post.excerpt}
-        </p>
-
         <Link
           href={`/blog/${post.slug}`}
-          className="inline-block bg-violet-600 hover:bg-violet-500 text-white font-semibold px-6 py-2.5 rounded-lg text-sm transition-colors shadow-lg shadow-violet-900/40"
+          className="hidden sm:inline-block bg-violet-600 hover:bg-violet-500 text-white font-semibold px-6 py-2.5 rounded-lg text-sm transition-colors shadow-lg shadow-violet-900/40"
         >
           Leia Mais →
         </Link>

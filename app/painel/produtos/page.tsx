@@ -26,7 +26,9 @@ export default function ProdutosPage() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [creating, setCreating] = useState(false);
   const [createForm, setCreateForm] = useState(emptyCreateForm);
-  const [editForm, setEditForm] = useState<Record<number, UpdateProductDto>>({});
+  const [editForm, setEditForm] = useState<Record<number, UpdateProductDto>>(
+    {},
+  );
   const [actionLoading, setActionLoading] = useState<number | null>(null);
 
   useEffect(() => {
@@ -92,7 +94,7 @@ export default function ProdutosPage() {
       const updated = await updateProduct(
         product.id,
         { active: !product.active },
-        token
+        token,
       );
       setProducts((p) => p.map((x) => (x.id === product.id ? updated : x)));
     } catch (err) {
@@ -116,7 +118,11 @@ export default function ProdutosPage() {
     }
   }
 
-  function setEditField(id: number, field: keyof UpdateProductDto, value: string | number | boolean | undefined) {
+  function setEditField(
+    id: number,
+    field: keyof UpdateProductDto,
+    value: string | number | boolean | undefined,
+  ) {
     setEditForm((f) => {
       const current = f[id] ?? {};
       const next = { ...current, [field]: value };
@@ -130,7 +136,9 @@ export default function ProdutosPage() {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-foreground mb-6">Produtos Afiliados</h2>
+      <h2 className="text-2xl font-bold text-foreground mb-6">
+        Produtos Afiliados
+      </h2>
 
       {creating ? (
         <form
@@ -139,7 +147,9 @@ export default function ProdutosPage() {
         >
           <input
             value={createForm.name}
-            onChange={(e) => setCreateForm((f) => ({ ...f, name: e.target.value }))}
+            onChange={(e) =>
+              setCreateForm((f) => ({ ...f, name: e.target.value }))
+            }
             placeholder="Nome *"
             required
             maxLength={200}
@@ -151,7 +161,12 @@ export default function ProdutosPage() {
               step="0.01"
               min={0}
               value={createForm.price || ""}
-              onChange={(e) => setCreateForm((f) => ({ ...f, price: e.target.value ? Number(e.target.value) : 0 }))}
+              onChange={(e) =>
+                setCreateForm((f) => ({
+                  ...f,
+                  price: e.target.value ? Number(e.target.value) : 0,
+                }))
+              }
               placeholder="Preço *"
               required
               className="w-full px-4 py-2 rounded-lg bg-bg border border-border text-foreground"
@@ -164,7 +179,9 @@ export default function ProdutosPage() {
               onChange={(e) =>
                 setCreateForm((f) => ({
                   ...f,
-                  original_price: e.target.value ? Number(e.target.value) : undefined,
+                  original_price: e.target.value
+                    ? Number(e.target.value)
+                    : undefined,
                 }))
               }
               placeholder="Preço original"
@@ -174,14 +191,18 @@ export default function ProdutosPage() {
           <input
             type="url"
             value={createForm.affiliate_url}
-            onChange={(e) => setCreateForm((f) => ({ ...f, affiliate_url: e.target.value }))}
+            onChange={(e) =>
+              setCreateForm((f) => ({ ...f, affiliate_url: e.target.value }))
+            }
             placeholder="URL de afiliado *"
             required
             className="w-full px-4 py-2 rounded-lg bg-bg border border-border text-foreground"
           />
           <input
             value={createForm.image ?? ""}
-            onChange={(e) => setCreateForm((f) => ({ ...f, image: e.target.value }))}
+            onChange={(e) =>
+              setCreateForm((f) => ({ ...f, image: e.target.value }))
+            }
             placeholder="URL ou path da imagem"
             maxLength={255}
             className="w-full px-4 py-2 rounded-lg bg-bg border border-border text-foreground"
@@ -255,8 +276,13 @@ export default function ProdutosPage() {
                       >
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                           <input
-                            value={(editForm[product.id]?.name as string) ?? product.name}
-                            onChange={(e) => setEditField(product.id, "name", e.target.value)}
+                            value={
+                              (editForm[product.id]?.name as string) ??
+                              product.name
+                            }
+                            onChange={(e) =>
+                              setEditField(product.id, "name", e.target.value)
+                            }
                             placeholder="Nome"
                             maxLength={200}
                             className="px-4 py-2 rounded-lg bg-bg border border-border text-foreground"
@@ -266,13 +292,17 @@ export default function ProdutosPage() {
                             step="0.01"
                             min={0}
                             value={
-                              (editForm[product.id]?.price as number) ?? product.price ?? ""
+                              (editForm[product.id]?.price as number) ??
+                              product.price ??
+                              ""
                             }
                             onChange={(e) =>
                               setEditField(
                                 product.id,
                                 "price",
-                                e.target.value ? Number(e.target.value) : undefined
+                                e.target.value
+                                  ? Number(e.target.value)
+                                  : undefined,
                               )
                             }
                             placeholder="Preço"
@@ -283,7 +313,8 @@ export default function ProdutosPage() {
                             step="0.01"
                             min={0}
                             value={
-                              (editForm[product.id]?.original_price as number) ??
+                              (editForm[product.id]
+                                ?.original_price as number) ??
                               product.original_price ??
                               ""
                             }
@@ -291,7 +322,9 @@ export default function ProdutosPage() {
                               setEditField(
                                 product.id,
                                 "original_price",
-                                e.target.value ? Number(e.target.value) : undefined
+                                e.target.value
+                                  ? Number(e.target.value)
+                                  : undefined,
                               )
                             }
                             placeholder="Preço original"
@@ -305,7 +338,11 @@ export default function ProdutosPage() {
                               ""
                             }
                             onChange={(e) =>
-                              setEditField(product.id, "affiliate_url", e.target.value)
+                              setEditField(
+                                product.id,
+                                "affiliate_url",
+                                e.target.value,
+                              )
                             }
                             placeholder="URL de afiliado"
                             className="px-4 py-2 rounded-lg bg-bg border border-border text-foreground sm:col-span-2"
@@ -317,7 +354,11 @@ export default function ProdutosPage() {
                               ""
                             }
                             onChange={(e) =>
-                              setEditField(product.id, "image", e.target.value || undefined)
+                              setEditField(
+                                product.id,
+                                "image",
+                                e.target.value || undefined,
+                              )
                             }
                             placeholder="URL da imagem"
                             maxLength={255}
@@ -337,7 +378,9 @@ export default function ProdutosPage() {
                               setEditField(
                                 product.id,
                                 "rating",
-                                e.target.value ? Number(e.target.value) : undefined
+                                e.target.value
+                                  ? Number(e.target.value)
+                                  : undefined,
                               )
                             }
                             placeholder="Avaliação (0-5)"
@@ -347,10 +390,15 @@ export default function ProdutosPage() {
                             <input
                               type="checkbox"
                               checked={
-                                (editForm[product.id]?.active as boolean) ?? product.active
+                                (editForm[product.id]?.active as boolean) ??
+                                product.active
                               }
                               onChange={(e) =>
-                                setEditField(product.id, "active", e.target.checked)
+                                setEditField(
+                                  product.id,
+                                  "active",
+                                  e.target.checked,
+                                )
                               }
                               className="rounded border-border text-violet-600"
                             />
@@ -407,12 +455,14 @@ export default function ProdutosPage() {
                           href={product.affiliate_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-foreground font-medium text-violet-400 hover:text-violet-300 underline decoration-violet-500/50 hover:decoration-violet-400 transition-colors"
+                          className="text-foreground font-medium hover:text-violet-300 underline decoration-violet-500/50 hover:decoration-violet-400 transition-colors"
                         >
                           {product.name}
                         </a>
                       ) : (
-                        <span className="text-foreground font-medium">{product.name}</span>
+                        <span className="text-foreground font-medium">
+                          {product.name}
+                        </span>
                       )}
                     </td>
                     <td className="py-3 px-2 text-violet-400">
@@ -467,7 +517,7 @@ export default function ProdutosPage() {
                       </div>
                     </td>
                   </tr>
-                )
+                ),
               )}
             </tbody>
           </table>
