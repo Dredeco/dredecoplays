@@ -7,6 +7,10 @@ import { uploadImage } from "@/lib/api";
 import RichTextEditor from "./RichTextEditor";
 import Image from "next/image";
 
+function isDataUri(url: string): boolean {
+  return typeof url === "string" && url.startsWith("data:");
+}
+
 interface Props {
   post?: Post | null;
   categories: Category[];
@@ -197,13 +201,21 @@ export default function PostForm({
         </div>
         {thumbnail && (
           <div className="mt-2">
-            <Image
-              src={thumbnail}
-              alt="Thumbnail"
-              className="w-40 h-24 object-cover rounded-lg"
-              width={160}
-              height={96}
-            />
+            {isDataUri(thumbnail) ? (
+              <img
+                src={thumbnail}
+                alt="Thumbnail"
+                className="w-40 h-24 object-cover rounded-lg"
+              />
+            ) : (
+              <Image
+                src={thumbnail}
+                alt="Thumbnail"
+                className="w-40 h-24 object-cover rounded-lg"
+                width={160}
+                height={96}
+              />
+            )}
           </div>
         )}
       </div>

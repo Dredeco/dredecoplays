@@ -4,6 +4,10 @@ import Image from "next/image";
 import { useState } from "react";
 import { DEFAULT_COVER_IMAGE } from "@/lib/posts";
 
+function isDataUri(url: string): boolean {
+  return typeof url === "string" && url.startsWith("data:");
+}
+
 interface Props {
   src: string;
   alt: string;
@@ -30,6 +34,19 @@ export default function PostThumbnail({
       setImgSrc(DEFAULT_COVER_IMAGE);
     }
   };
+
+  if (isDataUri(imgSrc)) {
+    return (
+      <div className={fill ? "absolute inset-0" : undefined}>
+        <img
+          src={imgSrc}
+          alt={alt}
+          className={fill ? `w-full h-full ${className}` : className}
+          onError={handleError}
+        />
+      </div>
+    );
+  }
 
   return (
     <Image
