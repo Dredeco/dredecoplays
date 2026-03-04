@@ -30,15 +30,11 @@ export default function AdSlot({ className = "" }: Props) {
     }
   }, [mounted]);
 
-  if (!mounted) {
-    return <div className={`flex justify-center ${className}`} aria-hidden />;
-  }
-
   return (
-    <div className={`flex justify-center ${className}`}>
+    <div className={`flex justify-center ${className}`} aria-hidden={!mounted}>
       <ins
         className="adsbygoogle"
-        style={{ display: "block" }}
+        style={{ display: mounted ? "block" : "none" }}
         data-ad-client="ca-pub-7501367689908064"
         data-ad-slot="4057072452"
         data-ad-format="auto"

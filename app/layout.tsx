@@ -104,7 +104,9 @@ export default function RootLayout({
             <ScrollToTop />
           </Suspense>
           <Header />
-          <main className="min-h-screen">{children}</main>
+          <main className="min-h-screen" suppressHydrationWarning>
+            {children}
+          </main>
           <Footer />
         </Providers>
 

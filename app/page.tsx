@@ -32,7 +32,7 @@ export default async function HomePage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
       <AdSlot position="top" className="mb-6" />
 
-      <div className="flex gap-8">
+      <div className="flex gap-8" suppressHydrationWarning>
         <div className="flex-1 min-w-0 space-y-10">
           {featuredPost && <PostCardFeatured post={featuredPost} />}
 
