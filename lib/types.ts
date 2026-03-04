@@ -81,8 +81,14 @@ export interface AuthResponse {
   user: User;
 }
 
+export interface ApiValidationDetail {
+  field: string;
+  message: string;
+}
+
 export interface ApiError {
   error: string;
+  details?: ApiValidationDetail[];
 }
 
 // DTOs para criação/edição

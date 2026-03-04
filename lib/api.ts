@@ -8,6 +8,7 @@ import type {
   SingleResponse,
   AuthResponse,
   ApiError,
+  ApiValidationDetail,
   CreatePostDto,
   UpdatePostDto,
   CreateCategoryDto,
@@ -19,10 +20,24 @@ import type {
   CreateProductDto,
   UpdateProductDto,
 } from "./types";
+import { removeToken } from "./auth";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.dredecoplays.com.br";
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "https://api.dredecoplays.com.br";
 
 type RequestInitWithToken = RequestInit & { token?: string };
+
+export class ApiClientError extends Error {
+  status: number;
+  details?: ApiValidationDetail[];
+
+  constructor(message: string, status: number, details?: ApiValidationDetail[]) {
+    super(message);
+    this.name = "ApiClientError";
+    this.status = status;
+    this.details = details;
+  }
+}
 
 async function request<T>(
   path: string,
@@ -38,11 +53,28 @@ async function request<T>(
   }
 
   const res = await fetch(`${API_URL}${path}`, { ...init, headers });
-  const json = await res.json().catch(() => ({}));
+
+  if (res.status === 204) {
+    // No Content
+    return undefined as unknown as T;
+  }
+
+  const json = (await res.json().catch(() => ({}))) as ApiError | T | Record<string, unknown>;
 
   if (!res.ok) {
     const err = json as ApiError;
-    throw new Error(err.error || `HTTP ${res.status}`);
+    const message =
+      err.error || (json as { message?: string }).message || `HTTP ${res.status}`;
+
+    if (typeof window !== "undefined" && res.status === 401) {
+      // Token ausente/inválido/expirado – limpa sessão e volta para login
+      removeToken();
+      if (!window.location.pathname.startsWith("/painel/login")) {
+        window.location.href = "/painel/login";
+      }
+    }
+
+    throw new ApiClientError(message, res.status, err.details);
   }
 
   return json as T;
@@ -101,13 +133,10 @@ export async function getPosts(
   if (params.search) search.set("search", params.search);
   if (params.status) search.set("status", params.status);
   const qs = search.toString();
-  try {
-    return await request<PaginatedResponse<Post>>(`/api/posts${qs ? `?${qs}` : ""}`, {
-      ...(token ? { token: token as string } : {}),
-    });
-  } catch {
-    return { data: [], meta: { total: 0, page: 1, limit: params.limit ?? 10, totalPages: 0 } };
-  }
+  return request<PaginatedResponse<Post>>(
+    `/api/posts${qs ? `?${qs}` : ""}`,
+    token ? { token: token as string } : {}
+  );
 }
 
 export async function getFeaturedPost(): Promise<Post | null> {
@@ -139,10 +168,13 @@ export async function getRecentPosts(): Promise<Post[]> {
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
   try {
-    const res = await request<SingleResponse<Post>>(`/api/posts/${encodeURIComponent(slug)}`);
+    const res = await request<SingleResponse<Post>>(
+      `/api/posts/${encodeURIComponent(slug)}`
+    );
     return (res as unknown as SingleResponse<Post>).data ?? null;
-  } catch {
-    return null;
+  } catch (err) {
+    if (err instanceof ApiClientError && err.status === 404) return null;
+    throw err;
   }
 }
 
