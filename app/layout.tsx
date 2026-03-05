@@ -14,7 +14,8 @@ const geistSans = Geist({
   display: "swap",
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://dredecoplays.com.br";
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://dredecoplays.com.br";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -92,6 +93,11 @@ export default function RootLayout({
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7501367689908064"
           crossOrigin="anonymous"
         ></Script>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7501367689908064"
+          crossOrigin="anonymous"
+        ></script>
 
         <meta name="google-adsense-account" content="ca-pub-7501367689908064" />
       </head>
