@@ -46,6 +46,110 @@ export function injectHeadingIds(html: string): string {
   );
 }
 
+/** Segmento de conteço: HTML bruto ou vídeo YouTube (carregamento lazy no cliente). */
+export type ContentSegment =
+  | { type: "html"; html: string }
+  | { type: "youtube"; videoId: string; title: string };
+
+function escapeHtmlAttr(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function extractIframeTitle(iframeTag: string): string {
+  const m = iframeTag.match(/\btitle\s*=\s*["']([^"']*)["']/i);
+  const t = m?.[1]?.trim();
+  return t && t.length > 0 ? t : "Vídeo do YouTube";
+}
+
+/** Extrai o ID do vídeo a partir de URLs /embed/VIDEO_ID do YouTube. */
+export function extractYoutubeVideoIdFromSrc(src: string): string | null {
+  try {
+    const normalized = src.startsWith("//") ? `https:${src}` : src;
+    const url = new URL(
+      normalized.startsWith("http") ? normalized : `https:${normalized}`,
+    );
+    if (
+      !/youtube\.com$/i.test(url.hostname) &&
+      !/youtube-nocookie\.com$/i.test(url.hostname) &&
+      !/youtu\.be$/i.test(url.hostname)
+    ) {
+      return null;
+    }
+    const pathMatch = url.pathname.match(/\/embed\/([^/?]+)/);
+    if (pathMatch) return pathMatch[1];
+    if (/youtu\.be$/i.test(url.hostname)) {
+      const seg = url.pathname.replace(/^\//, "").split("/")[0];
+      return seg || null;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function mergeAdjacentHtml(segments: ContentSegment[]): ContentSegment[] {
+  const out: ContentSegment[] = [];
+  for (const p of segments) {
+    if (p.type === "html" && p.html === "") continue;
+    const last = out[out.length - 1];
+    if (last?.type === "html" && p.type === "html") {
+      last.html += p.html;
+    } else {
+      out.push({ ...p });
+    }
+  }
+  return out;
+}
+
+/**
+ * Divide o HTML em blocos HTML e entradas YouTube para renderização com facade (lazy).
+ */
+export function splitContentForYouTube(html: string): ContentSegment[] {
+  const segments: ContentSegment[] = [];
+  let lastIndex = 0;
+  const re =
+    /<iframe\b[^>]*\bsrc\s*=\s*["']([^"']+)["'][^>]*>\s*<\/iframe>/gi;
+  let match: RegExpExecArray | null;
+  while ((match = re.exec(html)) !== null) {
+    const fullMatch = match[0];
+    const src = match[1];
+    const before = html.slice(lastIndex, match.index);
+    segments.push({ type: "html", html: before });
+    lastIndex = match.index + fullMatch.length;
+
+    const videoId = extractYoutubeVideoIdFromSrc(src);
+    if (videoId) {
+      segments.push({
+        type: "youtube",
+        videoId,
+        title: extractIframeTitle(fullMatch),
+      });
+    } else {
+      segments.push({ type: "html", html: fullMatch });
+    }
+  }
+  segments.push({ type: "html", html: html.slice(lastIndex) });
+  return mergeAdjacentHtml(segments);
+}
+
+/**
+ * Substitui iframes do YouTube por marcadores `data-yt-*` (útil para HTML estático).
+ * Para a página de post, prefira `splitContentForYouTube` + `ContentRenderer`.
+ */
+export function replaceYouTubeIframes(html: string): string {
+  return splitContentForYouTube(html)
+    .map((s) =>
+      s.type === "html"
+        ? s.html
+        : `<div data-yt-facade data-yt-id="${escapeHtmlAttr(s.videoId)}" data-yt-title="${escapeHtmlAttr(s.title)}"></div>`,
+    )
+    .join("");
+}
+
 export function calculateReadingTime(content: string): number {
   const stripHtml = content.replace(/<[^>]+>/g, " ");
   const wordCount = stripHtml.trim().split(/\s+/).filter(Boolean).length;

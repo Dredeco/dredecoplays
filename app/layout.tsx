@@ -90,19 +90,7 @@ export default function RootLayout({
 
   return (
     <html lang="pt-BR" className="scroll-smooth" suppressHydrationWarning>
-      {/* Google AdSense */}
       <head>
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7501367689908064"
-          crossOrigin="anonymous"
-        ></Script>
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7501367689908064"
-          crossOrigin="anonymous"
-        ></script>
-
         <meta name="google-adsense-account" content="ca-pub-7501367689908064" />
         <link
           rel="alternate"
@@ -116,6 +104,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} antialiased bg-bg text-foreground min-h-screen transition-colors duration-300`}
       >
+        <Script
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7501367689908064"
+          strategy="afterInteractive"
+          crossOrigin="anonymous"
+        />
         <Providers>
           <Suspense fallback={null}>
             <ScrollToTop />

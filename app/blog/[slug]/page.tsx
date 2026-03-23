@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
-import PostThumbnail from "@/components/PostThumbnail";
 import {
   getPostBySlug,
   getPostSeo,
@@ -14,6 +14,7 @@ import {
   getPostCategorySlug,
   extractHeadingsFromHtml,
   injectHeadingIds,
+  splitContentForYouTube,
   calculateReadingTime,
 } from "@/lib/posts";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -26,6 +27,7 @@ import ProductsGridAd from "@/components/ProductsGridAd";
 import ArticleJsonLd from "@/components/seo/ArticleJsonLd";
 import BreadcrumbJsonLd from "@/components/seo/BreadcrumbJsonLd";
 import AuthorBio from "@/components/AuthorBio";
+import ContentRenderer from "@/components/ContentRenderer";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://dredecoplays.com.br";
 
@@ -102,6 +104,7 @@ export default async function PostPage({ params }: Props) {
   const readingTime = calculateReadingTime(post.content);
   const coverUrl = getPostCoverUrl(post);
   const categoryName = getPostCategoryName(post);
+  const contentSegments = splitContentForYouTube(injectHeadingIds(post.content));
 
   return (
     <>
@@ -132,9 +135,10 @@ export default async function PostPage({ params }: Props) {
         <div className="flex gap-10">
           <article className="flex-1 min-w-0">
             <div className="relative aspect-[1200/630] rounded-xl overflow-hidden mb-8">
-              <PostThumbnail
+              <Image
                 src={coverUrl}
                 alt={post.title}
+                fill
                 priority
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 70vw"
@@ -190,12 +194,7 @@ export default async function PostPage({ params }: Props) {
               </div>
             </header>
 
-            <div
-              className="prose prose-invert prose-lg max-w-none [&_*]:!my-0 [&_hr]:!my-6 [&_p:empty]:!my-4"
-              dangerouslySetInnerHTML={{
-                __html: injectHeadingIds(post.content),
-              }}
-            />
+            <ContentRenderer segments={contentSegments} />
 
             {post.author && (
               <AuthorBio
