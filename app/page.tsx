@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   getFeaturedPost,
@@ -13,6 +14,38 @@ import AdSlot from "@/components/AdSlot";
 import CategoryBadge from "@/components/CategoryBadge";
 import ProductsGridAd from "@/components/ProductsGridAd";
 import ProductsRowAd from "@/components/ProductsRowAd";
+
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://dredecoplays.com.br";
+
+export const metadata: Metadata = {
+  title: "Dredeco Plays — Portal de Games",
+  description:
+    "Notícias, reviews, guias e listas sobre games. Conteúdo para jogadores de PS5, Xbox, PC e Nintendo.",
+  alternates: { canonical: SITE_URL },
+  openGraph: {
+    title: "Dredeco Plays — Portal de Games",
+    description: "Notícias, reviews, guias e listas sobre games.",
+    url: SITE_URL,
+    siteName: "Dredeco Plays",
+    locale: "pt_BR",
+    type: "website",
+    images: [
+      {
+        url: `${SITE_URL}/og-default.png`,
+        width: 1200,
+        height: 630,
+        alt: "Dredeco Plays — Portal de Games",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Dredeco Plays — Portal de Games",
+    description: "Notícias, reviews, guias e listas sobre games.",
+    images: [`${SITE_URL}/og-default.png`],
+  },
+};
 
 export const revalidate = 60;
 

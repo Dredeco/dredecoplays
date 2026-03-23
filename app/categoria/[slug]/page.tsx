@@ -6,6 +6,10 @@ import PostCard from "@/components/PostCard";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import AdSlot from "@/components/AdSlot";
 import ProductsRowAd from "@/components/ProductsRowAd";
+import BreadcrumbJsonLd from "@/components/seo/BreadcrumbJsonLd";
+
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://dredecoplays.com.br";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -24,9 +28,36 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!category) return { title: "Categoria não encontrada" };
 
+  const title = `${category.name} | Dredeco Plays`;
+  const description = `Os melhores artigos sobre ${category.name} no Dredeco Plays.`;
+  const canonical = `${SITE_URL}/categoria/${slug}`;
+
   return {
     title: `${category.name} — Todos os artigos`,
-    description: `Veja todos os artigos sobre ${category.name} no Dredeco Plays.`,
+    description,
+    alternates: { canonical },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      siteName: "Dredeco Plays",
+      locale: "pt_BR",
+      type: "website",
+      images: [
+        {
+          url: `${SITE_URL}/og-default.png`,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [`${SITE_URL}/og-default.png`],
+    },
     robots: { index: true, follow: true },
   };
 }
@@ -54,7 +85,14 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   const totalPages = meta?.totalPages ?? 1;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+    <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", item: SITE_URL },
+          { name: category.name, item: `${SITE_URL}/categoria/${slug}` },
+        ]}
+      />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
@@ -114,6 +152,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
       )}
 
       <AdSlot position="footer" className="mt-12" />
-    </div>
+      </div>
+    </>
   );
 }

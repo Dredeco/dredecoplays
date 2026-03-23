@@ -19,6 +19,7 @@ import type {
   UpdateUserDto,
   CreateProductDto,
   UpdateProductDto,
+  PostSeoData,
 } from "./types";
 import { removeToken } from "./auth";
 
@@ -172,6 +173,30 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
       `/api/posts/${encodeURIComponent(slug)}`
     );
     return (res as unknown as SingleResponse<Post>).data ?? null;
+  } catch (err) {
+    if (err instanceof ApiClientError && err.status === 404) return null;
+    throw err;
+  }
+}
+
+/** GET /api/posts/:slug/seo — metadados completos para SEO (Discover, OG, JSON-LD) */
+export async function getPostSeo(slug: string): Promise<PostSeoData | null> {
+  try {
+    const res = await request<SingleResponse<PostSeoData> | PostSeoData>(
+      `/api/posts/${encodeURIComponent(slug)}/seo`
+    );
+    if (res && typeof res === "object" && "data" in res && res.data) {
+      return res.data;
+    }
+    if (
+      res &&
+      typeof res === "object" &&
+      "title" in res &&
+      "url" in res
+    ) {
+      return res as PostSeoData;
+    }
+    return null;
   } catch (err) {
     if (err instanceof ApiClientError && err.status === 404) return null;
     throw err;

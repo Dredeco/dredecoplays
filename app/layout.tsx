@@ -7,6 +7,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Providers from "@/components/Providers";
 import ScrollToTop from "@/components/ScrollToTop";
+import OrganizationJsonLd from "@/components/seo/OrganizationJsonLd";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -75,6 +76,9 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  other: {
+    "application-name": "Dredeco Plays",
+  },
 };
 
 export default function RootLayout({
@@ -100,6 +104,13 @@ export default function RootLayout({
         ></script>
 
         <meta name="google-adsense-account" content="ca-pub-7501367689908064" />
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="Dredeco Plays — Feed RSS"
+          href={`${SITE_URL}/feed.xml`}
+        />
+        <OrganizationJsonLd />
       </head>
 
       <body

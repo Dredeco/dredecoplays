@@ -32,6 +32,8 @@ export interface PostAuthor {
   id: number;
   name: string;
   avatar: string | null;
+  /** Bio curta do autor (E-E-A-T), quando a API expuser */
+  bio?: string;
 }
 
 export interface PostCategory {
@@ -39,6 +41,36 @@ export interface PostCategory {
   name: string;
   slug: string;
   color: string;
+}
+
+/** Resposta de GET /api/posts/:slug/seo — metadados para SEO */
+export interface PostSeoImage {
+  url: string;
+  width: number;
+  height: number;
+  alt: string;
+}
+
+export interface PostSeoAuthor {
+  name: string;
+  url?: string;
+}
+
+export interface PostSeoCategory {
+  name: string;
+  slug: string;
+}
+
+export interface PostSeoData {
+  title: string;
+  description: string;
+  canonicalUrl: string;
+  url: string;
+  publishedAt: string;
+  updatedAt: string;
+  author: PostSeoAuthor;
+  category: PostSeoCategory;
+  image: PostSeoImage;
 }
 
 export interface Post {

@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import PostThumbnail from "@/components/PostThumbnail";
-import { getPostBySlug, getRelatedPosts, getPosts } from "@/lib/api";
+import {
+  getPostBySlug,
+  getPostSeo,
+  getRelatedPosts,
+  getPosts,
+} from "@/lib/api";
 import {
   formatDate,
   getPostCoverUrl,
@@ -18,6 +23,9 @@ import ShareButtons from "@/components/ShareButtons";
 import AdSlot from "@/components/AdSlot";
 import CategoryBadge from "@/components/CategoryBadge";
 import ProductsGridAd from "@/components/ProductsGridAd";
+import ArticleJsonLd from "@/components/seo/ArticleJsonLd";
+import BreadcrumbJsonLd from "@/components/seo/BreadcrumbJsonLd";
+import AuthorBio from "@/components/AuthorBio";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://dredecoplays.com.br";
 
@@ -34,54 +42,56 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = await getPostBySlug(slug);
+  const seo = await getPostSeo(slug);
 
-  if (!post) return { title: "Post não encontrado" };
-
-  const coverUrl = getPostCoverUrl(post);
-  const imageUrl = coverUrl.startsWith("http")
-    ? coverUrl
-    : `${SITE_URL}${coverUrl.startsWith("/") ? coverUrl : `/${coverUrl}`}`;
+  if (!seo) {
+    notFound();
+  }
 
   return {
-    title: post.title,
-    description: post.excerpt,
-    keywords: post.tags?.map((t) => t.name) ?? [],
-    authors: post.author ? [{ name: post.author.name }] : undefined,
+    title: seo.title,
+    description: seo.description,
+    authors: [{ name: seo.author.name }],
+    alternates: {
+      canonical: seo.canonicalUrl,
+    },
     openGraph: {
-      title: post.title,
-      description: post.excerpt,
-      url: `${SITE_URL}/blog/${post.slug}`,
+      title: seo.title,
+      description: seo.description,
+      url: seo.url,
+      siteName: "Dredeco Plays",
+      locale: "pt_BR",
       type: "article",
-      publishedTime: post.createdAt,
-      modifiedTime: post.updatedAt,
-      authors: post.author ? [post.author.name] : undefined,
+      publishedTime: seo.publishedAt,
+      modifiedTime: seo.updatedAt,
+      authors: [seo.author.name],
+      section: seo.category.name,
       images: [
         {
-          url: imageUrl,
-          width: 1200,
-          height: 630,
-          alt: post.title,
+          url: seo.image.url,
+          width: seo.image.width,
+          height: seo.image.height,
+          alt: seo.image.alt,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: post.title,
-      description: post.excerpt,
-      images: [imageUrl],
-    },
-    alternates: {
-      canonical: `${SITE_URL}/blog/${post.slug}`,
+      title: seo.title,
+      description: seo.description,
+      images: [seo.image.url],
     },
   };
 }
 
 export default async function PostPage({ params }: Props) {
   const { slug } = await params;
-  const post = await getPostBySlug(slug);
+  const [post, seo] = await Promise.all([
+    getPostBySlug(slug),
+    getPostSeo(slug),
+  ]);
 
-  if (!post) notFound();
+  if (!post || !seo) notFound();
 
   const headings = extractHeadingsFromHtml(post.content);
   const relatedPosts = await getRelatedPosts(
@@ -93,31 +103,18 @@ export default async function PostPage({ params }: Props) {
   const coverUrl = getPostCoverUrl(post);
   const categoryName = getPostCategoryName(post);
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: post.title,
-    description: post.excerpt,
-    image: coverUrl.startsWith("http") ? coverUrl : `${SITE_URL}${coverUrl}`,
-    datePublished: post.createdAt,
-    dateModified: post.updatedAt,
-    author: post.author
-      ? { "@type": "Person", name: post.author.name }
-      : undefined,
-    publisher: {
-      "@type": "Organization",
-      name: "Dredeco Plays",
-      url: SITE_URL,
-    },
-    mainEntityOfPage: { "@type": "WebPage", "@id": `${SITE_URL}/blog/${slug}` },
-    keywords: post.tags?.map((t) => t.name).join(", ") ?? "",
-  };
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      <ArticleJsonLd seo={seo} />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", item: SITE_URL },
+          {
+            name: seo.category.name,
+            item: `${SITE_URL}/categoria/${seo.category.slug}`,
+          },
+          { name: seo.title, item: seo.url },
+        ]}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
@@ -134,7 +131,7 @@ export default async function PostPage({ params }: Props) {
 
         <div className="flex gap-10">
           <article className="flex-1 min-w-0">
-            <div className="relative aspect-[16/9] rounded-xl overflow-hidden mb-8">
+            <div className="relative aspect-[1200/630] rounded-xl overflow-hidden mb-8">
               <PostThumbnail
                 src={coverUrl}
                 alt={post.title}
@@ -199,6 +196,16 @@ export default async function PostPage({ params }: Props) {
                 __html: injectHeadingIds(post.content),
               }}
             />
+
+            {post.author && (
+              <AuthorBio
+                author={{
+                  name: post.author.name,
+                  avatar: post.author.avatar,
+                  bio: post.author.bio,
+                }}
+              />
+            )}
 
             <AdSlot position="mid-article" className="my-12" />
 

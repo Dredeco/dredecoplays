@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 declare global {
   interface Window {
@@ -13,14 +13,23 @@ interface Props {
   className?: string;
 }
 
+/**
+ * Renderiza slot de anúncio AdSense apenas no cliente para evitar hydration
+ * mismatch: o script do AdSense modifica o <ins> antes do React hidratar.
+ */
 export default function AdSlot({ className = "" }: Props) {
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
+    setMounted(true);
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     } catch {
       // bloqueador de anúncios
     }
   }, []);
+
+  if (!mounted) return null;
 
   return (
     <div className={`flex justify-center ${className}`}>

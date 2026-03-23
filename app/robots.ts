@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/", "/_next/", "/painel"],
+        disallow: ["/api/", "/_next/", "/painel", "/admin/"],
       },
     ],
     sitemap: `${process.env.NEXT_PUBLIC_SITE_URL || "https://dredecoplays.com.br"}/sitemap.xml`,

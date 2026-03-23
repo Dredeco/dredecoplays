@@ -53,12 +53,18 @@ export function calculateReadingTime(content: string): number {
   return Math.max(1, Math.ceil(wordCount / wordsPerMinute));
 }
 
+const PT_BR_MONTHS = [
+  "janeiro", "fevereiro", "março", "abril", "maio", "junho",
+  "julho", "agosto", "setembro", "outubro", "novembro", "dezembro",
+];
+
+/** Formata data em pt-BR sem depender de ICU do Node.js (evita hydration mismatch) */
 export function formatDate(date: string): string {
-  return new Date(date).toLocaleDateString("pt-BR", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  });
+  const d = new Date(date);
+  const day = String(d.getUTCDate()).padStart(2, "0");
+  const month = PT_BR_MONTHS[d.getUTCMonth()];
+  const year = d.getUTCFullYear();
+  return `${day} de ${month} de ${year}`;
 }
 
 export const DEFAULT_COVER_IMAGE =
