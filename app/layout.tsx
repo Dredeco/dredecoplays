@@ -91,6 +91,8 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className="scroll-smooth" suppressHydrationWarning>
       <head>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://api.dredecoplays.com.br" crossOrigin="anonymous" />
         <meta name="google-adsense-account" content="ca-pub-7501367689908064" />
         <link
           rel="alternate"

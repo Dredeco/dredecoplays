@@ -6,7 +6,11 @@ import { useCallback, useState } from "react";
 interface Props {
   videoId: string;
   title: string;
-  className?: string;
+  /**
+   * Quando `true`, o componente assume que o container pai já tem
+   * `position:relative` e `aspect-video` (caso do portal via ContentRenderer).
+   */
+  inContainer?: boolean;
 }
 
 const NOCOOKIE_EMBED = "https://www.youtube-nocookie.com/embed";
@@ -14,22 +18,22 @@ const NOCOOKIE_EMBED = "https://www.youtube-nocookie.com/embed";
 export default function YouTubeFacade({
   videoId,
   title,
-  className = "",
+  inContainer = false,
 }: Props) {
   const [loaded, setLoaded] = useState(false);
 
   const thumbSrc = `https://i.ytimg.com/vi/${encodeURIComponent(videoId)}/hqdefault.jpg`;
   const embedSrc = `${NOCOOKIE_EMBED}/${encodeURIComponent(videoId)}?rel=0`;
 
-  const loadVideo = useCallback(() => {
-    setLoaded(true);
-  }, []);
+  const loadVideo = useCallback(() => setLoaded(true), []);
+
+  const wrapper = inContainer
+    ? "absolute inset-0"
+    : "relative w-full overflow-hidden rounded-lg aspect-video bg-surface-2";
 
   if (loaded) {
     return (
-      <div
-        className={`relative w-full overflow-hidden rounded-lg aspect-video ${className}`}
-      >
+      <div className={inContainer ? "absolute inset-0" : "relative w-full overflow-hidden rounded-lg aspect-video"}>
         <iframe
           className="absolute inset-0 h-full w-full"
           src={embedSrc}
@@ -42,9 +46,7 @@ export default function YouTubeFacade({
   }
 
   return (
-    <div
-      className={`relative w-full overflow-hidden rounded-lg aspect-video bg-surface-2 ${className}`}
-    >
+    <div className={wrapper}>
       <Image
         src={thumbSrc}
         alt=""
