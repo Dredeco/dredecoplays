@@ -96,7 +96,7 @@ function Toolbar({
   const [showImport, setShowImport] = useState(false);
 
   const handleImportHtml = (html: string) => {
-    editor?.commands.setContent(html, true);
+    editor?.commands.setContent(html);
     setShowImport(false);
   };
   const addImage = useCallback(
