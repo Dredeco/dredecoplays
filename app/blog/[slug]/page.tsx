@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   getPostBySlug,
@@ -160,12 +161,13 @@ export default async function PostPage({ params }: Props) {
                   size="md"
                 />
                 {post.tags?.slice(0, 3).map((tag) => (
-                  <span
+                  <Link
                     key={tag.id}
-                    className="text-xs text-muted bg-surface-2 px-2.5 py-1 rounded border border-border"
+                    href={`/tag/${tag.slug}`}
+                    className="text-xs text-muted bg-surface-2 px-2.5 py-1 rounded border border-border hover:border-violet-500 hover:text-violet-400 transition-colors"
                   >
                     #{tag.name}
-                  </span>
+                  </Link>
                 ))}
               </div>
 

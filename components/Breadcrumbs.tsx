@@ -9,7 +9,8 @@ interface Props {
   items: BreadcrumbItem[];
 }
 
-const SITE_URL = "https://dredecoplays.com";
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://dredecoplays.com.br";
 
 export default function Breadcrumbs({ items }: Props) {
   const jsonLd = {

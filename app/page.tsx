@@ -152,27 +152,34 @@ export default async function HomePage() {
         </div>
 
         <aside className="hidden lg:flex flex-col gap-6 w-72 shrink-0">
-          <div className="relative">
+          <form action="/busca" method="GET" className="relative">
             <input
               type="search"
+              name="q"
               placeholder="Buscar..."
-              className="w-full bg-surface border border-border rounded-lg px-4 py-3 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-violet-600 transition-colors"
+              className="w-full bg-surface border border-border rounded-lg px-4 py-3 pr-10 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-violet-600 transition-colors"
             />
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4 absolute right-3.5 top-3.5 text-muted"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+            <button
+              type="submit"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-violet-400 transition-colors"
+              aria-label="Buscar"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </button>
+          </form>
 
           <div className="bg-surface rounded-xl border border-border shadow-md p-5">
             <h3 className="text-foreground font-bold text-xs uppercase tracking-widest mb-4">

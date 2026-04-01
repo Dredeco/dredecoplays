@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import Providers from "@/components/Providers";
 import ScrollToTop from "@/components/ScrollToTop";
 import OrganizationJsonLd from "@/components/seo/OrganizationJsonLd";
+import WebsiteJsonLd from "@/components/seo/WebsiteJsonLd";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -101,6 +102,7 @@ export default function RootLayout({
           href={`${SITE_URL}/feed.xml`}
         />
         <OrganizationJsonLd />
+        <WebsiteJsonLd />
       </head>
 
       <body
