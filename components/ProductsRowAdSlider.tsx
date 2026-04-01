@@ -1,6 +1,3 @@
-"use client";
-
-import { useState } from "react";
 import type { Product } from "@/lib/types";
 
 function formatPrice(price: number): string {
@@ -13,41 +10,41 @@ function ProductCard({ product }: { product: Product }) {
       href={product.affiliate_url}
       target="_blank"
       rel="nofollow sponsored noopener noreferrer"
-      className="flex flex-col h-full rounded-xl bg-surface border border-border overflow-hidden shadow-md hover:border-violet-600/50 transition-colors group"
+      className="group flex h-full min-w-0 flex-col overflow-hidden rounded-xl border border-border bg-surface shadow-md transition-colors hover:border-violet-600/50"
     >
-      <div className="h-36 w-full shrink-0 overflow-hidden bg-surface-2 flex items-center justify-center p-3">
+      <div className="flex h-24 w-full shrink-0 items-center justify-center bg-surface-2 p-2">
         {product.image ? (
           /* eslint-disable-next-line @next/next/no-img-element */
           <img
             src={product.image}
             alt={product.name}
-            className="w-full h-full object-contain"
+            className="h-full w-full object-contain"
           />
         ) : (
-          <span className="text-muted text-xs">—</span>
+          <span className="text-xs text-muted">—</span>
         )}
       </div>
-      <div className="p-3 flex-1 flex flex-col justify-around">
-        <h4 className="text-sm font-medium text-foreground line-clamp-2 group-hover:text-violet-300 transition-colors">
+      <div className="flex min-h-0 flex-1 flex-col p-3">
+        <h4 className="line-clamp-2 text-xs font-medium text-foreground transition-colors group-hover:text-violet-300 sm:text-sm">
           {product.name}
         </h4>
-        <div className="flex items-baseline gap-1.5 mt-1">
-          <span className="text-cyan-400 font-bold text-sm">
+        <div className="mt-1 flex flex-wrap items-baseline gap-1">
+          <span className="text-sm font-bold text-cyan-400">
             {formatPrice(product.price)}
           </span>
           {product.original_price != null &&
             product.original_price > product.price && (
-              <span className="text-muted line-through text-xs">
+              <span className="text-xs text-muted line-through">
                 {formatPrice(product.original_price)}
               </span>
             )}
         </div>
         {product.rating != null && (
-          <span className="text-yellow-400 text-xs mt-0.5">
+          <span className="mt-0.5 text-xs text-yellow-400">
             ★ {Number(product.rating).toFixed(1)}
           </span>
         )}
-        <span className="mt-2 px-3 py-1.5 text-center rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-xs font-medium transition-colors">
+        <span className="mt-2 rounded-lg bg-violet-600 px-2.5 py-1.5 text-center text-[11px] font-medium text-white transition-colors hover:bg-violet-500 sm:text-xs">
           Ver oferta
         </span>
       </div>
@@ -55,90 +52,34 @@ function ProductCard({ product }: { product: Product }) {
   );
 }
 
-const PRODUCTS_PER_PAGE = 4;
-
 interface Props {
   products: Product[];
 }
 
 export default function ProductsRowAdSlider({ products }: Props) {
-  const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
-  const [currentPage, setCurrentPage] = useState(0);
-
-  const start = currentPage * PRODUCTS_PER_PAGE;
-  const pageProducts = products.slice(start, start + PRODUCTS_PER_PAGE);
-
-  const goPrev = () => setCurrentPage((p) => (p > 0 ? p - 1 : totalPages - 1));
-  const goNext = () => setCurrentPage((p) => (p < totalPages - 1 ? p + 1 : 0));
+  const list = products.length > 0 ? products : [];
 
   return (
     <div className="relative">
-      <div className="grid grid-cols-2 gap-4 min-h-[280px]">
-        {pageProducts.map((product) => (
-          <ProductCard key={product.id} product={product} />
+      <div
+        className={
+          "flex gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] " +
+          "snap-x snap-mandatory " +
+          "[&::-webkit-scrollbar]:hidden " +
+          "lg:grid lg:grid-cols-4 lg:gap-4 lg:overflow-visible lg:pb-0"
+        }
+        role="list"
+        aria-label="Produtos recomendados"
+      >
+        {list.map((product) => (
+          <div
+            key={product.id}
+            className="w-[min(72vw,260px)] shrink-0 snap-start lg:w-auto lg:min-w-0"
+            role="listitem"
+          >
+            <ProductCard product={product} />
+          </div>
         ))}
-      </div>
-
-      <div className="flex items-center justify-center gap-2 mt-4">
-        <button
-          type="button"
-          onClick={goPrev}
-          className="p-2 rounded-lg bg-surface-2 border border-border text-muted hover:text-violet-400 hover:border-violet-600/50 transition-colors"
-          aria-label="Produtos anteriores"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-        </button>
-
-        <div className="flex gap-1.5">
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => setCurrentPage(i)}
-              className={`w-2.5 h-2.5 rounded-full transition-colors ${
-                i === currentPage
-                  ? "bg-violet-600"
-                  : "bg-border hover:bg-surface-2"
-              }`}
-              aria-label={`Página ${i + 1}`}
-            />
-          ))}
-        </div>
-
-        <button
-          type="button"
-          onClick={goNext}
-          className="p-2 rounded-lg bg-surface-2 border border-border text-muted hover:text-violet-400 hover:border-violet-600/50 transition-colors"
-          aria-label="Próximos produtos"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
-        </button>
       </div>
     </div>
   );

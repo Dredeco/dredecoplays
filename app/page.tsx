@@ -14,6 +14,9 @@ import AdSlot from "@/components/AdSlot";
 import CategoryBadge from "@/components/CategoryBadge";
 import ProductsGridAd from "@/components/ProductsGridAd";
 import ProductsRowAd from "@/components/ProductsRowAd";
+import BreakingNewsBar from "@/components/BreakingNewsBar";
+import HeroSecondaryCard from "@/components/HeroSecondaryCard";
+import CategoryShowcase from "@/components/CategoryShowcase";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://dredecoplays.com.br";
@@ -58,194 +61,210 @@ export default async function HomePage() {
       getCategories(),
     ]);
 
+  const breakingPosts = recentPosts.slice(0, 5);
+  const heroMain = featuredPost ?? recentPosts[0] ?? null;
+  const heroSecondary = heroMain
+    ? recentPosts.filter((p) => p.id !== heroMain.id).slice(0, 2)
+    : [];
+  const heroIds = new Set(
+    [heroMain?.id, ...heroSecondary.map((p) => p.id)].filter(
+      (id): id is number => id != null,
+    ),
+  );
+  const latestGrid = recentPosts.filter((p) => !heroIds.has(p.id)).slice(0, 6);
+  const gridDisplay =
+    latestGrid.length >= 3 ? latestGrid : recentPosts.slice(0, 6);
+
   const mostRead = popularPosts.slice(0, 3);
-  const recent = recentPosts.slice(0, 6);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
-      <AdSlot position="top" className="mb-6" />
+    <div className="py-6">
+      {breakingPosts.length > 0 ? (
+        <div className="mb-6">
+          <BreakingNewsBar posts={breakingPosts} />
+        </div>
+      ) : null}
 
-      <div className="flex gap-8" suppressHydrationWarning>
-        <div className="flex-1 min-w-0 space-y-10">
-          {featuredPost && <PostCardFeatured post={featuredPost} />}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <AdSlot position="top" className="mb-4" />
+      </div>
 
-          <section>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-1 h-7 bg-violet-600 rounded-full shrink-0" />
-              <h2 className="text-xl font-bold text-foreground">Últimos Posts</h2>
-              <Link
-                href="/blog"
-                className="ml-auto text-sm text-violet-400 hover:text-violet-300 transition-colors"
+      {heroMain ? (
+        <div className="mx-auto mb-8 max-w-7xl px-4 sm:px-6">
+          <div
+            className={
+              heroSecondary.length > 0
+                ? "grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_300px] lg:h-[460px] lg:items-stretch"
+                : "grid grid-cols-1"
+            }
+          >
+            <PostCardFeatured post={heroMain} heroLayout />
+            {heroSecondary.length > 0 ? (
+              <div className="hidden flex-col gap-4 lg:flex">
+                {heroSecondary.map((post) => (
+                  <HeroSecondaryCard key={post.id} post={post} />
+                ))}
+              </div>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
+
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="flex gap-8" suppressHydrationWarning>
+          <div className="min-w-0 flex-1 space-y-10">
+            <CategoryShowcase categories={categories} />
+
+            <section>
+              <div className="mb-6 flex items-center gap-3">
+                <div className="h-7 w-1 shrink-0 rounded-full bg-violet-600" />
+                <h2 className="text-xl font-bold text-foreground">
+                  Últimos Posts
+                </h2>
+                <Link
+                  href="/blog"
+                  className="ml-auto text-sm text-violet-400 transition-colors hover:text-violet-300"
+                >
+                  Ver todos →
+                </Link>
+              </div>
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {gridDisplay.map((post) => (
+                  <PostCard key={post.id} post={post} />
+                ))}
+              </div>
+            </section>
+
+            <AdSlot position="mid-content" />
+
+            <ProductsRowAd className="mt-10" />
+
+            <section>
+              <div className="mb-6 flex items-center gap-3">
+                <div className="h-7 w-1 shrink-0 rounded-full bg-violet-600" />
+                <h2 className="text-xl font-bold text-foreground">
+                  Mais Lidos
+                </h2>
+              </div>
+              <div className="flex items-start gap-6">
+                <ol className="flex-1 space-y-5">
+                  {mostRead.map((post, index) => (
+                    <li key={post.id} className="flex items-start gap-4">
+                      <span className="mt-0.5 w-10 shrink-0 text-4xl font-black leading-none text-violet-800/60">
+                        {index + 1}
+                      </span>
+                      <div className="flex-1">
+                        <CategoryBadge
+                          category={
+                            post.category
+                              ? {
+                                  name: post.category.name,
+                                  slug: post.category.slug,
+                                  color: post.category.color,
+                                }
+                              : "Sem categoria"
+                          }
+                        />
+                        <Link
+                          href={`/blog/${post.slug}`}
+                          className="mt-1 block font-semibold leading-snug text-foreground transition-colors hover:text-violet-400"
+                        >
+                          {post.title}
+                        </Link>
+                        <time
+                          className="mt-1 block text-xs text-muted"
+                          dateTime={post.createdAt}
+                        >
+                          {formatDate(post.createdAt)}
+                        </time>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+
+                {mostRead[0] ? (
+                  <div className="hidden w-52 shrink-0 sm:block">
+                    <Link href={`/blog/${mostRead[0].slug}`}>
+                      <div className="relative aspect-[3/4] overflow-hidden rounded-xl">
+                        <PostThumbnail
+                          src={getPostCoverUrl(mostRead[0])}
+                          alt={mostRead[0].title}
+                          className="object-cover transition-transform duration-500 hover:scale-105"
+                          sizes="208px"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                      </div>
+                    </Link>
+                  </div>
+                ) : null}
+              </div>
+            </section>
+          </div>
+
+          <aside className="hidden w-72 shrink-0 flex-col gap-6 lg:flex">
+            <form action="/busca" method="GET" className="relative">
+              <input
+                type="search"
+                name="q"
+                placeholder="Buscar..."
+                className="w-full rounded-lg border border-border bg-surface px-4 py-3 pr-10 text-sm text-foreground placeholder:text-muted transition-colors focus:border-violet-600 focus:outline-none"
+              />
+              <button
+                type="submit"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted transition-colors hover:text-violet-400"
+                aria-label="Buscar"
               >
-                Ver todos →
-              </Link>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {recent.map((post) => (
-                <PostCard key={post.id} post={post} />
-              ))}
-            </div>
-          </section>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </button>
+            </form>
 
-          <AdSlot position="mid-content" />
-
-          <ProductsRowAd className="mt-10" />
-
-          <section>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-1 h-7 bg-violet-600 rounded-full shrink-0" />
-              <h2 className="text-xl font-bold text-foreground">Mais Lidos</h2>
-            </div>
-            <div className="flex gap-6 items-start">
-              <ol className="flex-1 space-y-5">
+            <div className="rounded-xl border border-border bg-surface p-5 shadow-md">
+              <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-foreground">
+                Populares
+              </h3>
+              <ol className="space-y-4">
                 {mostRead.map((post, index) => (
-                  <li key={post.id} className="flex items-start gap-4">
-                    <span className="text-4xl font-black text-violet-800/60 w-10 shrink-0 leading-none mt-0.5">
-                      {index + 1}
-                    </span>
-                    <div className="flex-1">
-                      <CategoryBadge
-                        category={
-                          post.category
-                            ? {
-                                name: post.category.name,
-                                slug: post.category.slug,
-                                color: post.category.color,
-                              }
-                            : "Sem categoria"
-                        }
+                  <li key={post.id} className="flex gap-3">
+                    <div className="relative h-12 w-16 shrink-0 overflow-hidden rounded-lg">
+                      <PostThumbnail
+                        src={getPostCoverUrl(post)}
+                        alt={post.title}
+                        className="object-cover"
+                        sizes="64px"
                       />
-                      <Link
-                        href={`/blog/${post.slug}`}
-                        className="block mt-1 text-foreground font-semibold hover:text-violet-400 transition-colors leading-snug"
-                      >
-                        {post.title}
-                      </Link>
-                      <time
-                        className="text-xs text-muted mt-1 block"
-                        dateTime={post.createdAt}
-                      >
-                        {formatDate(post.createdAt)}
-                      </time>
+                      <div className="absolute left-0 top-0 flex h-5 w-5 items-center justify-center rounded-br-lg bg-violet-700 text-xs font-black text-white">
+                        {index + 1}
+                      </div>
                     </div>
+                    <Link
+                      href={`/blog/${post.slug}`}
+                      className="line-clamp-3 text-xs font-medium leading-snug text-foreground transition-colors hover:text-violet-400"
+                    >
+                      {post.title}
+                    </Link>
                   </li>
                 ))}
               </ol>
-
-              {mostRead[0] && (
-                <div className="hidden sm:block w-52 shrink-0">
-                  <Link href={`/blog/${mostRead[0].slug}`}>
-                    <div className="relative aspect-[3/4] rounded-xl overflow-hidden">
-                      <PostThumbnail
-                        src={getPostCoverUrl(mostRead[0])}
-                        alt={mostRead[0].title}
-                        className="object-cover hover:scale-105 transition-transform duration-500"
-                        sizes="208px"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                    </div>
-                  </Link>
-                </div>
-              )}
             </div>
-          </section>
+
+            <ProductsGridAd />
+
+            <AdSlot position="sidebar" />
+          </aside>
         </div>
-
-        <aside className="hidden lg:flex flex-col gap-6 w-72 shrink-0">
-          <form action="/busca" method="GET" className="relative">
-            <input
-              type="search"
-              name="q"
-              placeholder="Buscar..."
-              className="w-full bg-surface border border-border rounded-lg px-4 py-3 pr-10 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-violet-600 transition-colors"
-            />
-            <button
-              type="submit"
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-violet-400 transition-colors"
-              aria-label="Buscar"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </button>
-          </form>
-
-          <div className="bg-surface rounded-xl border border-border shadow-md p-5">
-            <h3 className="text-foreground font-bold text-xs uppercase tracking-widest mb-4">
-              Categorias
-            </h3>
-            <ul className="divide-y divide-border">
-              {categories.map((cat) => (
-                <li key={cat.id}>
-                  <Link
-                    href={`/categoria/${cat.slug}`}
-                    className="flex items-center justify-between py-2.5 text-sm text-muted hover:text-violet-400 transition-colors"
-                  >
-                    <span>{cat.name}</span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 text-muted"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="bg-surface rounded-xl border border-border shadow-md p-5">
-            <h3 className="text-foreground font-bold text-xs uppercase tracking-widest mb-4">
-              Populares
-            </h3>
-            <ol className="space-y-4">
-              {mostRead.map((post, index) => (
-                <li key={post.id} className="flex gap-3">
-                  <div className="relative w-16 h-12 rounded-lg overflow-hidden shrink-0">
-                    <PostThumbnail
-                      src={getPostCoverUrl(post)}
-                      alt={post.title}
-                      className="object-cover"
-                      sizes="64px"
-                    />
-                    <div className="absolute top-0 left-0 bg-violet-700 text-white text-xs font-black w-5 h-5 flex items-center justify-center rounded-br-lg">
-                      {index + 1}
-                    </div>
-                  </div>
-                  <Link
-                    href={`/blog/${post.slug}`}
-                    className="text-xs text-foreground hover:text-violet-400 transition-colors font-medium leading-snug line-clamp-3"
-                  >
-                    {post.title}
-                  </Link>
-                </li>
-              ))}
-            </ol>
-          </div>
-
-          <ProductsGridAd />
-
-          <AdSlot position="sidebar" />
-        </aside>
       </div>
     </div>
   );

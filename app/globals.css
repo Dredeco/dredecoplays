@@ -96,6 +96,12 @@ html.light .prose {
   --tw-prose-td-borders: #e2e8f0;
 }
 
+/* Breaking news marquee */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
 /* TipTap image resize handles */
 [data-resize-handle] {
   width: 8px;

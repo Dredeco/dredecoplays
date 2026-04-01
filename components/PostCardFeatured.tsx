@@ -2,33 +2,68 @@ import Link from "next/link";
 import PostThumbnail from "./PostThumbnail";
 import type { Post } from "@/lib/types";
 import CategoryBadge from "./CategoryBadge";
-import { getPostCoverUrl, getPostCategoryName } from "@/lib/posts";
+import {
+  getPostCoverUrl,
+  getPostCategoryName,
+  calculateReadingTime,
+} from "@/lib/posts";
 
 interface Props {
   post: Post;
+  /** Quando true, preenche altura do hero (desktop) com excerpt e tempo de leitura */
+  heroLayout?: boolean;
 }
 
-export default function PostCardFeatured({ post }: Props) {
+export default function PostCardFeatured({ post, heroLayout = false }: Props) {
   const coverUrl = getPostCoverUrl(post);
   const categoryName = getPostCategoryName(post);
+  const readingTime = calculateReadingTime(post.content);
 
   return (
-    <article className="relative rounded-xl overflow-hidden group shadow-lg">
-      <div className="relative aspect-[16/9] sm:aspect-[21/9]">
+    <article
+      className={
+        heroLayout
+          ? "group relative flex h-full min-h-[280px] flex-col overflow-hidden rounded-2xl shadow-lg ring-1 ring-white/10"
+          : "group relative overflow-hidden rounded-xl shadow-lg"
+      }
+    >
+      <div
+        className={
+          heroLayout
+            ? "relative min-h-[240px] flex-1 lg:min-h-0"
+            : "relative aspect-[16/9] sm:aspect-[21/9]"
+        }
+      >
         <PostThumbnail
           src={coverUrl}
           alt={post.title}
           priority
-          className="object-cover group-hover:scale-105 transition-transform duration-700"
-          sizes="(max-width: 1024px) 100vw, 65vw"
+          className="object-cover transition-transform duration-700 group-hover:scale-105"
+          sizes={
+            heroLayout
+              ? "(max-width: 1024px) 100vw, calc(100vw - 380px)"
+              : "(max-width: 1024px) 100vw, 65vw"
+          }
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-r from-violet-950/20 to-transparent" />
+        <div
+          className={
+            heroLayout
+              ? "absolute inset-0 bg-gradient-to-t from-black/[0.96] via-black/55 to-transparent"
+              : "absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent"
+          }
+        />
+        <div
+          className={
+            heroLayout
+              ? "absolute inset-0 bg-gradient-to-r from-violet-950/35 to-transparent"
+              : "absolute inset-0 bg-gradient-to-r from-violet-950/20 to-transparent"
+          }
+        />
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-7">
-        <div className="flex items-center gap-3 mb-3">
-          <span className="inline-block bg-orange-500 text-white text-xs font-black px-3 py-1 rounded uppercase tracking-widest">
+        <div className="mb-3 flex flex-wrap items-center gap-2 sm:gap-3">
+          <span className="inline-block rounded bg-orange-500 px-3 py-1 text-xs font-black uppercase tracking-widest text-white">
             Destaque
           </span>
           <CategoryBadge
@@ -43,17 +78,43 @@ export default function PostCardFeatured({ post }: Props) {
             }
             asLink={false}
           />
+          {heroLayout ? (
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/40 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-white/90 backdrop-blur-sm">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-3.5 w-3.5 shrink-0 opacity-90"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              {readingTime} min
+            </span>
+          ) : null}
         </div>
 
         <Link href={`/blog/${post.slug}`}>
-          <h2 className="text-white font-extrabold text-lg sm:text-3xl leading-tight mb-4 hover:text-violet-300 transition-colors max-w-2xl">
+          <h2 className="mb-4 max-w-2xl text-lg font-extrabold leading-tight text-white transition-colors hover:text-violet-300 sm:text-3xl">
             {post.title}
           </h2>
         </Link>
 
+        {heroLayout && post.excerpt ? (
+          <p className="mb-4 hidden max-w-2xl text-sm leading-relaxed text-white/80 line-clamp-2 sm:block">
+            {post.excerpt}
+          </p>
+        ) : null}
+
         <Link
           href={`/blog/${post.slug}`}
-          className="hidden sm:inline-block bg-violet-600 hover:bg-violet-500 text-white font-semibold px-6 py-2.5 rounded-lg text-sm transition-colors shadow-lg shadow-violet-900/40"
+          className="hidden sm:inline-block rounded-lg bg-violet-600 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-900/40 transition-colors hover:bg-violet-500"
         >
           Leia Mais →
         </Link>
