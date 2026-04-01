@@ -9,6 +9,51 @@ import Youtube from "@tiptap/extension-youtube";
 import FileHandler from "@tiptap/extension-file-handler";
 import { uploadImage } from "@/lib/api";
 
+function ImportHtmlModal({
+  onConfirm,
+  onClose,
+}: {
+  onConfirm: (html: string) => void;
+  onClose: () => void;
+}) {
+  const [raw, setRaw] = useState("");
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+      <div className="bg-brand-surface border border-brand-border rounded-xl shadow-2xl w-full max-w-2xl flex flex-col gap-4 p-6">
+        <h2 className="text-foreground font-bold text-lg">Importar HTML</h2>
+        <p className="text-sm text-gray-400">
+          Cole o HTML gerado pela IA abaixo. O conteúdo atual do editor será
+          substituído.
+        </p>
+        <textarea
+          className="w-full h-64 px-3 py-2 rounded-lg bg-black/40 border border-brand-border text-foreground text-sm font-mono resize-y focus:outline-none focus:border-violet-500"
+          placeholder="<h2>Título da seção</h2><p>Parágrafo...</p>"
+          value={raw}
+          onChange={(e) => setRaw(e.target.value)}
+          autoFocus
+        />
+        <div className="flex justify-end gap-3">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2 rounded-lg bg-brand-surface-2 text-gray-400 hover:text-white border border-brand-border text-sm"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            disabled={!raw.trim()}
+            onClick={() => onConfirm(raw.trim())}
+            className="px-4 py-2 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-medium text-sm disabled:opacity-40"
+          >
+            Importar
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const IMAGE_MIMES = ["image/jpeg", "image/png", "image/gif", "image/webp"];
 
 function parseYoutubeUrl(input: string): string | null {
@@ -48,6 +93,12 @@ function Toolbar({
   token: string;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [showImport, setShowImport] = useState(false);
+
+  const handleImportHtml = (html: string) => {
+    editor?.commands.setContent(html, true);
+    setShowImport(false);
+  };
   const addImage = useCallback(
     async (file: File) => {
       if (!editor) return;
@@ -200,6 +251,21 @@ function Toolbar({
         onChange={handleImageChange}
         className="hidden"
       />
+      <span className="w-px h-6 bg-brand-border self-center mx-1" />
+      <button
+        type="button"
+        onClick={() => setShowImport(true)}
+        className={`${btnClass} text-xs font-semibold text-violet-400 hover:text-violet-300`}
+        title="Importar HTML gerado por IA"
+      >
+        {"</> IA"}
+      </button>
+      {showImport && (
+        <ImportHtmlModal
+          onConfirm={handleImportHtml}
+          onClose={() => setShowImport(false)}
+        />
+      )}
     </div>
   );
 }
