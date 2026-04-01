@@ -1,4 +1,5 @@
 import Link from "next/link";
+import NewsletterForm from "@/components/NewsletterForm";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -99,29 +100,36 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Aviso de Afiliados */}
+          {/* Newsletter */}
           <div>
-            <h3 className="text-foreground font-bold mb-4 text-sm uppercase tracking-wider">
-              Aviso de Afiliados
+            <h3 className="text-foreground font-bold mb-2 text-sm uppercase tracking-wider">
+              Newsletter
             </h3>
-            <p className="text-sm text-muted leading-relaxed">
-              Este site participa de programas de afiliados. Ao comprar pelos
-              links, recebo uma comissão sem custo adicional para você.
-              Recomendo apenas produtos que conheço e confio.
+            <p className="text-muted text-xs leading-relaxed mb-3">
+              Resumo semanal com notícias e ofertas. Sem spam.
             </p>
+            <NewsletterForm variant="compact" />
           </div>
         </div>
 
-        <div className="border-t border-border mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-muted">
-          <p>© {year} Dredeco Plays. Todos os direitos reservados.</p>
-          <div className="flex gap-4">
-            <Link href="/politica-de-privacidade" className="hover:text-foreground transition-colors">
-              Política de Privacidade
-            </Link>
-            <Link href="/contato" className="hover:text-foreground transition-colors">
-              Contato
-            </Link>
+        <div className="border-t border-border mt-10 pt-6 flex flex-col gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-muted">
+            <p>© {year} Dredeco Plays. Todos os direitos reservados.</p>
+            <div className="flex gap-4">
+              <Link href="/politica-de-privacidade" className="hover:text-foreground transition-colors">
+                Política de Privacidade
+              </Link>
+              <Link href="/contato" className="hover:text-foreground transition-colors">
+                Contato
+              </Link>
+            </div>
           </div>
+          <p className="text-xs text-muted/90 leading-relaxed max-w-4xl">
+            <span className="font-medium text-muted">Aviso de afiliados:</span>{" "}
+            Este site participa de programas de afiliados. Ao comprar pelos links,
+            recebemos uma comissão sem custo adicional para você. Recomendamos
+            apenas produtos que conhecemos e confiamos.
+          </p>
         </div>
       </div>
     </footer>

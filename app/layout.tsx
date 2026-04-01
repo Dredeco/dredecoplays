@@ -7,6 +7,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Providers from "@/components/Providers";
 import ScrollToTop from "@/components/ScrollToTop";
+import NewsletterPopup from "@/components/NewsletterPopup";
 import OrganizationJsonLd from "@/components/seo/OrganizationJsonLd";
 import WebsiteJsonLd from "@/components/seo/WebsiteJsonLd";
 
@@ -114,6 +115,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         <Providers>
+          <NewsletterPopup />
           <Suspense fallback={null}>
             <ScrollToTop />
           </Suspense>

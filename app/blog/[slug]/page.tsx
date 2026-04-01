@@ -29,6 +29,7 @@ import ArticleJsonLd from "@/components/seo/ArticleJsonLd";
 import BreadcrumbJsonLd from "@/components/seo/BreadcrumbJsonLd";
 import AuthorBio from "@/components/AuthorBio";
 import ContentRenderer from "@/components/ContentRenderer";
+import NewsletterBanner from "@/components/NewsletterBanner";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://dredecoplays.com.br";
 
@@ -218,6 +219,8 @@ export default async function PostPage({ params }: Props) {
             <ProductsGridAd className="my-12" />
 
             <RelatedPosts posts={relatedPosts} />
+
+            <NewsletterBanner />
 
             <AdSlot position="footer" className="mt-12" />
           </article>
