@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getPosts, getCategories } from "@/lib/api";
+import { getPosts, getCategories, getTags } from "@/lib/api";
 import { getPostCoverUrl } from "@/lib/posts";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://dredecoplays.com.br";
@@ -7,9 +7,10 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://dredecoplays.com.b
 export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [postsRes, categories] = await Promise.all([
+  const [postsRes, categories, tags] = await Promise.all([
     getPosts({ limit: 1000, status: "published" }),
     getCategories(),
+    getTags(),
   ]);
 
   const posts = postsRes.data;
@@ -59,5 +60,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  return [...staticPages, ...postPages, ...categoryPages];
+  const tagPages: MetadataRoute.Sitemap = tags.map((tag) => ({
+    url: `${SITE_URL}/tag/${tag.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.5,
+  }));
+
+  return [...staticPages, ...postPages, ...categoryPages, ...tagPages];
 }
