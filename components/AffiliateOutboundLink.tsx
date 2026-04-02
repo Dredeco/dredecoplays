@@ -9,6 +9,8 @@ interface Props {
   postId?: number;
   className?: string;
   rel?: string;
+  /** Ex.: data-variant para testes / estilos contextuais */
+  "data-variant"?: string;
   children: ReactNode;
 }
 
@@ -18,12 +20,14 @@ export default function AffiliateOutboundLink({
   postId,
   className,
   rel = "nofollow sponsored noopener noreferrer",
+  "data-variant": dataVariant,
   children,
 }: Props) {
   return (
     <a
       href={href}
       className={className}
+      data-variant={dataVariant}
       rel={rel}
       target="_blank"
       onClick={() => {

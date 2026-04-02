@@ -45,12 +45,14 @@ export default function PostCardFeatured({ post, heroLayout = false }: Props) {
               : "(max-width: 1024px) 100vw, 65vw"
           }
         />
+        {/* Gradients come after PostThumbnail wrapper in DOM → paint on top of image */}
         <div
           className={
             heroLayout
               ? "absolute inset-0 bg-gradient-to-t from-black/[0.96] via-black/55 to-transparent"
               : "absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent"
           }
+          aria-hidden
         />
         <div
           className={
@@ -58,10 +60,12 @@ export default function PostCardFeatured({ post, heroLayout = false }: Props) {
               ? "absolute inset-0 bg-gradient-to-r from-violet-950/35 to-transparent"
               : "absolute inset-0 bg-gradient-to-r from-violet-950/20 to-transparent"
           }
+          aria-hidden
         />
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-7">
+      {/* z-[1] ensures text is always above image in the article stacking context */}
+      <div className="absolute bottom-0 left-0 right-0 z-[1] p-5 sm:p-7">
         <div className="mb-3 flex flex-wrap items-center gap-2 sm:gap-3">
           <span className="inline-block rounded bg-orange-500 px-3 py-1 text-xs font-black uppercase tracking-widest text-white">
             Destaque
@@ -101,7 +105,13 @@ export default function PostCardFeatured({ post, heroLayout = false }: Props) {
         </div>
 
         <Link href={`/blog/${post.slug}`}>
-          <h2 className="mb-4 max-w-2xl text-lg font-extrabold leading-tight text-white transition-colors hover:text-violet-300 sm:text-3xl">
+          <h2
+            className={`mb-4 max-w-2xl font-extrabold leading-tight text-white transition-colors hover:text-violet-300 line-clamp-2 ${
+              heroLayout
+                ? "text-lg sm:text-4xl"
+                : "text-lg sm:text-3xl"
+            }`}
+          >
             {post.title}
           </h2>
         </Link>
@@ -114,9 +124,9 @@ export default function PostCardFeatured({ post, heroLayout = false }: Props) {
 
         <Link
           href={`/blog/${post.slug}`}
-          className="hidden sm:inline-block rounded-lg bg-violet-600 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-900/40 transition-colors hover:bg-violet-500"
+          className="hidden rounded-lg border border-white/40 bg-transparent px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:border-violet-600 hover:bg-violet-600 sm:inline-block"
         >
-          Leia Mais →
+          Leia Agora →
         </Link>
       </div>
     </article>

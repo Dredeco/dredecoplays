@@ -22,7 +22,8 @@ export default function HeroSecondaryCard({ post }: Props) {
           className="object-cover transition-transform duration-500 group-hover:scale-105"
           sizes="300px"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10" />
+        {/* Gradient after PostThumbnail in DOM → on top; z-[1] for extra safety */}
+        <div className="absolute inset-0 z-[1] bg-gradient-to-t from-black/90 via-black/30 to-black/10" aria-hidden />
       </div>
 
       <div className="absolute left-3 top-3 z-[1]">

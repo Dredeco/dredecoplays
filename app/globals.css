@@ -21,6 +21,23 @@
   --color-nav: #e2e2f0;
   --color-nav-muted: #9ca3af;
   --font-sans: var(--font-geist-sans);
+
+  /* Design system — editorial / gaming portal */
+  --color-bg-base: #0a0a0f;
+  --color-bg-elevated: #1a1a26;
+  --color-bg-overlay: #22223a;
+  --color-brand-accent: #f59e0b;
+  --color-brand-glow: #a78bfa;
+  --color-text-primary: #f0f0f5;
+  --color-text-secondary: #a0a0b8;
+  --color-text-muted: #606078;
+  --color-border-subtle: rgba(255, 255, 255, 0.06);
+  --color-border-default: rgba(255, 255, 255, 0.12);
+  --color-border-strong: rgba(255, 255, 255, 0.25);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.4), 0 4px 16px rgba(0, 0, 0, 0.3);
+  --shadow-elevated: 0 8px 32px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.4);
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Light theme overrides */
@@ -33,6 +50,19 @@ html.light {
   --color-muted: #64748b;
   --color-nav: #0f172a;
   --color-nav-muted: #334155;
+
+  /* Tokens editoriais — mesmos nomes do dark, valores para tema claro (footer, cards, bordas) */
+  --color-bg-base: #f8fafc;
+  --color-bg-elevated: #ffffff;
+  --color-bg-overlay: #e2e8f0;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-muted: #64748b;
+  --color-border-subtle: rgba(15, 23, 42, 0.08);
+  --color-border-default: rgba(15, 23, 42, 0.14);
+  --color-border-strong: rgba(15, 23, 42, 0.24);
+  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.06), 0 4px 12px rgba(15, 23, 42, 0.08);
+  --shadow-elevated: 0 8px 24px rgba(15, 23, 42, 0.1), 0 2px 8px rgba(15, 23, 42, 0.06);
 }
 
 body {
@@ -114,4 +144,51 @@ html.light .prose {
 [data-resize-handle]:hover {
   opacity: 1;
   background: var(--color-brand-violet-light);
+}
+
+/* Skeleton shimmer */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-surface) 25%,
+    var(--color-bg-elevated) 50%,
+    var(--color-surface) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Focus visible — WCAG */
+:focus-visible {
+  outline: 2px solid var(--color-brand-violet);
+  outline-offset: 2px;
+}
+
+button:focus:not(:focus-visible),
+a:focus:not(:focus-visible) {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .skeleton {
+    animation: none;
+    background: var(--color-surface);
+  }
 }

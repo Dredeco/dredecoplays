@@ -128,74 +128,114 @@ export default async function HomePage() {
                   Ver todos →
                 </Link>
               </div>
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {gridDisplay.map((post) => (
-                  <PostCard key={post.id} post={post} />
-                ))}
-              </div>
+              {gridDisplay.length >= 6 ? (
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-6">
+                  <div className="sm:col-span-2 lg:col-span-4 lg:row-span-2 flex">
+                    <PostCard post={gridDisplay[0]} variant="featured" />
+                  </div>
+                  <div className="sm:col-span-1 lg:col-span-2">
+                    <PostCard post={gridDisplay[1]} />
+                  </div>
+                  <div className="sm:col-span-1 lg:col-span-2">
+                    <PostCard post={gridDisplay[2]} />
+                  </div>
+                  <div className="sm:col-span-1 lg:col-span-2">
+                    <PostCard post={gridDisplay[3]} />
+                  </div>
+                  <div className="sm:col-span-1 lg:col-span-2">
+                    <PostCard post={gridDisplay[4]} />
+                  </div>
+                  <div className="sm:col-span-1 lg:col-span-2">
+                    <PostCard post={gridDisplay[5]} />
+                  </div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                  {gridDisplay.map((post, index) => (
+                    <PostCard
+                      key={post.id}
+                      post={post}
+                      variant={
+                        gridDisplay.length >= 2 && index === 0
+                          ? "featured"
+                          : "default"
+                      }
+                    />
+                  ))}
+                </div>
+              )}
             </section>
 
             <AdSlot position="mid-content" />
 
-            <section>
+            <section aria-labelledby="most-read-heading">
               <div className="mb-6 flex items-center gap-3">
-                <div className="h-7 w-1 shrink-0 rounded-full bg-violet-600" />
-                <h2 className="text-xl font-bold text-foreground">
+                <div
+                  className="h-7 w-1 shrink-0 rounded-full bg-violet-600"
+                  aria-hidden
+                />
+                <h2
+                  id="most-read-heading"
+                  className="text-xs font-bold uppercase tracking-[0.12em] text-foreground"
+                >
                   Mais Lidos
                 </h2>
               </div>
-              <div className="flex items-start gap-6">
-                <ol className="flex-1 space-y-5">
-                  {mostRead.map((post, index) => (
-                    <li key={post.id} className="flex items-start gap-4">
-                      <span className="mt-0.5 w-10 shrink-0 text-4xl font-black leading-none text-violet-800/60">
-                        {index + 1}
-                      </span>
-                      <div className="flex-1">
-                        <CategoryBadge
-                          category={
-                            post.category
-                              ? {
-                                  name: post.category.name,
-                                  slug: post.category.slug,
-                                  color: post.category.color,
-                                }
-                              : "Sem categoria"
-                          }
-                        />
-                        <Link
-                          href={`/blog/${post.slug}`}
-                          className="mt-1 block font-semibold leading-snug text-foreground transition-colors hover:text-violet-400"
+              <ol className="space-y-0">
+                {mostRead.map((post, index) => (
+                  <li
+                    key={post.id}
+                    className="border-b border-[var(--color-border-subtle)] py-5 last:border-b-0 last:pb-0 first:pt-0"
+                  >
+                    <div className="relative flex items-start gap-4">
+                      <div className="relative min-w-0 flex-1 overflow-hidden pl-1">
+                        <span
+                          className="pointer-events-none absolute -left-1 -top-2 select-none font-black leading-none text-[4.5rem] text-[var(--color-brand-violet)] opacity-[0.22] sm:text-[5rem]"
+                          aria-hidden
                         >
-                          {post.title}
-                        </Link>
-                        <time
-                          className="mt-1 block text-xs text-muted"
-                          dateTime={post.createdAt}
-                        >
-                          {formatDate(post.createdAt)}
-                        </time>
+                          {index + 1}
+                        </span>
+                        <div className="relative z-[1]">
+                          <CategoryBadge
+                            category={
+                              post.category
+                                ? {
+                                    name: post.category.name,
+                                    slug: post.category.slug,
+                                    color: post.category.color,
+                                  }
+                                : "Sem categoria"
+                            }
+                          />
+                          <Link
+                            href={`/blog/${post.slug}`}
+                            className="mt-1 block font-semibold leading-snug text-foreground transition-colors hover:text-violet-400"
+                          >
+                            {post.title}
+                          </Link>
+                          <time
+                            className="mt-1 block text-sm text-[var(--color-text-muted)]"
+                            dateTime={post.createdAt}
+                          >
+                            {formatDate(post.createdAt)}
+                          </time>
+                        </div>
                       </div>
-                    </li>
-                  ))}
-                </ol>
-
-                {mostRead[0] ? (
-                  <div className="hidden w-52 shrink-0 sm:block">
-                    <Link href={`/blog/${mostRead[0].slug}`}>
-                      <div className="relative aspect-[3/4] overflow-hidden rounded-xl">
+                      <Link
+                        href={`/blog/${post.slug}`}
+                        className="relative z-[1] h-[60px] w-[60px] shrink-0 overflow-hidden rounded-lg ring-1 ring-[var(--color-border-subtle)] transition-transform duration-300 hover:scale-105"
+                      >
                         <PostThumbnail
-                          src={getPostCoverUrl(mostRead[0])}
-                          alt={mostRead[0].title}
-                          className="object-cover transition-transform duration-500 hover:scale-105"
-                          sizes="208px"
+                          src={getPostCoverUrl(post)}
+                          alt={post.title}
+                          className="object-cover"
+                          sizes="60px"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                      </div>
-                    </Link>
-                  </div>
-                ) : null}
-              </div>
+                      </Link>
+                    </div>
+                  </li>
+                ))}
+              </ol>
             </section>
 
             <ProductsRowAd className="mt-10" />
@@ -231,30 +271,58 @@ export default async function HomePage() {
               </button>
             </form>
 
-            <div className="rounded-xl border border-border bg-surface p-5 shadow-md">
-              <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-foreground">
-                Populares
-              </h3>
-              <ol className="space-y-4">
+            <div className="rounded-xl border border-[var(--color-border-subtle)] bg-surface p-5 shadow-[var(--shadow-card)]">
+              <div className="mb-4 flex items-center gap-2">
+                <div
+                  className="h-6 w-1 shrink-0 rounded-full bg-orange-500"
+                  aria-hidden
+                />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="h-4 w-4 shrink-0 text-orange-400"
+                  fill="currentColor"
+                  aria-hidden
+                >
+                  <path d="M12 23c-1.1 0-2-.9-2-2h4c0 1.1-.9 2-2 2zm7-6H5v-2h14v2zm-1.5-9c0-3.1-2-5.7-4.8-6.6L14 2h-4l.3 1.4C7.5 4.3 5.5 6.9 5.5 10V11h13v-1.5z" />
+                </svg>
+                <h3 className="text-xs font-bold uppercase tracking-[0.12em] text-foreground">
+                  Populares
+                </h3>
+              </div>
+              <ol className="space-y-0">
                 {mostRead.map((post, index) => (
-                  <li key={post.id} className="flex gap-3">
-                    <div className="relative h-12 w-16 shrink-0 overflow-hidden rounded-lg">
-                      <PostThumbnail
-                        src={getPostCoverUrl(post)}
-                        alt={post.title}
-                        className="object-cover"
-                        sizes="64px"
-                      />
-                      <div className="absolute left-0 top-0 flex h-5 w-5 items-center justify-center rounded-br-lg bg-violet-700 text-xs font-black text-white">
-                        {index + 1}
+                  <li
+                    key={post.id}
+                    className="border-b border-[var(--color-border-subtle)] py-4 last:border-b-0 last:pb-0 first:pt-0"
+                  >
+                    <div className="relative flex items-start gap-3">
+                      <div className="relative min-w-0 flex-1">
+                        <span
+                          className="pointer-events-none absolute -left-0.5 -top-1 select-none font-black leading-none text-[2.75rem] text-[var(--color-brand-violet)] opacity-25"
+                          aria-hidden
+                        >
+                          {index + 1}
+                        </span>
+                        <Link
+                          href={`/blog/${post.slug}`}
+                          className="relative z-[1] line-clamp-3 text-sm font-medium leading-snug text-foreground transition-colors hover:text-violet-400"
+                        >
+                          {post.title}
+                        </Link>
                       </div>
+                      <Link
+                        href={`/blog/${post.slug}`}
+                        className="relative z-[1] h-[60px] w-[60px] shrink-0 overflow-hidden rounded-lg ring-1 ring-[var(--color-border-subtle)]"
+                      >
+                        <PostThumbnail
+                          src={getPostCoverUrl(post)}
+                          alt={post.title}
+                          className="object-cover"
+                          sizes="60px"
+                        />
+                      </Link>
                     </div>
-                    <Link
-                      href={`/blog/${post.slug}`}
-                      className="line-clamp-3 text-xs font-medium leading-snug text-foreground transition-colors hover:text-violet-400"
-                    >
-                      {post.title}
-                    </Link>
                   </li>
                 ))}
               </ol>

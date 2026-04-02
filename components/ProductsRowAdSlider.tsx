@@ -24,7 +24,7 @@ export default function ProductsRowAdSlider({ products, postId }: Props) {
         {list.map((product) => (
           <div
             key={product.id}
-            className="w-[min(72vw,260px)] shrink-0 snap-start lg:w-auto lg:min-w-0"
+            className="flex w-[min(72vw,260px)] shrink-0 snap-start lg:h-full lg:min-h-0 lg:w-auto lg:min-w-0 lg:flex-col"
             role="listitem"
           >
             <ProductAffiliateCard product={product} postId={postId} variant="row" />

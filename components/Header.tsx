@@ -23,12 +23,17 @@ export default function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isCompact, setIsCompact] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 0);
+    const handleScroll = () => {
+      const y = window.scrollY;
+      setIsScrolled(y > 0);
+      setIsCompact(y > 80);
+    };
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
@@ -64,13 +69,26 @@ export default function Header() {
   return (
     <>
       <header
-        className={`sticky top-0 z-50 bg-bg/95 backdrop-blur-md border-b border-border transition-shadow duration-200 ${
+        className={`relative sticky top-0 z-50 bg-bg/95 backdrop-blur-[20px] border-b border-border transition-shadow duration-200 ${
           isScrolled ? "shadow-md" : ""
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center gap-2 shrink-0">
+        <div
+          className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-[var(--color-brand-violet)] via-[var(--color-brand-violet-light)] to-transparent opacity-90"
+          aria-hidden
+        />
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div
+            className={`flex items-center justify-between transition-[height] duration-300 ease-out ${
+              isCompact ? "h-12" : "h-16"
+            }`}
+          >
+            <Link
+              href="/"
+              className={`flex shrink-0 items-center gap-2 transition-transform duration-300 ease-out ${
+                isCompact ? "scale-[0.85]" : "scale-100"
+              }`}
+            >
               <Image src={logo} alt="Dredeco Plays" width={115} priority />
             </Link>
 

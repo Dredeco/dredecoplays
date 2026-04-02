@@ -8,6 +8,8 @@ interface Props {
   variant: NewsletterFormVariant;
   /** Para variant inline: gradient = texto claro (banner); default = tema do site (modal) */
   inlineTheme?: "gradient" | "default";
+  /** @deprecated Preferir tema via html.light; mantido para compatibilidade */
+  darkFooter?: boolean;
   /** Chamado após inscrição bem-sucedida (ex.: fechar pop-up) */
   onSuccess?: () => void;
   className?: string;
@@ -37,6 +39,7 @@ export function isNewsletterSubscribed(): boolean {
 export default function NewsletterForm({
   variant,
   inlineTheme = "gradient",
+  darkFooter = false,
   onSuccess,
   className = "",
 }: Props) {
@@ -122,10 +125,15 @@ export default function NewsletterForm({
       ? "underline hover:text-white"
       : "text-violet-400 underline hover:text-violet-300";
 
+  const compactFooterInputClass =
+    "min-w-0 flex-1 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-elevated)] px-3 py-2.5 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] transition-colors focus:border-[var(--color-brand-violet)] focus:outline-none";
+  const compactFooterButtonClass =
+    "shrink-0 rounded-lg bg-[var(--color-brand-violet)] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-brand-violet-light)] disabled:opacity-60";
+
   if (variant === "compact") {
     return (
       <form onSubmit={handleSubmit} className={`space-y-2 ${className}`}>
-        <div className="flex flex-col sm:flex-row gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-stretch">
           <label htmlFor="newsletter-email-footer" className="sr-only">
             E-mail para newsletter
           </label>
@@ -138,12 +146,16 @@ export default function NewsletterForm({
             onChange={(e) => setEmail(e.target.value)}
             placeholder="seu@email.com"
             disabled={status === "loading"}
-            className={inputClass}
+            className={darkFooter ? compactFooterInputClass : inputClass}
           />
           <button
             type="submit"
             disabled={status === "loading"}
-            className="shrink-0 bg-violet-600 hover:bg-violet-500 disabled:opacity-60 text-white font-semibold px-4 py-2.5 rounded-lg text-sm transition-colors"
+            className={
+              darkFooter
+                ? compactFooterButtonClass
+                : "shrink-0 rounded-lg bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-violet-500 disabled:opacity-60"
+            }
           >
             {status === "loading" ? "…" : "Inscrever"}
           </button>
