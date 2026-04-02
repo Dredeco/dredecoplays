@@ -90,6 +90,11 @@ export interface Post {
   author?: PostAuthor;
   category?: PostCategory;
   tags?: Tag[];
+  /** JSON string — FAQ para schema.org (opcional) */
+  faq_json?: string | null;
+  video_json?: string | null;
+  howto_json?: string | null;
+  linkedProducts?: Product[];
 }
 
 export interface PaginatedMeta {
@@ -178,8 +183,18 @@ export interface Product {
   affiliate_url: string;
   image?: string | null;
   active: boolean;
+  category?: string | null;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface HubPage {
+  id: number;
+  slug: string;
+  title: string;
+  description: string | null;
+  meta_description: string | null;
+  posts?: Post[];
 }
 
 export interface CreateProductDto {
@@ -189,6 +204,7 @@ export interface CreateProductDto {
   image?: string;
   original_price?: number;
   rating?: number;
+  category?: string;
 }
 
 export interface UpdateProductDto {
@@ -199,4 +215,5 @@ export interface UpdateProductDto {
   affiliate_url?: string;
   image?: string;
   active?: boolean;
+  category?: string;
 }

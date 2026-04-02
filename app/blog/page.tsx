@@ -1,7 +1,6 @@
 import { getPosts, getCategories } from "@/lib/api";
 import PostCard from "@/components/PostCard";
 import AdSlot from "@/components/AdSlot";
-import ProductsRowAd from "@/components/ProductsRowAd";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -84,8 +83,6 @@ export default async function BlogPage({ searchParams }: Props) {
               ))}
             </div>
           )}
-
-          <ProductsRowAd className="mt-12" />
 
           {meta.totalPages > 1 && (
             <div className="flex justify-center gap-2 mt-12">

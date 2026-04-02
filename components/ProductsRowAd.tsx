@@ -4,9 +4,10 @@ import ProductsRowAdSlider from "@/components/ProductsRowAdSlider";
 
 interface Props {
   className?: string;
+  postId?: number;
 }
 
-export default async function ProductsRowAd({ className = "" }: Props) {
+export default async function ProductsRowAd({ className = "", postId }: Props) {
   const products = await getPublicProducts();
   const display = shuffle(products).slice(0, 8);
 
@@ -17,7 +18,7 @@ export default async function ProductsRowAd({ className = "" }: Props) {
       <h3 className="text-foreground font-bold text-sm uppercase tracking-widest mb-4">
         Produtos Recomendados
       </h3>
-      <ProductsRowAdSlider products={display} />
+      <ProductsRowAdSlider products={display} postId={postId} />
     </section>
   );
 }

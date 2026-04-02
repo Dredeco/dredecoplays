@@ -8,6 +8,7 @@ import logo from "@/public/logo.png";
 import ThemeToggle from "@/components/ThemeToggle";
 
 const navigation = [
+  { label: "Ofertas", href: "/ofertas" },
   { label: "Listas & Rankings", href: "/categoria/listas-rankings" },
   { label: "Reviews", href: "/categoria/reviews" },
   { label: "Notícias", href: "/categoria/noticias" },

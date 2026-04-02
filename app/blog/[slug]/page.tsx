@@ -7,7 +7,9 @@ import {
   getPostSeo,
   getRelatedPosts,
   getPosts,
+  getProductById,
 } from "@/lib/api";
+import type { Product } from "@/lib/types";
 import {
   formatDate,
   getPostCoverUrl,
@@ -16,8 +18,13 @@ import {
   extractHeadingsFromHtml,
   injectHeadingIds,
   splitContentForYouTube,
+  injectParagraphAds,
+  injectInternalLinks,
+  extractProductShortcodeIds,
+  replaceProductShortcodesWithPlaceholders,
   calculateReadingTime,
 } from "@/lib/posts";
+import { parseFaqJson, parseVideoJson, parseHowToJson } from "@/lib/seo-json";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import TableOfContents from "@/components/TableOfContents";
 import RelatedPosts from "@/components/RelatedPosts";
@@ -27,9 +34,13 @@ import CategoryBadge from "@/components/CategoryBadge";
 import ProductsGridAd from "@/components/ProductsGridAd";
 import ArticleJsonLd from "@/components/seo/ArticleJsonLd";
 import BreadcrumbJsonLd from "@/components/seo/BreadcrumbJsonLd";
+import FAQJsonLd from "@/components/seo/FAQJsonLd";
+import VideoJsonLd from "@/components/seo/VideoJsonLd";
+import HowToJsonLd from "@/components/seo/HowToJsonLd";
 import AuthorBio from "@/components/AuthorBio";
 import ContentRenderer from "@/components/ContentRenderer";
 import NewsletterBanner from "@/components/NewsletterBanner";
+import PostLinkedProducts from "@/components/PostLinkedProducts";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://dredecoplays.com.br";
 
@@ -90,14 +101,36 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function PostPage({ params }: Props) {
   const { slug } = await params;
-  const [post, seo] = await Promise.all([
+  const [post, seo, postsList] = await Promise.all([
     getPostBySlug(slug),
     getPostSeo(slug),
+    getPosts({ limit: 250, status: "published" }),
   ]);
 
   if (!post || !seo) notFound();
 
-  const headings = extractHeadingsFromHtml(post.content);
+  const linkedHtml = injectInternalLinks(
+    injectHeadingIds(post.content),
+    postsList.data.map((p) => ({ slug: p.slug, title: p.title })),
+    slug,
+  );
+
+  const shortcodeIds = extractProductShortcodeIds(linkedHtml);
+  const inlineProducts: Partial<Record<number, Product>> = {};
+  await Promise.all(
+    shortcodeIds.map(async (id) => {
+      const p = await getProductById(id);
+      if (p) inlineProducts[id] = p;
+    }),
+  );
+
+  const htmlWithShortcodes = replaceProductShortcodesWithPlaceholders(linkedHtml);
+  const contentSegments = injectParagraphAds(
+    splitContentForYouTube(htmlWithShortcodes),
+    4,
+  );
+
+  const headings = extractHeadingsFromHtml(linkedHtml);
   const relatedPosts = await getRelatedPosts(
     slug,
     getPostCategorySlug(post),
@@ -106,11 +139,38 @@ export default async function PostPage({ params }: Props) {
   const readingTime = calculateReadingTime(post.content);
   const coverUrl = getPostCoverUrl(post);
   const categoryName = getPostCategoryName(post);
-  const contentSegments = splitContentForYouTube(injectHeadingIds(post.content));
+
+  const faqItems = parseFaqJson(post.faq_json);
+  const videoSchema = parseVideoJson(post.video_json);
+  const howToSchema = parseHowToJson(post.howto_json);
+
+  const linkedProductsList =
+    post.linkedProducts ??
+    (post as { linked_products?: Product[] }).linked_products ??
+    [];
+  const hasLinkedProducts = linkedProductsList.length > 0;
 
   return (
     <>
       <ArticleJsonLd seo={seo} />
+      {faqItems?.length ? <FAQJsonLd items={faqItems} /> : null}
+      {videoSchema ? (
+        <VideoJsonLd
+          name={videoSchema.name}
+          description={videoSchema.description}
+          thumbnailUrl={videoSchema.thumbnailUrl}
+          contentUrl={videoSchema.contentUrl}
+          uploadDate={videoSchema.uploadDate}
+          duration={videoSchema.duration}
+        />
+      ) : null}
+      {howToSchema ? (
+        <HowToJsonLd
+          name={howToSchema.name}
+          description={howToSchema.description}
+          steps={howToSchema.steps}
+        />
+      ) : null}
       <BreadcrumbJsonLd
         items={[
           { name: "Home", item: SITE_URL },
@@ -197,7 +257,16 @@ export default async function PostPage({ params }: Props) {
               </div>
             </header>
 
-            <ContentRenderer segments={contentSegments} />
+            <ContentRenderer
+              segments={contentSegments}
+              inlineProducts={inlineProducts}
+              postId={post.id}
+            />
+
+            <PostLinkedProducts
+              products={linkedProductsList}
+              postId={post.id}
+            />
 
             {post.author && (
               <AuthorBio
@@ -209,14 +278,14 @@ export default async function PostPage({ params }: Props) {
               />
             )}
 
-            <AdSlot position="mid-article" className="my-12" />
-
             <ShareButtons
               title={post.title}
               url={`${SITE_URL}/blog/${post.slug}`}
             />
 
-            <ProductsGridAd className="my-12" />
+            {!hasLinkedProducts && (
+              <ProductsGridAd className="my-12" postId={post.id} />
+            )}
 
             <RelatedPosts posts={relatedPosts} />
 

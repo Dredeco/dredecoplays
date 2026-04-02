@@ -46,10 +46,11 @@ export function injectHeadingIds(html: string): string {
   );
 }
 
-/** Segmento de conteço: HTML bruto ou vídeo YouTube (carregamento lazy no cliente). */
+/** Segmento de conteúdo: HTML, vídeo YouTube ou bloco de anúncio (in-article). */
 export type ContentSegment =
   | { type: "html"; html: string }
-  | { type: "youtube"; videoId: string; title: string };
+  | { type: "youtube"; videoId: string; title: string }
+  | { type: "ad"; position: "inline" };
 
 function escapeHtmlAttr(value: string): string {
   return value
@@ -106,6 +107,58 @@ function mergeAdjacentHtml(segments: ContentSegment[]): ContentSegment[] {
 }
 
 /**
+ * Divide HTML em blocos terminados em `</p>` (case-insensitive), preservando o restante.
+ */
+function splitHtmlByClosingParagraphs(html: string): string[] {
+  const re = /<\/p\s*>/gi;
+  const parts: string[] = [];
+  let lastIndex = 0;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(html)) !== null) {
+    const end = m.index + m[0].length;
+    parts.push(html.slice(lastIndex, end));
+    lastIndex = end;
+  }
+  if (lastIndex < html.length) {
+    parts.push(html.slice(lastIndex));
+  }
+  return parts.length > 0 ? parts : [html];
+}
+
+/**
+ * Insere anúncios in-article a cada N parágrafos (`</p>`), após split do YouTube.
+ * @param everyN — padrão 4 parágrafos entre cada bloco de anúncio
+ */
+export function injectParagraphAds(
+  segments: ContentSegment[],
+  everyN: number = 4,
+): ContentSegment[] {
+  if (everyN < 1) return segments;
+  const out: ContentSegment[] = [];
+  for (const seg of segments) {
+    if (seg.type !== "html") {
+      out.push(seg);
+      continue;
+    }
+    const blocks = splitHtmlByClosingParagraphs(seg.html);
+    let paragraphCount = 0;
+    for (let i = 0; i < blocks.length; i++) {
+      const block = blocks[i];
+      if (/<\/p\s*>/i.test(block)) paragraphCount++;
+      out.push({ type: "html", html: block });
+      if (
+        paragraphCount > 0 &&
+        paragraphCount % everyN === 0 &&
+        i < blocks.length - 1
+      ) {
+        out.push({ type: "ad", position: "inline" });
+      }
+    }
+  }
+  return mergeAdjacentHtml(out);
+}
+
+/**
  * Divide o HTML em blocos HTML e entradas YouTube para renderização com facade (lazy).
  */
 export function splitContentForYouTube(html: string): ContentSegment[] {
@@ -140,13 +193,88 @@ export function splitContentForYouTube(html: string): ContentSegment[] {
  * Substitui iframes do YouTube por marcadores `data-yt-*` (útil para HTML estático).
  * Para a página de post, prefira `splitContentForYouTube` + `ContentRenderer`.
  */
+/** Shortcodes `[[product:ID]]` no HTML do post — substituídos por placeholders no render */
+export function extractProductShortcodeIds(html: string): number[] {
+  const m = [...html.matchAll(/\[\[product:(\d+)\]\]/g)];
+  return [
+    ...new Set(
+      m
+        .map((x) => parseInt(x[1], 10))
+        .filter((n) => Number.isFinite(n) && n > 0),
+    ),
+  ];
+}
+
+export function replaceProductShortcodesWithPlaceholders(html: string): string {
+  return html.replace(
+    /\[\[product:(\d+)\]\]/g,
+    (_, id) =>
+      `<div data-inline-product="${String(id)}" class="not-prose my-8 w-full max-w-xl mx-auto"></div>`,
+  );
+}
+
 export function replaceYouTubeIframes(html: string): string {
   return splitContentForYouTube(html)
-    .map((s) =>
-      s.type === "html"
-        ? s.html
-        : `<div data-yt-facade data-yt-id="${escapeHtmlAttr(s.videoId)}" data-yt-title="${escapeHtmlAttr(s.title)}"></div>`,
-    )
+    .map((s) => {
+      if (s.type === "html") return s.html;
+      if (s.type === "youtube") {
+        return `<div data-yt-facade data-yt-id="${escapeHtmlAttr(s.videoId)}" data-yt-title="${escapeHtmlAttr(s.title)}"></div>`;
+      }
+      return "";
+    })
+    .join("");
+}
+
+export interface InternalLinkCandidate {
+  slug: string;
+  title: string;
+}
+
+/**
+ * Links internos automáticos: primeira ocorrência do título de outro post no texto
+ * (fora de tags HTML), para distribuir autoridade e crawl.
+ */
+export function injectInternalLinks(
+  html: string,
+  candidates: InternalLinkCandidate[],
+  currentSlug: string,
+): string {
+  const others = [...candidates]
+    .filter((p) => p.slug !== currentSlug && p.title.trim().length >= 12)
+    .sort((a, b) => b.title.length - a.title.length);
+  const linkedSlugs = new Set<string>();
+  let out = html;
+  for (const p of others) {
+    if (linkedSlugs.has(p.slug)) continue;
+    const title = p.title.trim();
+    out = replaceFirstInHtmlTextNodes(out, title, (match) => {
+      linkedSlugs.add(p.slug);
+      return `<a href="/blog/${p.slug}" class="text-violet-400 underline underline-offset-2 hover:text-violet-300">${match}</a>`;
+    });
+  }
+  return out;
+}
+
+function replaceFirstInHtmlTextNodes(
+  html: string,
+  search: string,
+  replacer: (match: string) => string,
+): string {
+  const parts = html.split(/(<[^>]+>)/g);
+  let done = false;
+  return parts
+    .map((part) => {
+      if (done || part.startsWith("<")) return part;
+      const lower = part.toLowerCase();
+      const s = search.toLowerCase();
+      const idx = lower.indexOf(s);
+      if (idx === -1) return part;
+      done = true;
+      const real = part.slice(idx, idx + search.length);
+      const before = part.slice(0, idx);
+      const after = part.slice(idx + search.length);
+      return `${before}${replacer(real)}${after}`;
+    })
     .join("");
 }
 

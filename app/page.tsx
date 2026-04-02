@@ -137,8 +137,6 @@ export default async function HomePage() {
 
             <AdSlot position="mid-content" />
 
-            <ProductsRowAd className="mt-10" />
-
             <section>
               <div className="mb-6 flex items-center gap-3">
                 <div className="h-7 w-1 shrink-0 rounded-full bg-violet-600" />
@@ -199,6 +197,8 @@ export default async function HomePage() {
                 ) : null}
               </div>
             </section>
+
+            <ProductsRowAd className="mt-10" />
           </div>
 
           <aside className="hidden w-72 shrink-0 flex-col gap-6 lg:flex">

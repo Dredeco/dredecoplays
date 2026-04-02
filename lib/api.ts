@@ -20,6 +20,7 @@ import type {
   CreateProductDto,
   UpdateProductDto,
   PostSeoData,
+  HubPage,
 } from "./types";
 import { removeToken } from "./auth";
 
@@ -401,15 +402,55 @@ export async function deleteProduct(id: number, token: string): Promise<void> {
 }
 
 /** GET /api/products (público, sem token) — retorna produtos ativos */
-export async function getPublicProducts(): Promise<Product[]> {
+export async function getProductById(id: number): Promise<Product | null> {
   try {
-    const res = await request<{ data: Product[] } | Product[]>("/api/products");
+    const res = await request<SingleResponse<Product>>(`/api/products/${id}`);
+    return (res as unknown as SingleResponse<Product>).data ?? null;
+  } catch (err) {
+    if (err instanceof ApiClientError && err.status === 404) return null;
+    return null;
+  }
+}
+
+export async function getPublicProducts(params?: {
+  category?: string;
+  sort?: "discount" | "price_asc" | "price_desc";
+}): Promise<Product[]> {
+  try {
+    const search = new URLSearchParams();
+    if (params?.category) search.set("category", params.category);
+    if (params?.sort) search.set("sort", params.sort);
+    const qs = search.toString();
+    const res = await request<{ data: Product[] } | Product[]>(
+      `/api/products${qs ? `?${qs}` : ""}`
+    );
     const all = Array.isArray(res)
       ? res
       : (res as { data: Product[] }).data ?? [];
     return all.filter((p) => p.active !== false);
   } catch {
     return [];
+  }
+}
+
+export async function getHubs(): Promise<HubPage[]> {
+  try {
+    const res = await request<{ data: HubPage[] }>("/api/hubs");
+    return res.data ?? [];
+  } catch {
+    return [];
+  }
+}
+
+export async function getHubBySlug(slug: string): Promise<HubPage | null> {
+  try {
+    const res = await request<{ data: HubPage }>(
+      `/api/hubs/${encodeURIComponent(slug)}`
+    );
+    return res.data ?? null;
+  } catch (err) {
+    if (err instanceof ApiClientError && err.status === 404) return null;
+    throw err;
   }
 }
 

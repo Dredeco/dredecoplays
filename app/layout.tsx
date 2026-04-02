@@ -83,6 +83,9 @@ export const metadata: Metadata = {
   },
 };
 
+const ADSENSE_CLIENT =
+  process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "ca-pub-7501367689908064";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -95,7 +98,7 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://api.dredecoplays.com.br" crossOrigin="anonymous" />
-        <meta name="google-adsense-account" content="ca-pub-7501367689908064" />
+        <meta name="google-adsense-account" content={ADSENSE_CLIENT} />
         <link
           rel="alternate"
           type="application/rss+xml"
@@ -110,7 +113,7 @@ export default function RootLayout({
         className={`${geistSans.variable} antialiased bg-bg text-foreground min-h-screen transition-colors duration-300`}
       >
         <Script
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7501367689908064"
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(ADSENSE_CLIENT)}`}
           strategy="afterInteractive"
           crossOrigin="anonymous"
         />
@@ -143,6 +146,13 @@ export default function RootLayout({
             </Script>
           </>
         )}
+        <Script id="register-sw" strategy="afterInteractive">
+          {`
+            if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
+              navigator.serviceWorker.register('/sw.js').catch(function () {});
+            }
+          `}
+        </Script>
       </body>
     </html>
   );

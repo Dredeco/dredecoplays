@@ -17,6 +17,7 @@ const emptyCreateForm: CreateProductDto & { image?: string } = {
   image: "",
   original_price: undefined,
   rating: undefined,
+  category: "",
 };
 
 export default function ProdutosPage() {
@@ -52,6 +53,7 @@ export default function ProdutosPage() {
         dto.original_price = Number(createForm.original_price);
       if (createForm.rating != null)
         dto.rating = Math.min(5, Math.max(0, Number(createForm.rating)));
+      if (createForm.category?.trim()) dto.category = createForm.category.trim();
 
       const product = await createProduct(dto, token);
       setProducts((p) => [product, ...p]);
@@ -153,6 +155,15 @@ export default function ProdutosPage() {
             placeholder="Nome *"
             required
             maxLength={200}
+            className="w-full px-4 py-2 rounded-lg bg-bg border border-border text-foreground"
+          />
+          <input
+            value={createForm.category ?? ""}
+            onChange={(e) =>
+              setCreateForm((f) => ({ ...f, category: e.target.value }))
+            }
+            placeholder="Categoria (ex: Controles, Consoles) — para /ofertas"
+            maxLength={80}
             className="w-full px-4 py-2 rounded-lg bg-bg border border-border text-foreground"
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -258,6 +269,7 @@ export default function ProdutosPage() {
               <tr className="text-left text-sm text-muted border-b border-border">
                 <th className="py-3 px-2 w-14">Imagem</th>
                 <th className="py-3 px-2">Nome</th>
+                <th className="py-3 px-2">Categoria</th>
                 <th className="py-3 px-2">Preço</th>
                 <th className="py-3 px-2">Preço Orig.</th>
                 <th className="py-3 px-2">Avaliação</th>
@@ -269,7 +281,7 @@ export default function ProdutosPage() {
               {products.map((product) =>
                 editingId === product.id ? (
                   <tr key={product.id} className="border-b border-border">
-                    <td colSpan={7} className="py-4 px-2">
+                    <td colSpan={8} className="py-4 px-2">
                       <form
                         onSubmit={(e) => handleUpdate(e, product.id)}
                         className="p-4 rounded-xl bg-surface border border-border space-y-3"
@@ -285,6 +297,23 @@ export default function ProdutosPage() {
                             }
                             placeholder="Nome"
                             maxLength={200}
+                            className="px-4 py-2 rounded-lg bg-bg border border-border text-foreground"
+                          />
+                          <input
+                            value={
+                              (editForm[product.id]?.category as string) ??
+                              product.category ??
+                              ""
+                            }
+                            onChange={(e) =>
+                              setEditField(
+                                product.id,
+                                "category",
+                                e.target.value || undefined,
+                              )
+                            }
+                            placeholder="Categoria"
+                            maxLength={80}
                             className="px-4 py-2 rounded-lg bg-bg border border-border text-foreground"
                           />
                           <input
@@ -464,6 +493,9 @@ export default function ProdutosPage() {
                           {product.name}
                         </span>
                       )}
+                    </td>
+                    <td className="py-3 px-2 text-muted text-sm">
+                      {product.category ?? "—"}
                     </td>
                     <td className="py-3 px-2 text-violet-400">
                       R$ {Number(product.price).toFixed(2).replace(".", ",")}
