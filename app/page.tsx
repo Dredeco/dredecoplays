@@ -78,7 +78,7 @@ export default async function HomePage() {
   const mostRead = popularPosts.slice(0, 3);
 
   return (
-    <div className="py-6">
+    <div className="pb-6">
       {breakingPosts.length > 0 ? (
         <div className="mb-6">
           <BreakingNewsBar posts={breakingPosts} />

@@ -1,58 +1,54 @@
+// components/AdSlot.tsx
 "use client";
 
-import { useEffect, useState } from "react";
-
-declare global {
-  interface Window {
-    adsbygoogle: unknown[];
-  }
-}
+import { useEffect, useRef } from "react";
 
 type AdPosition = "top" | "mid-content" | "mid-article" | "footer" | "sidebar";
 
-interface Props {
+const SLOT_MAP: Record<AdPosition, string | undefined> = {
+  top: process.env.NEXT_PUBLIC_ADSENSE_SLOT_TOP,
+  "mid-content": process.env.NEXT_PUBLIC_ADSENSE_SLOT_MID_CONTENT,
+  "mid-article": process.env.NEXT_PUBLIC_ADSENSE_SLOT_MID_ARTICLE,
+  footer: process.env.NEXT_PUBLIC_ADSENSE_SLOT_FOOTER,
+  sidebar: process.env.NEXT_PUBLIC_ADSENSE_SLOT_SIDEBAR,
+};
+
+interface AdSlotProps {
   position: AdPosition;
   className?: string;
 }
 
-const AD_CLIENT = "ca-pub-7501367689908064";
-
-/**
- * Slot IDs por posição — configure via env vars para slots dedicados.
- * No painel AdSense: Anúncios > Por anúncio > criar um slot para cada posição.
- * Slots distintos = Google otimiza o leilão individualmente = RPM mais alto.
- */
-const SLOT_BY_POSITION: Record<AdPosition, string> = {
-  top: process.env.NEXT_PUBLIC_ADSENSE_SLOT_TOP || "4057072452",
-  "mid-content": process.env.NEXT_PUBLIC_ADSENSE_SLOT_MID_CONTENT || "4057072452",
-  "mid-article": process.env.NEXT_PUBLIC_ADSENSE_SLOT_MID_ARTICLE || "4057072452",
-  footer: process.env.NEXT_PUBLIC_ADSENSE_SLOT_FOOTER || "4057072452",
-  sidebar: process.env.NEXT_PUBLIC_ADSENSE_SLOT_SIDEBAR || "4057072452",
-};
-
-export default function AdSlot({ position, className = "" }: Props) {
-  const [mounted, setMounted] = useState(false);
+export default function AdSlot({ position, className }: AdSlotProps) {
+  const adRef = useRef<HTMLModElement>(null);
+  const slotId = SLOT_MAP[position];
+  const clientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
 
   useEffect(() => {
-    setMounted(true);
-    try {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch {
-      // bloqueador de anúncios ativo
-    }
-  }, []);
+    if (!slotId || !clientId) return;
 
-  if (!mounted) return null;
+    try {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (e) {
+      console.error("AdSense error:", e);
+    }
+  }, [slotId, clientId]);
+
+  if (!slotId || !clientId) return null;
 
   return (
-    <div className={`flex justify-center ${className}`}>
+    <div className={className}>
       <ins
+        ref={adRef}
         className="adsbygoogle"
         style={{ display: "block" }}
-        data-ad-client={AD_CLIENT}
-        data-ad-slot={SLOT_BY_POSITION[position]}
-        data-ad-format="auto"
+        data-ad-client={clientId}
+        data-ad-slot={slotId}
+        data-ad-format={position === "mid-article" ? "fluid" : "auto"}
         data-full-width-responsive="true"
+        // formato especial para in-article
+        {...(position === "mid-article" && { "data-ad-layout": "in-article" })}
       />
     </div>
   );
