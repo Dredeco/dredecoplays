@@ -24,26 +24,42 @@ export default function Breadcrumbs({ items }: Props) {
     })),
   };
 
+  const last = items.length - 1;
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <nav aria-label="Breadcrumb" className="mb-6">
-        <ol className="flex flex-wrap items-center gap-1.5 text-sm text-muted">
+      <nav aria-label="Breadcrumb">
+        <ol className="breadcrumb-nav flex flex-wrap items-center gap-x-2 gap-y-1">
           {items.map((item, index) => (
-            <li key={index} className="flex items-center gap-1.5">
-              {index > 0 && <span className="text-muted">›</span>}
+            <li key={index} className="flex items-center gap-2">
+              {index > 0 ? (
+                <span className="breadcrumb-sep" aria-hidden>
+                  ›
+                </span>
+              ) : null}
               {item.href ? (
                 <Link
                   href={item.href}
-                  className="hover:text-violet-400 transition-colors"
+                  className="text-[var(--color-text-muted)] hover:text-[var(--color-brand-primary)]"
+                  {...(index === last ? { "aria-current": "page" as const } : {})}
                 >
                   {item.label}
                 </Link>
               ) : (
-                <span className="text-foreground">{item.label}</span>
+                <span
+                  className={
+                    index === last
+                      ? "font-medium text-[var(--color-text-primary)]"
+                      : "text-[var(--color-text-muted)]"
+                  }
+                  aria-current={index === last ? "page" : undefined}
+                >
+                  {item.label}
+                </span>
               )}
             </li>
           ))}

@@ -95,7 +95,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
-          { label: "Categorias" },
+          { label: "Categorias", href: "/blog" },
           { label: category.name },
         ]}
       />
@@ -122,29 +122,29 @@ export default async function CategoryPage({ params, searchParams }: Props) {
             ))}
           </div>
 
-          {totalPages > 1 && (
-            <div className="flex justify-center gap-2 mt-12">
-              {page > 1 && (
+          {totalPages > 1 ? (
+            <div className="pagination">
+              {page > 1 ? (
                 <Link
                   href={`/categoria/${slug}?page=${page - 1}`}
-                  className="px-4 py-2 rounded-lg bg-surface-2 text-foreground hover:bg-violet-900/40 border border-border"
+                  className="pagination__btn"
                 >
                   Anterior
                 </Link>
-              )}
-              <span className="px-4 py-2 text-muted">
+              ) : null}
+              <span className="pagination__info">
                 Página {page} de {totalPages}
               </span>
-              {page < totalPages && (
+              {page < totalPages ? (
                 <Link
                   href={`/categoria/${slug}?page=${page + 1}`}
-                  className="px-4 py-2 rounded-lg bg-surface-2 text-foreground hover:bg-violet-900/40 border border-border"
+                  className="pagination__btn"
                 >
                   Próxima
                 </Link>
-              )}
+              ) : null}
             </div>
-          )}
+          ) : null}
         </>
       )}
 

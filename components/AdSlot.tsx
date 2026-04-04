@@ -1,7 +1,12 @@
 // components/AdSlot.tsx
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import {
+  startTransition,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 export type AdPosition =
   | "top"
@@ -60,13 +65,15 @@ export default function AdSlot({
     if (!lazy || visible) return;
     const el = wrapperRef.current;
     if (!el || typeof IntersectionObserver === "undefined") {
-      setVisible(true);
+      queueMicrotask(() => {
+        startTransition(() => setVisible(true));
+      });
       return;
     }
     const io = new IntersectionObserver(
       (entries) => {
         if (entries.some((e) => e.isIntersecting)) {
-          setVisible(true);
+          startTransition(() => setVisible(true));
           io.disconnect();
         }
       },

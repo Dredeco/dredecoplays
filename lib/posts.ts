@@ -46,11 +46,12 @@ export function injectHeadingIds(html: string): string {
   );
 }
 
-/** Segmento de conteúdo: HTML, vídeo YouTube ou bloco de anúncio (in-article). */
+/** Segmento de conteúdo: HTML, vídeo YouTube, anúncio in-article ou faixa de afiliados no meio do texto. */
 export type ContentSegment =
   | { type: "html"; html: string }
   | { type: "youtube"; videoId: string; title: string }
-  | { type: "ad"; position: "inline" };
+  | { type: "ad"; position: "inline" }
+  | { type: "affiliate-inline" };
 
 function escapeHtmlAttr(value: string): string {
   return value
@@ -106,56 +107,65 @@ function mergeAdjacentHtml(segments: ContentSegment[]): ContentSegment[] {
   return out;
 }
 
-/**
- * Divide HTML em blocos terminados em `</p>` (case-insensitive), preservando o restante.
- */
-function splitHtmlByClosingParagraphs(html: string): string[] {
-  const re = /<\/p\s*>/gi;
-  const parts: string[] = [];
-  let lastIndex = 0;
-  let m: RegExpExecArray | null;
-  while ((m = re.exec(html)) !== null) {
-    const end = m.index + m[0].length;
-    parts.push(html.slice(lastIndex, end));
-    lastIndex = end;
-  }
-  if (lastIndex < html.length) {
-    parts.push(html.slice(lastIndex));
-  }
-  return parts.length > 0 ? parts : [html];
+const MAX_STRUCTURAL_ANCHORS = 6;
+
+export interface StructuralInjectOptions {
+  /** Se false, só insere anúncios (ex.: post já tem produtos vinculados). */
+  includeAffiliate: boolean;
 }
 
 /**
- * Insere anúncios in-article a cada N parágrafos (`</p>`), após split do YouTube.
- * @param everyN — padrão 4 parágrafos entre cada bloco de anúncio
+ * Insere anúncio **antes** de cada h2/h3/hr e afiliado **depois** (alternando o par),
+ * até `MAX_STRUCTURAL_ANCHORS` ocorrências. Sem âncoras, o HTML não é alterado.
+ * Deve rodar após {@link splitContentForYouTube}.
  */
-export function injectParagraphAds(
+export function injectStructuralAdsAndAffiliates(
   segments: ContentSegment[],
-  everyN: number = 4,
+  options: StructuralInjectOptions,
 ): ContentSegment[] {
-  if (everyN < 1) return segments;
   const out: ContentSegment[] = [];
   for (const seg of segments) {
     if (seg.type !== "html") {
       out.push(seg);
       continue;
     }
-    const blocks = splitHtmlByClosingParagraphs(seg.html);
-    let paragraphCount = 0;
-    for (let i = 0; i < blocks.length; i++) {
-      const block = blocks[i];
-      if (/<\/p\s*>/i.test(block)) paragraphCount++;
-      out.push({ type: "html", html: block });
-      if (
-        paragraphCount > 0 &&
-        paragraphCount % everyN === 0 &&
-        i < blocks.length - 1
-      ) {
-        out.push({ type: "ad", position: "inline" });
-      }
-    }
+    out.push(...expandHtmlStructuralInjections(seg.html, options));
   }
   return mergeAdjacentHtml(out);
+}
+
+function expandHtmlStructuralInjections(
+  html: string,
+  { includeAffiliate }: StructuralInjectOptions,
+): ContentSegment[] {
+  const anchors: { start: number; end: number }[] = [];
+  const re = /<h[23][^>]*>[\s\S]*?<\/h[23]>|<hr\b[^>]*\/?>/gi;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(html)) !== null) {
+    anchors.push({ start: m.index, end: m.index + m[0].length });
+  }
+
+  if (anchors.length === 0) {
+    return [{ type: "html", html }];
+  }
+
+  const parts: ContentSegment[] = [];
+  let pos = 0;
+  const limit = Math.min(anchors.length, MAX_STRUCTURAL_ANCHORS);
+
+  for (let i = 0; i < limit; i++) {
+    const a = anchors[i];
+    parts.push({ type: "html", html: html.slice(pos, a.start) });
+    parts.push({ type: "ad", position: "inline" });
+    parts.push({ type: "html", html: html.slice(a.start, a.end) });
+    if (includeAffiliate) {
+      parts.push({ type: "affiliate-inline" });
+    }
+    pos = a.end;
+  }
+
+  parts.push({ type: "html", html: html.slice(pos) });
+  return mergeAdjacentHtml(parts);
 }
 
 /**

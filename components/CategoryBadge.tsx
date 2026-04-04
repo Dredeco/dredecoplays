@@ -20,9 +20,16 @@ interface Props {
   category: CategoryProp;
   asLink?: boolean;
   size?: "sm" | "md";
+  /** Estilo pill roxo editorial (cards de artigo) */
+  variant?: "default" | "pill";
 }
 
-export default function CategoryBadge({ category, asLink = true, size = "sm" }: Props) {
+export default function CategoryBadge({
+  category,
+  asLink = true,
+  size = "sm",
+  variant = "default",
+}: Props) {
   const name = typeof category === "string" ? category : category.name;
   const slug = typeof category === "string" ? slugify(category) : category.slug ?? slugify(category.name);
   const hexColor = typeof category === "object" && category.color ? category.color : undefined;
@@ -31,9 +38,21 @@ export default function CategoryBadge({ category, asLink = true, size = "sm" }: 
     ? ""
     : (categoryColors[slug] ?? "bg-violet-700 text-white");
   const sizeClass = size === "md" ? "text-sm px-3 py-1" : "text-xs px-2.5 py-0.5";
+  const pillClasses =
+    "inline-block rounded-full border-0 bg-[rgba(124,58,237,0.12)] px-2 py-0.5 text-[length:var(--text-xs)] font-semibold uppercase tracking-[var(--tracking-wider)] text-[var(--color-brand-primary)]";
   const baseClasses = `inline-block ${sizeClass} rounded font-bold uppercase tracking-wide`;
-  const classes = hexColor ? `${baseClasses}` : `${baseClasses} ${colorClass}`;
-  const style = hexColor ? { backgroundColor: hexColor, color: "#fff" } : undefined;
+  const classes =
+    variant === "pill"
+      ? pillClasses
+      : hexColor
+        ? `${baseClasses}`
+        : `${baseClasses} ${colorClass}`;
+  const style =
+    variant === "pill"
+      ? undefined
+      : hexColor
+        ? { backgroundColor: hexColor, color: "#fff" }
+        : undefined;
 
   if (asLink) {
     return (

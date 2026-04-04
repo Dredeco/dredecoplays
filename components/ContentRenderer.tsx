@@ -7,12 +7,15 @@ import type { Product } from "@/lib/types";
 import YouTubeFacade from "@/components/YouTubeFacade";
 import AdSlot from "@/components/AdSlot";
 import InlineProductCTA from "@/components/InlineProductCTA";
+import InlineAffiliateStrip from "@/components/InlineAffiliateStrip";
 
 interface Props {
   segments: ContentSegment[];
   className?: string;
   /** Produtos para shortcodes [[product:ID]] */
   inlineProducts?: Partial<Record<number, Product>>;
+  /** Produtos para o bloco in-article (meio do texto) */
+  affiliateProducts?: Product[];
   postId?: number;
 }
 
@@ -25,6 +28,10 @@ interface VideoMount {
 interface AdMount {
   container: Element;
   key: string;
+}
+
+interface AffiliateMount {
+  container: Element;
 }
 
 interface ProductMount {
@@ -42,18 +49,23 @@ export default function ContentRenderer({
   segments,
   className = "prose prose-invert prose-lg max-w-none [&_*]:!my-0 [&_hr]:!my-6 [&_p:empty]:!my-4",
   inlineProducts,
+  affiliateProducts,
   postId,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [videoMounts, setVideoMounts] = useState<VideoMount[]>([]);
   const [adMounts, setAdMounts] = useState<AdMount[]>([]);
   const [productMounts, setProductMounts] = useState<ProductMount[]>([]);
+  const [affiliateMounts, setAffiliateMounts] = useState<AffiliateMount[]>([]);
 
   const fullHtml = segments
     .map((seg) => {
       if (seg.type === "html") return seg.html;
       if (seg.type === "youtube") {
         return `<div data-yt-facade data-yt-id="${encodeHtmlAttr(seg.videoId)}" data-yt-title="${encodeHtmlAttr(seg.title)}" class="my-6 rounded-lg overflow-hidden aspect-video bg-surface-2 relative"></div>`;
+      }
+      if (seg.type === "affiliate-inline") {
+        return `<div data-dp-affiliate-inline class="my-8 not-prose flex w-full max-w-full justify-center"></div>`;
       }
       return `<div data-dp-ad-slot class="my-8 not-prose flex justify-center w-full max-w-full"></div>`;
     })
@@ -90,6 +102,8 @@ export default function ContentRenderer({
         productId: parseInt(el.dataset.inlineProduct ?? "0", 10),
       })),
     );
+    const aff = root.querySelectorAll<HTMLElement>("[data-dp-affiliate-inline]");
+    setAffiliateMounts(Array.from(aff).map((container) => ({ container })));
   }, [fullHtml]);
 
   return (
@@ -128,6 +142,18 @@ export default function ContentRenderer({
           `ip-${m.productId}`,
         );
       })}
+      {affiliateMounts.map((m, i) =>
+        affiliateProducts && affiliateProducts.length > 0
+          ? createPortal(
+              <InlineAffiliateStrip
+                products={affiliateProducts}
+                postId={postId}
+              />,
+              m.container,
+              `aff-inline-${i}`,
+            )
+          : null,
+      )}
     </>
   );
 }

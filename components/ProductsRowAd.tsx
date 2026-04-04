@@ -16,17 +16,14 @@ export default async function ProductsRowAd({ className = "", postId }: Props) {
   return (
     <section className={className} aria-labelledby="products-row-heading">
       <div className="mb-4 flex flex-wrap items-center gap-2">
-        <span
-          className="rounded-md border border-[var(--color-border-default)] bg-[var(--color-bg-elevated)] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--color-brand-violet-light)]"
-          aria-hidden
-        >
-          Dredeco
+        <span className="rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-bg-elevated)] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
+          Afiliados
         </span>
         <h3
           id="products-row-heading"
           className="text-sm font-bold uppercase tracking-[0.12em] text-foreground"
         >
-          Recomendado pela Redação
+          Produtos Recomendados
         </h3>
       </div>
       <ProductsRowAdSlider products={display} postId={postId} />

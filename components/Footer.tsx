@@ -27,11 +27,11 @@ export default function Footer() {
   return (
     <footer className="relative mt-20 border-t border-border bg-bg text-foreground transition-colors">
       <div
-        className="h-px bg-gradient-to-r from-violet-600 via-violet-400 to-transparent opacity-90"
+        className="h-[2px] bg-gradient-to-r from-[var(--color-brand-primary)] via-[var(--color-brand-glow)] to-transparent opacity-95"
         aria-hidden
       />
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
-        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-10">
+        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-10 sm:gap-x-8">
           <div className="space-y-4 lg:pr-4">
             <Link
               href="/"
@@ -40,9 +40,10 @@ export default function Footer() {
               <Image
                 src={logo}
                 alt="Dredeco Plays"
-                width={140}
-                height={40}
-                className="h-auto w-[140px]"
+                width={384}
+                height={110}
+                className="h-auto w-full max-w-[200px]"
+                sizes="200px"
               />
             </Link>
             <p className="max-w-sm text-sm leading-relaxed text-muted">
@@ -99,7 +100,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="YouTube"
-                  className="flex h-11 w-11 items-center justify-center rounded-full bg-red-600 text-white transition-[transform,box-shadow] duration-200 hover:scale-105 hover:shadow-[0_0_20px_rgba(239,68,68,0.45)]"
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-red-600 text-white transition-[transform,box-shadow] duration-200 hover:scale-105 hover:shadow-[0_0_20px_rgba(124,58,237,0.45)]"
                 >
                   <svg
                     className="h-5 w-5"
@@ -115,7 +116,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Instagram"
-                  className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-purple-600 via-pink-600 to-orange-400 text-white transition-[transform,box-shadow] duration-200 hover:scale-105 hover:shadow-[0_0_20px_rgba(236,72,153,0.4)]"
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-600 via-pink-600 to-orange-400 text-white transition-[transform,box-shadow] duration-200 hover:scale-105 hover:shadow-[0_0_20px_rgba(124,58,237,0.45)]"
                 >
                   <svg
                     className="h-5 w-5"
@@ -131,7 +132,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="TikTok"
-                  className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-surface text-foreground transition-[transform,box-shadow] duration-200 hover:scale-105 hover:bg-surface-2 hover:shadow-md "
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface text-foreground transition-[transform,box-shadow] duration-200 hover:scale-105 hover:bg-surface-2 hover:shadow-[0_0_18px_rgba(124,58,237,0.35)]"
                 >
                   <svg
                     className="h-5 w-5"
@@ -156,27 +157,11 @@ export default function Footer() {
         </div>
 
         <div className="mt-12 border-t border-border pt-8">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-            <div className="flex flex-col gap-3 text-sm text-muted sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6 sm:gap-y-2">
-              <p>© {year} Dredeco Plays. Todos os direitos reservados.</p>
-              <p className="text-foreground sm:border-l sm:border-border sm:pl-6">
-                Feito com ♥ para gamers brasileiros
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
-              <Link
-                href="/politica-de-privacidade"
-                className="text-muted transition-colors hover:text-foreground"
-              >
-                Política de Privacidade
-              </Link>
-              <Link
-                href="/contato"
-                className="text-muted transition-colors hover:text-foreground"
-              >
-                Contato
-              </Link>
-            </div>
+          <div className="flex flex-col gap-3 text-sm text-muted sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6 sm:gap-y-2">
+            <p>© {year} Dredeco Plays. Todos os direitos reservados.</p>
+            <p className="text-foreground sm:border-l sm:border-border sm:pl-6">
+              Feito com ♥ para gamers brasileiros
+            </p>
           </div>
           <p className="mt-6 max-w-4xl text-xs leading-relaxed text-muted">
             <span className="font-medium text-foreground">

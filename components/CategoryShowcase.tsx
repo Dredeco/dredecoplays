@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Category } from "@/lib/types";
+import SectionHeader from "@/components/SectionHeader";
 
 interface Props {
   categories: Category[];
@@ -138,27 +139,18 @@ export default function CategoryShowcase({ categories }: Props) {
 
   return (
     <section aria-labelledby="category-showcase-heading">
-      <div className="mb-5 flex items-center gap-3">
-        <div className="h-7 w-1 shrink-0 rounded-full bg-violet-600" />
-        <h2
-          id="category-showcase-heading"
-          className="text-xl font-bold text-foreground"
-        >
-          Explore por categoria
-        </h2>
-        <Link
-          href="/blog"
-          className="ml-auto text-sm text-violet-400 transition-colors hover:text-violet-300"
-        >
-          Ver blog →
-        </Link>
-      </div>
-      <div className="-mx-1 flex gap-3 overflow-x-auto pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible lg:grid-cols-3 xl:grid-cols-4">
+      <SectionHeader
+        id="category-showcase-heading"
+        label="Explore por categoria"
+        href="/blog"
+        linkText="Ver blog →"
+      />
+      <div className="-mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 sm:mx-0 sm:grid sm:max-w-none sm:auto-rows-fr sm:grid-cols-[repeat(auto-fill,minmax(160px,1fr))] sm:gap-3 sm:overflow-visible">
         {categories.map((cat) => (
           <Link
             key={cat.id}
             href={`/categoria/${cat.slug}`}
-            className="group relative min-w-[220px] shrink-0 overflow-hidden rounded-xl border border-[var(--color-border-subtle)] bg-surface shadow-[var(--shadow-card)] transition-[border-color,box-shadow,background-color] duration-[var(--transition-base)] hover:border-[var(--color-border-default)] hover:bg-[var(--color-bg-elevated)] hover:shadow-[var(--shadow-elevated)] sm:min-w-0"
+            className="group relative min-h-[44px] min-w-[200px] max-w-[min(100%,280px)] shrink-0 snap-start overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] shadow-[var(--shadow-card)] transition-[border-color,box-shadow,background-color,transform] duration-[var(--transition-base)] hover:border-[var(--color-border-default)] hover:bg-[var(--color-bg-elevated)] hover:shadow-[var(--shadow-elevated)] sm:min-h-0 sm:min-w-0 sm:max-w-none"
           >
             {/* Borda esquerda colorida com pseudo-elemento via inline style */}
             <div
@@ -169,7 +161,7 @@ export default function CategoryShowcase({ categories }: Props) {
             <div className="p-4 pl-4">
               <div className="flex items-start gap-3">
                 <span
-                  className="block shrink-0 transition-colors group-hover:opacity-90"
+                  className="block h-6 w-6 shrink-0 transition-colors group-hover:opacity-90"
                   style={{ color: cat.color }}
                 >
                   <CategoryIcon slug={cat.slug} />

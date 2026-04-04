@@ -35,7 +35,10 @@ export default function TableOfContents({ headings }: Props) {
   if (headings.length === 0) return null;
 
   return (
-    <nav aria-label="Índice do artigo" className="sticky top-24">
+    <nav
+      aria-label="Índice do artigo"
+      className="w-full rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-base)] p-4 shadow-[var(--shadow-card)] pr-2"
+    >
       <h3 className="text-foreground font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
         <span className="w-4 h-px bg-violet-600 inline-block" />
         Neste artigo

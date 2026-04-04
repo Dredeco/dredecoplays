@@ -23,14 +23,14 @@ export default function PostCardFeatured({ post, heroLayout = false }: Props) {
     <article
       className={
         heroLayout
-          ? "group relative flex h-full min-h-[280px] flex-col overflow-hidden rounded-2xl shadow-lg ring-1 ring-white/10"
+          ? "group relative flex min-h-0 flex-col overflow-hidden rounded-2xl shadow-lg ring-1 ring-white/10"
           : "group relative overflow-hidden rounded-xl shadow-lg"
       }
     >
       <div
         className={
           heroLayout
-            ? "relative min-h-[240px] flex-1 lg:min-h-0"
+            ? "relative aspect-[16/10] max-h-[min(380px,46vh)] w-full sm:max-h-[min(400px,48vh)] lg:aspect-[16/9] lg:max-h-[min(420px,50vh)] lg:min-h-0 lg:flex-1"
             : "relative aspect-[16/9] sm:aspect-[21/9]"
         }
       >
@@ -41,33 +41,23 @@ export default function PostCardFeatured({ post, heroLayout = false }: Props) {
           className="object-cover transition-transform duration-700 group-hover:scale-105"
           sizes={
             heroLayout
-              ? "(max-width: 1024px) 100vw, calc(100vw - 380px)"
+              ? "(max-width: 640px) 100vw, (max-width: 1024px) 100vw, min(1280px, 100vw)"
               : "(max-width: 1024px) 100vw, 65vw"
           }
         />
-        {/* Gradients come after PostThumbnail wrapper in DOM → paint on top of image */}
         <div
           className={
             heroLayout
-              ? "absolute inset-0 bg-gradient-to-t from-black/[0.96] via-black/55 to-transparent"
+              ? "absolute inset-0 bg-gradient-to-t from-black/[0.95] from-0% via-black/45 via-[55%] to-transparent to-100%"
               : "absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent"
-          }
-          aria-hidden
-        />
-        <div
-          className={
-            heroLayout
-              ? "absolute inset-0 bg-gradient-to-r from-violet-950/35 to-transparent"
-              : "absolute inset-0 bg-gradient-to-r from-violet-950/20 to-transparent"
           }
           aria-hidden
         />
       </div>
 
-      {/* z-[1] ensures text is always above image in the article stacking context */}
-      <div className="absolute bottom-0 left-0 right-0 z-[1] p-5 sm:p-7">
+      <div className="hero-enter absolute bottom-0 left-0 right-0 z-[1] p-5 sm:p-7">
         <div className="mb-3 flex flex-wrap items-center gap-2 sm:gap-3">
-          <span className="inline-block rounded bg-orange-500 px-3 py-1 text-xs font-black uppercase tracking-widest text-white">
+          <span className="inline-block rounded-md bg-[var(--color-brand-primary)] px-3 py-1 text-xs font-black uppercase tracking-[var(--tracking-wider)] text-white">
             Destaque
           </span>
           <CategoryBadge
@@ -106,25 +96,21 @@ export default function PostCardFeatured({ post, heroLayout = false }: Props) {
 
         <Link href={`/blog/${post.slug}`}>
           <h2
-            className={`mb-4 max-w-2xl font-extrabold leading-tight text-white transition-colors hover:text-violet-300 line-clamp-2 ${
-              heroLayout
-                ? "text-lg sm:text-4xl"
-                : "text-lg sm:text-3xl"
-            }`}
+            className="mb-3 max-w-3xl line-clamp-3 text-2xl font-bold leading-[var(--leading-tight)] tracking-[var(--tracking-tight)] text-white transition-colors hover:text-violet-300 sm:mb-4 sm:text-3xl md:text-[1.75rem] lg:text-4xl xl:max-w-[40rem] xl:text-[2.25rem] 2xl:text-[2.5rem]"
           >
             {post.title}
           </h2>
         </Link>
 
         {heroLayout && post.excerpt ? (
-          <p className="mb-4 hidden max-w-2xl text-sm leading-relaxed text-white/80 line-clamp-2 sm:block">
+          <p className="mb-4 hidden max-w-2xl text-[length:var(--text-lg)] leading-relaxed text-[var(--color-text-secondary)] opacity-90 line-clamp-2 sm:block">
             {post.excerpt}
           </p>
         ) : null}
 
         <Link
           href={`/blog/${post.slug}`}
-          className="hidden rounded-lg border border-white/40 bg-transparent px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:border-violet-600 hover:bg-violet-600 sm:inline-block"
+          className="inline-flex min-h-[44px] items-center justify-center rounded-lg border border-white/40 bg-transparent px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:border-[var(--color-brand-primary)] hover:bg-[var(--color-brand-primary)] sm:inline-flex"
         >
           Leia Agora →
         </Link>

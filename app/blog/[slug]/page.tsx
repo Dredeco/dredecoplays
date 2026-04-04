@@ -8,6 +8,7 @@ import {
   getRelatedPosts,
   getPosts,
   getProductById,
+  getPublicProducts,
 } from "@/lib/api";
 import type { Product } from "@/lib/types";
 import {
@@ -18,7 +19,7 @@ import {
   extractHeadingsFromHtml,
   injectHeadingIds,
   splitContentForYouTube,
-  injectParagraphAds,
+  injectStructuralAdsAndAffiliates,
   injectInternalLinks,
   extractProductShortcodeIds,
   replaceProductShortcodesWithPlaceholders,
@@ -31,7 +32,7 @@ import RelatedPosts from "@/components/RelatedPosts";
 import ShareButtons from "@/components/ShareButtons";
 import AdSlot from "@/components/AdSlot";
 import CategoryBadge from "@/components/CategoryBadge";
-import ProductsGridAd from "@/components/ProductsGridAd";
+import { shuffle } from "@/lib/utils";
 import ArticleJsonLd from "@/components/seo/ArticleJsonLd";
 import BreadcrumbJsonLd from "@/components/seo/BreadcrumbJsonLd";
 import FAQJsonLd from "@/components/seo/FAQJsonLd";
@@ -101,10 +102,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function PostPage({ params }: Props) {
   const { slug } = await params;
-  const [post, seo, postsList] = await Promise.all([
+  const [post, seo, postsList, catalogProducts] = await Promise.all([
     getPostBySlug(slug),
     getPostSeo(slug),
     getPosts({ limit: 250, status: "published" }),
+    getPublicProducts(),
   ]);
 
   if (!post || !seo) notFound();
@@ -125,10 +127,21 @@ export default async function PostPage({ params }: Props) {
   );
 
   const htmlWithShortcodes = replaceProductShortcodesWithPlaceholders(linkedHtml);
-  const contentSegments = injectParagraphAds(
-    splitContentForYouTube(htmlWithShortcodes),
-    4,
-  );
+
+  const linkedProductsList =
+    post.linkedProducts ??
+    (post as { linked_products?: Product[] }).linked_products ??
+    [];
+  const hasLinkedProducts = linkedProductsList.length > 0;
+
+  const afterYoutube = splitContentForYouTube(htmlWithShortcodes);
+  const contentSegments = injectStructuralAdsAndAffiliates(afterYoutube, {
+    includeAffiliate: !hasLinkedProducts,
+  });
+
+  const affiliateProductsInline = !hasLinkedProducts
+    ? shuffle(catalogProducts).slice(0, 3)
+    : [];
 
   const headings = extractHeadingsFromHtml(linkedHtml);
   const relatedPosts = await getRelatedPosts(
@@ -143,12 +156,6 @@ export default async function PostPage({ params }: Props) {
   const faqItems = parseFaqJson(post.faq_json);
   const videoSchema = parseVideoJson(post.video_json);
   const howToSchema = parseHowToJson(post.howto_json);
-
-  const linkedProductsList =
-    post.linkedProducts ??
-    (post as { linked_products?: Product[] }).linked_products ??
-    [];
-  const hasLinkedProducts = linkedProductsList.length > 0;
 
   return (
     <>
@@ -182,7 +189,7 @@ export default async function PostPage({ params }: Props) {
         ]}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 py-6 sm:py-8">
         <Breadcrumbs
           items={[
             { label: "Home", href: "/" },
@@ -194,9 +201,9 @@ export default async function PostPage({ params }: Props) {
           ]}
         />
 
-        <div className="flex gap-10">
-          <article className="flex-1 min-w-0">
-            <div className="relative aspect-[1200/630] rounded-xl overflow-hidden mb-8">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-8 xl:gap-10">
+          <article className="min-w-0 flex-1">
+            <div className="relative mb-6 aspect-video overflow-hidden rounded-xl">
               <Image
                 src={coverUrl}
                 alt={post.title}
@@ -205,10 +212,11 @@ export default async function PostPage({ params }: Props) {
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 70vw"
               />
-            </div>
-
-            <header className="mb-8">
-              <div className="flex flex-wrap items-center gap-3 mb-4">
+              <div
+                className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent"
+                aria-hidden
+              />
+              <div className="absolute bottom-4 left-4 right-4 z-[1]">
                 <CategoryBadge
                   category={
                     post.category
@@ -220,7 +228,13 @@ export default async function PostPage({ params }: Props) {
                       : categoryName
                   }
                   size="md"
+                  asLink={false}
                 />
+              </div>
+            </div>
+
+            <header className="mb-4 md:mb-6">
+              <div className="mb-4 flex flex-wrap items-center gap-3">
                 {post.tags?.slice(0, 3).map((tag) => (
                   <Link
                     key={tag.id}
@@ -232,15 +246,15 @@ export default async function PostPage({ params }: Props) {
                 ))}
               </div>
 
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-foreground leading-tight mb-4">
+              <h1 className="mb-3 text-2xl font-extrabold leading-[var(--leading-tight)] tracking-[var(--tracking-tight)] text-foreground line-clamp-4 sm:mb-4 sm:text-3xl md:text-3xl lg:text-4xl xl:text-[2.125rem]">
                 {post.title}
               </h1>
 
-              <p className="text-muted text-lg leading-relaxed mb-6">
+              <p className="mb-4 text-base leading-relaxed text-[var(--color-text-secondary)] sm:mb-5 sm:text-[length:var(--text-lg)]">
                 {post.excerpt}
               </p>
 
-              <div className="flex flex-wrap items-center gap-4 text-sm text-muted pb-6 border-b border-border">
+              <div className="flex flex-wrap items-center gap-4 border-b border-border pb-4 text-sm text-[var(--color-text-muted)]">
                 <span>✍️ {post.author?.name ?? "Dredeco Plays"}</span>
                 <span>·</span>
                 <time dateTime={post.createdAt}>
@@ -260,7 +274,9 @@ export default async function PostPage({ params }: Props) {
             <ContentRenderer
               segments={contentSegments}
               inlineProducts={inlineProducts}
+              affiliateProducts={affiliateProductsInline}
               postId={post.id}
+              className="article-body prose prose-invert prose-lg max-w-none !mt-0 [&_.prose]:!mt-0 [&_*]:!my-0 [&_hr]:!my-6 [&_p:empty]:!my-4 [&_p:first-child]:!mt-0"
             />
 
             <PostLinkedProducts
@@ -283,10 +299,6 @@ export default async function PostPage({ params }: Props) {
               url={`${SITE_URL}/blog/${post.slug}`}
             />
 
-            {!hasLinkedProducts && (
-              <ProductsGridAd className="my-12" postId={post.id} />
-            )}
-
             <RelatedPosts posts={relatedPosts} />
 
             <NewsletterBanner />
@@ -294,11 +306,9 @@ export default async function PostPage({ params }: Props) {
             <AdSlot position="footer" className="mt-12" />
           </article>
 
-          {headings.length > 0 && (
-            <aside className="hidden xl:block w-64 shrink-0">
-              <TableOfContents headings={headings} />
-            </aside>
-          )}
+          <aside className="hidden w-full shrink-0 flex-col gap-5 lg:sticky lg:top-24 lg:z-20 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto lg:self-start lg:flex lg:w-64 xl:w-72">
+            {headings.length > 0 ? <TableOfContents headings={headings} /> : null}
+          </aside>
         </div>
       </div>
     </>

@@ -6,24 +6,36 @@ import { formatDate, getPostCoverUrl, getPostCategoryName } from "@/lib/posts";
 
 interface Props {
   post: Post;
+  /** Card grande no bento (span 4×2) */
+  layout?: "default" | "large";
 }
 
-/** Card compacto para coluna lateral do hero (imagem full-bleed + texto) */
-export default function HeroSecondaryCard({ post }: Props) {
+/** Card compacto para bento / colunas — imagem full-bleed + texto */
+export default function HeroSecondaryCard({
+  post,
+  layout = "default",
+}: Props) {
   const coverUrl = getPostCoverUrl(post);
   const categoryName = getPostCategoryName(post);
+  const isLarge = layout === "large";
 
   return (
-    <article className="group relative min-h-[140px] flex-1 overflow-hidden rounded-2xl ring-1 ring-white/10 transition-transform duration-300 hover:scale-[1.01]">
+    <article
+      className={`group relative h-full min-h-0 overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] transition-[transform,border-color] duration-[var(--transition-base)] hover:scale-[1.02] hover:border-[var(--color-border-default)] ${
+        isLarge ? "min-h-[200px] md:min-h-[230px] lg:min-h-[248px]" : "min-h-[112px] sm:min-h-[128px]"
+      }`}
+    >
       <div className="absolute inset-0">
         <PostThumbnail
           src={coverUrl}
           alt={post.title}
           className="object-cover transition-transform duration-500 group-hover:scale-105"
-          sizes="300px"
+          sizes={isLarge ? "(max-width: 1024px) 100vw, 55vw" : "(max-width: 1024px) 100vw, 280px"}
         />
-        {/* Gradient after PostThumbnail in DOM → on top; z-[1] for extra safety */}
-        <div className="absolute inset-0 z-[1] bg-gradient-to-t from-black/90 via-black/30 to-black/10" aria-hidden />
+        <div
+          className="absolute inset-0 z-[1] bg-gradient-to-t from-black/90 via-black/35 to-black/10"
+          aria-hidden
+        />
       </div>
 
       <div className="absolute left-3 top-3 z-[1]">
@@ -45,7 +57,11 @@ export default function HeroSecondaryCard({ post }: Props) {
         href={`/blog/${post.slug}`}
         className="absolute bottom-3 left-3 right-3 z-[1] block"
       >
-        <h3 className="line-clamp-2 text-sm font-bold leading-snug text-white transition-colors group-hover:text-violet-200 sm:text-base">
+        <h3
+          className={`line-clamp-2 font-bold leading-snug text-white transition-colors group-hover:text-violet-200 ${
+            isLarge ? "text-sm sm:text-base lg:text-lg" : "text-sm sm:text-base"
+          }`}
+        >
           {post.title}
         </h3>
         <time

@@ -71,20 +71,21 @@ export default async function OfertasPage({ searchParams }: Props) {
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
       <header className="mb-10 max-w-3xl">
-        <p className="text-xs font-bold uppercase tracking-widest text-violet-400">
+        <p className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-sm font-medium text-emerald-400">
+          <span aria-hidden>🏷️</span>
           Monetização ética
         </p>
-        <h1 className="mt-2 text-3xl font-black text-foreground sm:text-4xl">
+        <h1 className="mt-4 text-3xl font-black tracking-tight text-foreground sm:text-4xl">
           Ofertas em games e hardware
         </h1>
-        <p className="mt-3 text-muted leading-relaxed">
+        <p className="mt-3 text-[var(--color-text-secondary)] leading-relaxed">
           Selecionamos produtos com bom custo-benefício. Ao comprar pelos links,
           o Dredeco recebe uma comissão — você não paga nada a mais.
         </p>
       </header>
 
-      <div className="mb-8 flex flex-wrap items-center gap-3">
-        <span className="text-sm text-muted">Ordenar:</span>
+      <div className="sort-controls mb-8 flex flex-wrap items-center gap-2">
+        <span className="text-sm text-[var(--color-text-muted)]">Ordenar:</span>
         {(
           [
             ["discount", "Maior desconto"],
@@ -95,11 +96,12 @@ export default async function OfertasPage({ searchParams }: Props) {
           <Link
             key={key}
             href={buildHref({ ord: key })}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+            className={`sort-btn rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
               ordenar === key
-                ? "bg-violet-600 text-white"
-                : "border border-border bg-surface text-foreground hover:border-violet-500"
+                ? "bg-[var(--color-brand-primary)] text-white ring-0 border-transparent"
+                : "border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] text-[var(--color-text-secondary)] hover:border-[var(--color-brand-primary)]/50 hover:text-foreground"
             }`}
+            data-active={ordenar === key ? true : undefined}
           >
             {label}
           </Link>
@@ -135,7 +137,7 @@ export default async function OfertasPage({ searchParams }: Props) {
       {products.length === 0 ? (
         <p className="text-muted">Nenhum produto ativo no momento.</p>
       ) : (
-        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-[repeat(auto-fill,minmax(220px,1fr))]">
           {products.map((p) => {
             const disc =
               p.original_price != null && p.original_price > p.price
@@ -147,7 +149,7 @@ export default async function OfertasPage({ searchParams }: Props) {
               <li key={p.id}>
                 <div className="relative h-full">
                   {disc != null ? (
-                    <span className="absolute right-2 top-2 z-10 rounded bg-emerald-600 px-2 py-0.5 text-xs font-bold text-white">
+                    <span className="discount-badge absolute left-3 top-3 z-10 rounded-full bg-[var(--color-positive)] px-2 py-0.5 text-xs font-bold text-white shadow-sm">
                       −{disc}%
                     </span>
                   ) : null}
@@ -159,9 +161,10 @@ export default async function OfertasPage({ searchParams }: Props) {
         </ul>
       )}
 
-      <p className="mt-12 text-xs text-muted">
+      <p className="mt-12 text-xs text-muted" suppressHydrationWarning>
         Preços e disponibilidade podem mudar. Consultado em{" "}
-        {new Date().toLocaleDateString("pt-BR")}.
+        {new Date().toLocaleDateString("pt-BR")}
+        .
       </p>
     </div>
   );

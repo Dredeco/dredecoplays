@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Geist, Inter } from "next/font/google";
 import Script from "next/script";
 import { Suspense } from "react";
 import "./globals.css";
@@ -13,6 +13,12 @@ import WebsiteJsonLd from "@/components/seo/WebsiteJsonLd";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
   display: "swap",
 });
@@ -110,7 +116,7 @@ export default function RootLayout({
       </head>
 
       <body
-        className={`${geistSans.variable} antialiased bg-bg text-foreground min-h-screen transition-colors duration-300`}
+        className={`${geistSans.variable} ${inter.variable} antialiased bg-bg text-foreground min-h-screen transition-colors duration-300`}
       >
         <Script
           src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(ADSENSE_CLIENT)}`}

@@ -16,7 +16,7 @@ export default function ProductsRowAdSlider({ products, postId }: Props) {
           "flex gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] " +
           "snap-x snap-mandatory " +
           "[&::-webkit-scrollbar]:hidden " +
-          "lg:grid lg:grid-cols-4 lg:gap-4 lg:overflow-visible lg:pb-0"
+          "lg:grid lg:grid-cols-3 lg:gap-5 lg:overflow-visible lg:pb-0 xl:grid-cols-4"
         }
         role="list"
         aria-label="Produtos recomendados"

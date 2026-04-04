@@ -8,7 +8,7 @@ interface Props {
 function NewsList({ posts }: { posts: Post[] }) {
   return (
     <ul
-      className="flex items-center gap-x-6 whitespace-nowrap py-0.5 text-sm pr-6"
+      className="flex items-center gap-x-6 whitespace-nowrap py-0.5 pr-6"
       aria-hidden
     >
       {posts.map((post, i) => {
@@ -21,7 +21,7 @@ function NewsList({ posts }: { posts: Post[] }) {
               </span>
             )}
             <span
-              className="h-2 w-2 shrink-0 rounded-full ring-2 ring-white/10"
+              className="h-2 w-2 shrink-0 rounded-full ring-2 ring-white/10 [html.light_&]:ring-black/10"
               style={{ backgroundColor: color }}
               aria-hidden
             />
@@ -45,31 +45,28 @@ export default function BreakingNewsBar({ posts }: Props) {
 
   return (
     <div
-      className="border-b border-border bg-surface/80 backdrop-blur-md"
+      className="border-b border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)]/90 backdrop-blur-md"
       role="region"
       aria-label="Últimas publicações"
     >
       <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-2.5 sm:px-6 sm:gap-4">
-        {/* Badge "Agora" */}
-        <div className="flex shrink-0 items-center gap-2 rounded-md bg-violet-600 px-2.5 py-1.5 text-[10px] font-black uppercase tracking-widest text-white sm:text-xs">
+        {/* Badge "AGORA" — vermelho pulsante */}
+        <div className="flex shrink-0 items-center gap-2 rounded-lg bg-[var(--color-negative)] px-3 py-2 text-[11px] font-black uppercase tracking-[var(--tracking-wider)] text-white shadow-[0_0_12px_rgba(239,68,68,0.45)] sm:px-3.5 sm:py-2 sm:text-xs">
           <span
-            className="h-2 w-2 shrink-0 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.9)] animate-pulse"
+            className="h-2.5 w-2.5 shrink-0 rounded-full bg-white/90 [animation:pulse-agora_2s_ease-in-out_infinite] sm:h-3 sm:w-3"
             aria-hidden
           />
           Agora
         </div>
 
-        {/* Ticker com rolagem contínua */}
         <div className="group min-w-0 flex-1 overflow-hidden">
-          {/* Dois conjuntos idênticos garantem loop sem salto */}
-          <div className="flex w-max [animation:marquee_50s_linear_infinite] group-hover:[animation-play-state:paused]">
+          <div className="breaking-ticker-track flex w-max [animation:ticker-scroll_50s_linear_infinite] group-hover:[animation-play-state:paused]">
             <NewsList posts={posts} />
             <NewsList posts={posts} />
           </div>
         </div>
       </div>
 
-      {/* Lista acessível oculta visualmente para leitores de tela */}
       <ul className="sr-only">
         {posts.map((post) => (
           <li key={post.id}>

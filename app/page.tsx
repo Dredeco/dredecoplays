@@ -5,6 +5,7 @@ import {
   getRecentPosts,
   getPopularPosts,
   getCategories,
+  getPosts,
 } from "@/lib/api";
 import { formatDate, getPostCoverUrl } from "@/lib/posts";
 import PostThumbnail from "@/components/PostThumbnail";
@@ -17,6 +18,7 @@ import ProductsRowAd from "@/components/ProductsRowAd";
 import BreakingNewsBar from "@/components/BreakingNewsBar";
 import HeroSecondaryCard from "@/components/HeroSecondaryCard";
 import CategoryShowcase from "@/components/CategoryShowcase";
+import SectionHeader from "@/components/SectionHeader";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://dredecoplays.com.br";
@@ -53,27 +55,29 @@ export const metadata: Metadata = {
 export const revalidate = 60;
 
 export default async function HomePage() {
-  const [featuredPost, recentPosts, popularPosts, categories] =
+  const [featuredPost, recentPosts, popularPosts, categories, postsFeed] =
     await Promise.all([
       getFeaturedPost(),
       getRecentPosts(),
       getPopularPosts(),
       getCategories(),
+      getPosts({ limit: 48, page: 1, status: "published" }),
     ]);
 
   const breakingPosts = recentPosts.slice(0, 5);
   const heroMain = featuredPost ?? recentPosts[0] ?? null;
   const heroSecondary = heroMain
-    ? recentPosts.filter((p) => p.id !== heroMain.id).slice(0, 2)
+    ? recentPosts.filter((p) => p.id !== heroMain.id).slice(0, 3)
     : [];
   const heroIds = new Set(
     [heroMain?.id, ...heroSecondary.map((p) => p.id)].filter(
       (id): id is number => id != null,
     ),
   );
-  const latestGrid = recentPosts.filter((p) => !heroIds.has(p.id)).slice(0, 6);
-  const gridDisplay =
-    latestGrid.length >= 3 ? latestGrid : recentPosts.slice(0, 6);
+  /** Lista ampla da API para preencher o grid sem repetir destaque/bento */
+  const gridDisplay = postsFeed.data
+    .filter((p) => !heroIds.has(p.id))
+    .slice(0, 6);
 
   const mostRead = popularPosts.slice(0, 3);
 
@@ -85,102 +89,72 @@ export default async function HomePage() {
         </div>
       ) : null}
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <AdSlot position="top" className="mb-4" />
-      </div>
-
       {heroMain ? (
-        <div className="mx-auto mb-8 max-w-7xl px-4 sm:px-6">
-          <div
-            className={
-              heroSecondary.length > 0
-                ? "grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_300px] lg:h-[460px] lg:items-stretch"
-                : "grid grid-cols-1"
-            }
-          >
-            <PostCardFeatured post={heroMain} heroLayout />
-            {heroSecondary.length > 0 ? (
-              <div className="hidden flex-col gap-4 lg:flex">
-                {heroSecondary.map((post) => (
-                  <HeroSecondaryCard key={post.id} post={post} />
-                ))}
+        <div className="mx-auto mb-6 max-w-7xl space-y-3 px-4 sm:px-6">
+          <PostCardFeatured post={heroMain} heroLayout />
+          {heroSecondary.length > 0 ? (
+            <div className="bento-grid">
+              <div className="bento-card-featured">
+                <HeroSecondaryCard post={heroSecondary[0]} layout="large" />
               </div>
-            ) : null}
-          </div>
+              {heroSecondary[1] ? (
+                <div className="bento-card-secondary">
+                  <HeroSecondaryCard post={heroSecondary[1]} />
+                </div>
+              ) : null}
+              {heroSecondary[2] ? (
+                <div className="bento-card-secondary">
+                  <HeroSecondaryCard post={heroSecondary[2]} />
+                </div>
+              ) : null}
+            </div>
+          ) : null}
         </div>
       ) : null}
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="flex gap-8" suppressHydrationWarning>
+        <AdSlot position="top" className="mb-4" />
+      </div>
+
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="flex gap-6 lg:gap-7" suppressHydrationWarning>
           <div className="min-w-0 flex-1 space-y-10">
             <CategoryShowcase categories={categories} />
 
             <section>
-              <div className="mb-6 flex items-center gap-3">
-                <div className="h-7 w-1 shrink-0 rounded-full bg-violet-600" />
-                <h2 className="text-xl font-bold text-foreground">
-                  Últimos Posts
-                </h2>
-                <Link
-                  href="/blog"
-                  className="ml-auto text-sm text-violet-400 transition-colors hover:text-violet-300"
+              <SectionHeader
+                label="Últimos Posts"
+                href="/blog"
+                linkText="Ver blog →"
+              />
+              {gridDisplay.length > 0 ? (
+                <div
+                  className={
+                    gridDisplay.length >= 3
+                      ? "grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:items-start"
+                      : "grid grid-cols-1 gap-5 sm:grid-cols-2 lg:max-w-4xl lg:grid-cols-2 lg:items-start"
+                  }
                 >
-                  Ver todos →
-                </Link>
-              </div>
-              {gridDisplay.length >= 6 ? (
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-6">
-                  <div className="sm:col-span-2 lg:col-span-4 lg:row-span-2 flex">
-                    <PostCard post={gridDisplay[0]} variant="featured" />
-                  </div>
-                  <div className="sm:col-span-1 lg:col-span-2">
-                    <PostCard post={gridDisplay[1]} />
-                  </div>
-                  <div className="sm:col-span-1 lg:col-span-2">
-                    <PostCard post={gridDisplay[2]} />
-                  </div>
-                  <div className="sm:col-span-1 lg:col-span-2">
-                    <PostCard post={gridDisplay[3]} />
-                  </div>
-                  <div className="sm:col-span-1 lg:col-span-2">
-                    <PostCard post={gridDisplay[4]} />
-                  </div>
-                  <div className="sm:col-span-1 lg:col-span-2">
-                    <PostCard post={gridDisplay[5]} />
-                  </div>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                  {gridDisplay.map((post, index) => (
-                    <PostCard
-                      key={post.id}
-                      post={post}
-                      variant={
-                        gridDisplay.length >= 2 && index === 0
-                          ? "featured"
-                          : "default"
-                      }
-                    />
+                  {gridDisplay.map((post) => (
+                    <PostCard key={post.id} post={post} />
                   ))}
                 </div>
+              ) : (
+                <p className="text-sm text-muted">
+                  Nenhum outro post para listar além do destaque.
+                </p>
               )}
             </section>
 
             <AdSlot position="mid-content" />
 
             <section aria-labelledby="most-read-heading">
-              <div className="mb-6 flex items-center gap-3">
-                <div
-                  className="h-7 w-1 shrink-0 rounded-full bg-violet-600"
-                  aria-hidden
-                />
-                <h2
-                  id="most-read-heading"
-                  className="text-xs font-bold uppercase tracking-[0.12em] text-foreground"
-                >
-                  Mais Lidos
-                </h2>
-              </div>
+              <SectionHeader
+                id="most-read-heading"
+                label="Mais Lidos"
+                href="/blog"
+                linkText="Ver blog →"
+              />
               <ol className="space-y-0">
                 {mostRead.map((post, index) => (
                   <li
@@ -190,7 +164,7 @@ export default async function HomePage() {
                     <div className="relative flex items-start gap-4">
                       <div className="relative min-w-0 flex-1 overflow-hidden pl-1">
                         <span
-                          className="pointer-events-none absolute -left-1 -top-2 select-none font-black leading-none text-[4.5rem] text-[var(--color-brand-violet)] opacity-[0.22] sm:text-[5rem]"
+                          className="pointer-events-none absolute -left-1 -top-1 select-none font-black leading-none text-[2.5rem] text-[var(--color-brand-primary)] opacity-[0.15] sm:text-[2.75rem]"
                           aria-hidden
                         >
                           {index + 1}
@@ -241,7 +215,7 @@ export default async function HomePage() {
             <ProductsRowAd className="mt-10" />
           </div>
 
-          <aside className="hidden w-72 shrink-0 flex-col gap-6 lg:flex">
+          <aside className="hidden w-64 shrink-0 flex-col gap-5 xl:w-72 xl:gap-6 lg:flex">
             <form action="/busca" method="GET" className="relative">
               <input
                 type="search"
@@ -328,7 +302,7 @@ export default async function HomePage() {
               </ol>
             </div>
 
-            <ProductsGridAd />
+            <ProductsGridAd layout="sidebar" />
 
             <AdSlot position="sidebar" />
           </aside>

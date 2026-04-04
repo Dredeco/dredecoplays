@@ -35,35 +35,43 @@ export default async function BlogPage({ searchParams }: Props) {
   const posts = postsRes.data;
   const meta = postsRes.meta;
 
+  function pageHref(nextPage: number): string {
+    const p = new URLSearchParams();
+    if (nextPage > 1) p.set("page", String(nextPage));
+    if (params.category) p.set("category", params.category);
+    if (params.search) p.set("search", params.search);
+    const s = p.toString();
+    return s ? `/blog?${s}` : "/blog";
+  }
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
       <div className="mb-8">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-foreground mb-2">
+        <h1 className="mb-2 text-3xl font-extrabold text-foreground sm:text-4xl">
           Blog
         </h1>
         <p className="text-muted">
-          {meta.total} {meta.total === 1 ? "artigo" : "artigos"} publicados sobre games
+          {meta.total} {meta.total === 1 ? "artigo" : "artigos"} publicados sobre
+          games
         </p>
       </div>
 
-      <div className="flex flex-wrap gap-2 mb-8 pb-6 border-b border-border">
+      <div className="filter-tabs">
         <Link
           href="/blog"
-          className={`px-4 py-1.5 rounded-full text-sm font-medium ${
-            !params.category ? "bg-violet-700 text-white" : "bg-surface-2 text-foreground hover:bg-violet-900/40 hover:text-violet-300 border border-border transition-colors"
-          }`}
+          className="filter-tab"
+          data-active={!params.category ? true : undefined}
         >
           Todos
         </Link>
         {categories.map((cat) => (
           <Link
             key={cat.id}
-            href={params.category === cat.slug ? "/blog" : `/blog?category=${cat.slug}`}
-            className={`px-4 py-1.5 rounded-full text-sm font-medium ${
-              params.category === cat.slug
-                ? "bg-violet-700 text-white"
-                : "bg-surface-2 text-foreground hover:bg-violet-900/40 hover:text-violet-300 border border-border transition-colors"
-            }`}
+            href={
+              params.category === cat.slug ? "/blog" : `/blog?category=${cat.slug}`
+            }
+            className="filter-tab"
+            data-active={params.category === cat.slug ? true : undefined}
           >
             {cat.name}
           </Link>
@@ -71,49 +79,43 @@ export default async function BlogPage({ searchParams }: Props) {
       </div>
 
       <div className="flex gap-8">
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           {posts.length === 0 ? (
-            <div className="text-center py-20 text-muted">
+            <div className="py-20 text-center text-muted">
               Nenhum post encontrado.
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
               {posts.map((post) => (
                 <PostCard key={post.id} post={post} />
               ))}
             </div>
           )}
 
-          {meta.totalPages > 1 && (
-            <div className="flex justify-center gap-2 mt-12">
-              {page > 1 && (
-                <Link
-                  href={`/blog?page=${page - 1}${params.category ? `&category=${params.category}` : ""}${params.search ? `&search=${encodeURIComponent(params.search)}` : ""}`}
-                  className="px-4 py-2 rounded-lg bg-surface-2 text-foreground hover:bg-violet-900/40 border border-border"
-                >
+          {meta.totalPages > 1 ? (
+            <div className="pagination">
+              {page > 1 ? (
+                <Link href={pageHref(page - 1)} className="pagination__btn">
                   Anterior
                 </Link>
-              )}
-              <span className="px-4 py-2 text-muted">
+              ) : null}
+              <span className="pagination__info">
                 Página {page} de {meta.totalPages}
               </span>
-              {page < meta.totalPages && (
-                <Link
-                  href={`/blog?page=${page + 1}${params.category ? `&category=${params.category}` : ""}${params.search ? `&search=${encodeURIComponent(params.search)}` : ""}`}
-                  className="px-4 py-2 rounded-lg bg-surface-2 text-foreground hover:bg-violet-900/40 border border-border"
-                >
+              {page < meta.totalPages ? (
+                <Link href={pageHref(page + 1)} className="pagination__btn">
                   Próxima
                 </Link>
-              )}
+              ) : null}
             </div>
-          )}
+          ) : null}
 
           <AdSlot position="footer" className="mt-12" />
         </div>
 
-        <aside className="hidden lg:flex flex-col gap-6 w-64 shrink-0">
-          <div className="bg-surface rounded-xl border border-border shadow-md p-5 sticky top-24">
-            <h3 className="text-foreground font-bold text-xs uppercase tracking-widest mb-4">
+        <aside className="hidden w-64 shrink-0 flex-col gap-6 lg:flex">
+          <div className="sticky top-24 rounded-xl border border-border bg-surface p-5 shadow-md">
+            <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-foreground">
               Categorias
             </h3>
             <ul className="divide-y divide-border">
@@ -121,10 +123,10 @@ export default async function BlogPage({ searchParams }: Props) {
                 <li key={cat.id}>
                   <Link
                     href={`/categoria/${cat.slug}`}
-                    className="flex items-center justify-between py-2.5 text-sm text-muted hover:text-violet-400 transition-colors"
+                    className="flex items-center justify-between py-2.5 text-sm text-muted transition-colors hover:text-violet-400"
                   >
                     <span>{cat.name}</span>
-                    <span className="text-muted text-xs">&rarr;</span>
+                    <span className="text-xs text-muted">&rarr;</span>
                   </Link>
                 </li>
               ))}
