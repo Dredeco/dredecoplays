@@ -19,16 +19,24 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./src/*"],
+      "@core/*": ["./src/core/*"],
+      "@ui/*": ["./src/ui/*"],
+      "@pattern/*": ["./src/pattern/*"],
+      "@features/*": ["./src/features/*"],
+      "@layouts/*": ["./src/layouts/*"],
+      "@mocks/*": ["./src/mocks/*"],
+      "@public/*": ["./public/*"]
     }
   },
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    "**/*.mts",
+    "vitest.config.ts"
   ],
   "exclude": ["node_modules"]
 }
