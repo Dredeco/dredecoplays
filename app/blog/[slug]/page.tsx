@@ -111,9 +111,10 @@ export default async function PostPage({ params }: Props) {
 
   if (!post || !seo) notFound();
 
+  const postsForLinks = postsList.data ?? [];
   const linkedHtml = injectInternalLinks(
     injectHeadingIds(post.content),
-    postsList.data.map((p) => ({ slug: p.slug, title: p.title })),
+    postsForLinks.map((p) => ({ slug: p.slug, title: p.title })),
     slug,
   );
 

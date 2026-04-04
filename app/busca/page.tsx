@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { getPosts } from "@/lib/api";
 import PostCard from "@/components/PostCard";
 import AdSlot from "@/components/AdSlot";
@@ -103,9 +104,9 @@ export default async function SearchPage({ searchParams }: Props) {
           </p>
           <p className="text-muted text-sm">
             Tente palavras-chave diferentes ou navegue pelas{" "}
-            <a href="/blog" className="text-violet-400 hover:underline">
+            <Link href="/blog" className="text-violet-400 hover:underline">
               categorias
-            </a>
+            </Link>
             .
           </p>
         </div>

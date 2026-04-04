@@ -135,10 +135,21 @@ export async function getPosts(
   if (params.search) search.set("search", params.search);
   if (params.status) search.set("status", params.status);
   const qs = search.toString();
-  return request<PaginatedResponse<Post>>(
+  const res = await request<PaginatedResponse<Post>>(
     `/api/posts${qs ? `?${qs}` : ""}`,
     token ? { token: token as string } : {}
   );
+  const data = Array.isArray(res.data) ? res.data : [];
+  const meta =
+    res.meta && typeof res.meta === "object"
+      ? res.meta
+      : {
+          total: data.length,
+          page: params.page ?? 1,
+          limit: params.limit ?? data.length,
+          totalPages: 1,
+        };
+  return { data, meta };
 }
 
 export async function getFeaturedPost(): Promise<Post | null> {

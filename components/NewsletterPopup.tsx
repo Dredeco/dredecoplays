@@ -43,7 +43,7 @@ export default function NewsletterPopup() {
 
   useEffect(() => {
     if (shouldNeverShow()) {
-      setReady(true);
+      queueMicrotask(() => setReady(true));
       return;
     }
 
@@ -66,7 +66,7 @@ export default function NewsletterPopup() {
     const timer = window.setTimeout(show, DELAY_MS);
     window.addEventListener("scroll", onScroll, { passive: true });
 
-    setReady(true);
+    queueMicrotask(() => setReady(true));
 
     return () => {
       window.clearTimeout(timer);
