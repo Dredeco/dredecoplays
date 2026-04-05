@@ -161,7 +161,7 @@ export default function CategoryShowcase({ categories }: Props) {
             <div className="p-4 pl-4">
               <div className="flex items-start gap-3">
                 <span
-                  className="block h-6 w-6 shrink-0 transition-colors group-hover:opacity-90"
+                  className="block h-6 w-6 mt-1 shrink-0 transition-colors group-hover:opacity-90"
                   style={{ color: cat.color }}
                 >
                   <CategoryIcon slug={cat.slug} />

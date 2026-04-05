@@ -34,6 +34,20 @@ export function isApiClientError(err: unknown): err is ApiClientError {
 
 type RequestInitWithToken = RequestInit & { token?: string };
 
+/** Mensagem legível a partir de vários formatos comuns de erro da API. */
+function messageFromErrorJson(json: Record<string, unknown>, status: number): string {
+  const err = json as ApiError & Record<string, unknown>;
+  if (typeof err.error === "string" && err.error.trim()) return err.error;
+  if (err.error && typeof err.error === "object" && err.error !== null) {
+    const nested = (err.error as { message?: string }).message;
+    if (typeof nested === "string" && nested.trim()) return nested;
+  }
+  const msg = json.message;
+  if (typeof msg === "string" && msg.trim()) return msg;
+  if (Array.isArray(msg) && typeof msg[0] === "string") return msg[0];
+  return `Erro HTTP ${status}`;
+}
+
 export async function request<T>(
   path: string,
   options: RequestInitWithToken = {},
@@ -57,8 +71,7 @@ export async function request<T>(
 
   if (!res.ok) {
     const err = json as ApiError;
-    const message =
-      err.error || (json as { message?: string }).message || `HTTP ${res.status}`;
+    const message = messageFromErrorJson(json as Record<string, unknown>, res.status);
 
     if (typeof window !== "undefined" && res.status === 401) {
       removeToken();

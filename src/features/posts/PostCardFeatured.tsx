@@ -30,7 +30,7 @@ export default function PostCardFeatured({ post, heroLayout = false }: Props) {
       <div
         className={
           heroLayout
-            ? "relative aspect-[16/10] max-h-[min(380px,46vh)] w-full sm:max-h-[min(400px,48vh)] lg:aspect-[16/9] lg:max-h-[min(420px,50vh)] lg:min-h-0 lg:flex-1"
+            ? "relative aspect-[16/10] max-h-[min(480px,70vh)] w-full sm:max-h-[min(500px,70vh)] lg:aspect-[16/9] lg:max-h-[min(520px,70vh)] lg:min-h-0 lg:flex-1"
             : "relative aspect-[16/9] sm:aspect-[21/9]"
         }
       >
@@ -95,9 +95,7 @@ export default function PostCardFeatured({ post, heroLayout = false }: Props) {
         </div>
 
         <Link href={`/blog/${post.slug}`}>
-          <h2
-            className="mb-3 max-w-3xl line-clamp-3 text-2xl font-bold leading-[var(--leading-tight)] tracking-[var(--tracking-tight)] text-white transition-colors hover:text-violet-300 sm:mb-4 sm:text-3xl md:text-[1.75rem] lg:text-4xl xl:max-w-[40rem] xl:text-[2.25rem] 2xl:text-[2.5rem]"
-          >
+          <h2 className="mb-3 max-w-3xl line-clamp-3 text-2xl font-bold leading-[var(--leading-tight)] tracking-[var(--tracking-tight)] text-white transition-colors hover:text-violet-300 sm:mb-4 sm:text-3xl md:text-[1.75rem] lg:text-4xl xl:max-w-[40rem] xl:text-[2.25rem] 2xl:text-[2.5rem]">
             {post.title}
           </h2>
         </Link>

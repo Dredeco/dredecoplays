@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import type { Post, Category, Tag, CreatePostDto } from "@core/types";
 import { slugify } from "@features/posts/post-content";
-import { uploadImage, publishPostOnInstagram } from "@core/api-client";
+import { uploadImage, publishPostOnInstagram, isApiClientError } from "@core/api-client";
 import RichTextEditor from "./RichTextEditor";
 import Image from "next/image";
 
@@ -275,7 +275,12 @@ export default function PostForm({
                     await publishPostOnInstagram(post.id, token);
                     await onPostRefresh?.();
                   } catch (err) {
-                    alert(err instanceof Error ? err.message : "Erro ao publicar no Instagram");
+                    const text = isApiClientError(err)
+                      ? `${err.message} (HTTP ${err.status})`
+                      : err instanceof Error
+                        ? err.message
+                        : "Erro ao publicar no Instagram";
+                    alert(text);
                   } finally {
                     setIgPublishing(false);
                   }
