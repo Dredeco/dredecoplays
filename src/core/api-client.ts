@@ -219,6 +219,22 @@ export async function deletePost(id: number, token: string): Promise<void> {
   await request(`/api/posts/${id}`, { method: "DELETE", token });
 }
 
+/** Publica o artigo no Instagram (uma vez por post; apenas admin na API). */
+export async function publishPostOnInstagram(
+  id: number,
+  token: string,
+): Promise<{ instagram_media_id: string | null; instagram_published_at: string | null }> {
+  const res = await request<{
+    data: { instagram_media_id: string | null; instagram_published_at: string | null };
+  }>(`/api/posts/${id}/instagram-publish`, {
+    method: "POST",
+    token,
+  });
+  const data = (res as { data?: { instagram_media_id: string | null; instagram_published_at: string | null } }).data;
+  if (!data) throw new Error("Resposta inválida da API");
+  return data;
+}
+
 export async function publishPost(id: number, publish: boolean, token: string): Promise<Post> {
   const res = await request<SingleResponse<Post>>(`/api/posts/${id}/publish`, {
     method: "PATCH",

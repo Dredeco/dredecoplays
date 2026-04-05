@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import type { Post, Category, Tag, CreatePostDto } from "@core/types";
 import { slugify } from "@features/posts/post-content";
-import { uploadImage } from "@core/api-client";
+import { uploadImage, publishPostOnInstagram } from "@core/api-client";
 import RichTextEditor from "./RichTextEditor";
 import Image from "next/image";
 
@@ -16,8 +16,10 @@ interface Props {
   categories: Category[];
   tags: Tag[];
   token: string;
-  currentUser: { id: number } | null;
+  currentUser: { id: number; role?: "admin" | "editor" } | null;
   onSubmit: (dto: CreatePostDto) => Promise<void>;
+  /** Após publicar no Instagram, recarregar o post (ex.: slug na página de edição). */
+  onPostRefresh?: () => Promise<void>;
 }
 
 export default function PostForm({
@@ -27,6 +29,7 @@ export default function PostForm({
   token,
   currentUser,
   onSubmit,
+  onPostRefresh,
 }: Props) {
   const [title, setTitle] = useState(post?.title ?? "");
   const [slug, setSlug] = useState(post?.slug ?? "");
@@ -45,6 +48,7 @@ export default function PostForm({
   const [thumbnail, setThumbnail] = useState(post?.thumbnail ?? "");
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [igPublishing, setIgPublishing] = useState(false);
 
   useEffect(() => {
     if (!post && title) {
@@ -244,6 +248,49 @@ export default function PostForm({
           </select>
         </div>
       </div>
+
+      {post && currentUser?.role === "admin" && post.status === "published" && (
+        <div className="rounded-lg border border-border bg-surface-2 p-4 space-y-3">
+          <p className="text-sm font-medium text-foreground">Instagram</p>
+          {post.instagram_media_id ? (
+            <p className="text-sm text-muted">
+              Publicado no Instagram
+              {post.instagram_published_at
+                ? ` em ${new Date(post.instagram_published_at).toLocaleString("pt-BR")}`
+                : ""}
+              .
+            </p>
+          ) : (
+            <>
+              {post.instagram_last_error ? (
+                <p className="text-sm text-red-400 break-words">{post.instagram_last_error}</p>
+              ) : null}
+              <button
+                type="button"
+                disabled={igPublishing}
+                onClick={async () => {
+                  if (!post?.id) return;
+                  setIgPublishing(true);
+                  try {
+                    await publishPostOnInstagram(post.id, token);
+                    await onPostRefresh?.();
+                  } catch (err) {
+                    alert(err instanceof Error ? err.message : "Erro ao publicar no Instagram");
+                  } finally {
+                    setIgPublishing(false);
+                  }
+                }}
+                className="px-4 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-90 text-white text-sm font-medium disabled:opacity-50"
+              >
+                {igPublishing ? "Enviando…" : "Publicar no Instagram"}
+              </button>
+              <p className="text-xs text-muted">
+                Envia uma vez por artigo (feed com thumbnail ou Reels se houver vídeo em video_json).
+              </p>
+            </>
+          )}
+        </div>
+      )}
 
       <div className="flex gap-4">
         <button

@@ -104,6 +104,9 @@ export type Post = {
   video_json?: string | null;
   howto_json?: string | null;
   linkedProducts?: Product[];
+  instagram_media_id?: string | null;
+  instagram_published_at?: string | null;
+  instagram_last_error?: string | null;
 };
 
 export type PaginatedMeta = {

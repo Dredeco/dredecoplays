@@ -75,6 +75,10 @@ export default function EditarPostPage() {
         token={token}
         currentUser={currentUser}
         onSubmit={handleSubmit}
+        onPostRefresh={async () => {
+          const p = await getPostBySlug(slug);
+          setPost(p ?? null);
+        }}
       />
     </div>
   );

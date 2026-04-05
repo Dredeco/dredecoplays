@@ -298,6 +298,7 @@ export default async function PostPage({ params }: Props) {
             <ShareButtons
               title={post.title}
               url={`${SITE_URL}/blog/${post.slug}`}
+              excerpt={post.excerpt}
             />
 
             <RelatedPosts posts={relatedPosts} />
